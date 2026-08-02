@@ -207,6 +207,12 @@
       <button class="btn" id="btn-notifs" onclick="activerNotifs()">Activer les notifications d'annulation</button>
     </div>
     <div class="carte">
+      <h3>📲 Installer l'application</h3>
+      <p class="note">Ajoute SMS BLAFFA à ton écran d'accueil pour l'ouvrir comme une vraie application, en plein écran.</p>
+      <button class="btn" onclick="installerAppli()">📲 Installer SMS BLAFFA</button>
+      <p class="note" id="install-etat"></p>
+    </div>
+    <div class="carte">
       <h3>ℹ️ Application</h3>
       <p class="note">SMS BLAFFA v2 — lecture seule des SMS opérateurs de ton organisation. Chaque organisation utilise son propre token (BLAFFA FILE → menu 💬 SMS → SMS Center).</p>
       <button class="btn rouge-b" onclick="deconnecter()">Se déconnecter</button>
@@ -440,8 +446,8 @@ function majNotifEtat() {
 let promptInstall = null;
 const dejaInstallee = window.matchMedia && window.matchMedia("(display-mode: standalone)").matches;
 if ("serviceWorker" in navigator) {
-  const swScope = location.pathname.indexOf("sms-center") >= 0 ? "/sms-center" : "/";
-  navigator.serviceWorker.register("/sms-center-sw.js", { scope: swScope }).catch(function () {});
+  // scope "/" : le domaine entier EST l'application -> installation fiable.
+  navigator.serviceWorker.register("/sms-center-sw.js", { scope: "/" }).catch(function () {});
 }
 window.addEventListener("beforeinstallprompt", function (e) {
   e.preventDefault();
@@ -449,11 +455,23 @@ window.addEventListener("beforeinstallprompt", function (e) {
   if (!dejaInstallee) { const b = $("install-bar"); if (b) b.style.display = "flex"; }
 });
 function installerAppli() {
-  if (!promptInstall) return;
-  promptInstall.prompt();
-  promptInstall.userChoice.then(function () { promptInstall = null; cacher("install-bar"); });
+  const etat = $("install-etat");
+  if (dejaInstallee) { if (etat) etat.textContent = "✅ SMS BLAFFA est déjà installée."; return; }
+  // Android/Chrome : le vrai bouton d'installation du système.
+  if (promptInstall) {
+    promptInstall.prompt();
+    promptInstall.userChoice.then(function () { promptInstall = null; cacher("install-bar"); });
+    return;
+  }
+  // Sinon : instructions manuelles selon l'appareil.
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if (ios) {
+    if (etat) etat.textContent = "Sur iPhone : appuie sur le bouton Partager de Safari (carré avec une flèche), puis « Sur l'écran d'accueil ».";
+  } else {
+    if (etat) etat.textContent = "Ouvre le menu du navigateur (⋮ en haut à droite), puis « Installer l'application » ou « Ajouter à l'écran d'accueil ».";
+  }
 }
-window.addEventListener("appinstalled", function () { cacher("install-bar"); });
+window.addEventListener("appinstalled", function () { cacher("install-bar"); const e = $("install-etat"); if (e) e.textContent = "✅ Application installée."; });
 (function () {
   const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
   if (ios && !dejaInstallee && !localStorage.getItem("smsblaffa_ios_hint")) {
