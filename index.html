@@ -308,7 +308,7 @@ function rendreListe(nom) {
       + '<div class="avatar" style="background:' + couleurExp(s.sender) + '">' + esc(initiale) + "</div>"
       + '<div class="contenu">'
       + '<div class="ligne1"><span class="exp">' + esc(s.sender) + '</span><span class="quand">' + heure(s.receivedAt) + "</span></div>"
-      + '<div class="ligne2">' + tag + '<span class="tag t-plat">' + esc(s.platformCode) + '</span><span class="tag t-tel">📱 ' + esc(s.deviceLabel) + "</span></div>"
+      + '<div class="ligne2">' + tag + "</div>"
       + '<div class="corps">' + esc(s.body) + "</div>"
       + "</div></div>";
   }).join("");
