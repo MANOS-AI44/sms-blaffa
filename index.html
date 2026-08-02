@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#0B2545">
+<title>SMS BLAFFA</title>
+<link rel="manifest" href="/sms-center-manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="/sms-center-192.png">
+<link rel="apple-touch-icon" href="/sms-center-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SMS BLAFFA">
+<style>
+  :root {
+    --bleu: #0B2545; --bleu2: #14386B; --accent: #2563EB;
+    --jaune-bg: #FEFCE8; --jaune-bd: #FDE047; --jaune-tx: #854D0E;
+    --bleu-bg: #EFF6FF; --bleu-bd: #93C5FD; --bleu-tx: #1E40AF;
+    --rouge-bg: #FEF2F2; --rouge-bd: #FCA5A5; --rouge-tx: #991B1B;
+    --mute: #64748B; --border: #E2E8F0; --fond: #F1F5F9;
+    --safe-b: env(safe-area-inset-bottom, 0px);
+    --safe-t: env(safe-area-inset-top, 0px);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--fond); color: #0F172A; overscroll-behavior-y: contain; }
+
+  /* ═══ SPLASH ═══ */
+  #splash { position: fixed; inset: 0; background: linear-gradient(160deg, var(--bleu), var(--bleu2)); z-index: 200; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; transition: opacity .35s; }
+  #splash img { width: 96px; height: 96px; border-radius: 22px; box-shadow: 0 10px 40px rgba(0,0,0,.35); }
+  #splash .nom { color: #FFF; font-size: 26px; font-weight: 900; letter-spacing: 1px; }
+  #splash .sous { color: rgba(255,255,255,.6); font-size: 13px; }
+
+  /* ═══ EN-TÊTE ═══ */
+  .entete { background: linear-gradient(135deg, var(--bleu), var(--bleu2)); color: #FFF; padding: calc(12px + var(--safe-t)) 16px 12px; position: sticky; top: 0; z-index: 50; }
+  .entete .row { display: flex; align-items: center; gap: 10px; }
+  .entete img.logo { width: 34px; height: 34px; border-radius: 9px; }
+  .entete .titre { font-size: 17px; font-weight: 900; letter-spacing: .4px; }
+  .entete .org { font-size: 11px; opacity: .8; }
+  .entete .maj { margin-left: auto; text-align: right; font-size: 10px; opacity: .75; line-height: 1.5; }
+  .pastille { display: inline-block; width: 8px; height: 8px; border-radius: 99px; background: #22C55E; margin-right: 4px; }
+  .pastille.off { background: #F59E0B; }
+
+  /* ═══ CONTENU ═══ */
+  .page { max-width: 720px; margin: 0 auto; padding: 12px 12px calc(84px + var(--safe-b)); display: none; }
+  .page.on { display: block; }
+
+  .bandeau { background: #FFFBEB; border: 1px solid #FDE68A; color: #92400E; border-radius: 14px; padding: 11px 14px; font-size: 13px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .bandeau button { background: #F59E0B; color: #FFF; border: 0; border-radius: 9px; padding: 7px 14px; font-weight: 800; font-size: 12.5px; }
+
+  .cherche { display: flex; gap: 8px; margin-bottom: 10px; }
+  .cherche input { flex: 1; padding: 13px 16px; border: 1px solid var(--border); border-radius: 999px; font-size: 15px; outline: none; background: #FFF; }
+  .cherche input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+  .cherche button { background: var(--accent); color: #FFF; border: 0; border-radius: 999px; width: 48px; font-size: 17px; }
+
+  .chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip { flex: 0 0 auto; border: 1px solid var(--border); background: #FFF; border-radius: 999px; padding: 8px 15px; font-size: 12.5px; font-weight: 700; color: #475569; }
+  .chip.on { background: var(--bleu); color: #FFF; border-color: var(--bleu); }
+
+  /* ═══ MESSAGES ═══ */
+  .msg { display: flex; gap: 11px; background: #FFF; border: 1px solid var(--border); border-radius: 16px; padding: 12px 13px; margin-bottom: 8px; }
+  .msg.jaune { background: var(--jaune-bg); border-color: var(--jaune-bd); }
+  .msg.bleu  { background: var(--bleu-bg);  border-color: var(--bleu-bd); }
+  .msg.rouge { background: var(--rouge-bg); border-color: var(--rouge-bd); }
+  .avatar { flex: 0 0 auto; width: 42px; height: 42px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; color: #FFF; }
+  .contenu { flex: 1; min-width: 0; }
+  .ligne1 { display: flex; align-items: baseline; gap: 8px; }
+  .exp { font-weight: 800; font-size: 14px; }
+  .quand { margin-left: auto; font-size: 10.5px; color: var(--mute); font-weight: 700; white-space: nowrap; }
+  .ligne2 { display: flex; align-items: center; gap: 6px; margin: 2px 0 4px; flex-wrap: wrap; }
+  .tag { font-size: 9.5px; font-weight: 800; border-radius: 999px; padding: 1.5px 8px; }
+  .t-bleu { background: #DBEAFE; color: var(--bleu-tx); }
+  .t-jaune { background: #FEF9C3; color: var(--jaune-tx); }
+  .t-rouge { background: #FEE2E2; color: var(--rouge-tx); }
+  .t-plat { background: #EDE9FE; color: #5B21B6; }
+  .t-tel { background: #F1F5F9; color: #475569; }
+  .corps { font-size: 13.5px; line-height: 1.5; word-break: break-word; color: #1E293B; max-height: 3.1em; overflow: hidden; }
+  .msg.ouvert .corps { max-height: none; white-space: pre-wrap; }
+  .msg.bleu .corps { color: #1D4ED8; font-weight: 600; }
+  .msg.rouge .corps { color: #991B1B; font-weight: 600; }
+
+  .vide { text-align: center; color: var(--mute); padding: 60px 16px; font-size: 14px; }
+  .vide .ico { font-size: 44px; margin-bottom: 8px; }
+  .plus { display: block; width: 100%; padding: 13px; background: #FFF; border: 1px solid var(--border); border-radius: 14px; font-size: 14px; font-weight: 800; color: var(--accent); margin: 6px 0 12px; }
+
+  /* ═══ ONGLETS BAS ═══ */
+  .tabs { position: fixed; bottom: 0; left: 0; right: 0; background: #FFF; border-top: 1px solid var(--border); display: flex; z-index: 60; padding-bottom: var(--safe-b); box-shadow: 0 -4px 16px rgba(15,23,42,.06); }
+  .tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 9px 4px 7px; font-size: 10.5px; font-weight: 800; color: #94A3B8; border: 0; background: none; position: relative; }
+  .tab .ico { font-size: 21px; line-height: 1; }
+  .tab.on { color: var(--accent); }
+  .tab .bulle { position: absolute; top: 4px; right: calc(50% - 22px); background: #DC2626; color: #FFF; font-size: 9.5px; font-weight: 900; border-radius: 999px; min-width: 16px; height: 16px; display: none; align-items: center; justify-content: center; padding: 0 4px; }
+
+  /* ═══ RÉGLAGES ═══ */
+  .carte { background: #FFF; border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; }
+  .carte h3 { font-size: 14px; margin-bottom: 10px; }
+  .carte label { display: block; font-size: 11px; font-weight: 800; color: #334155; margin: 10px 0 4px; }
+  .carte input { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; font-family: monospace; }
+  .btn { display: block; width: 100%; margin-top: 12px; background: var(--accent); color: #FFF; border: 0; border-radius: 12px; padding: 13px; font-size: 14.5px; font-weight: 800; }
+  .btn.rouge-b { background: #FFF; color: #B91C1C; border: 1px solid #FCA5A5; }
+  .note { font-size: 11.5px; color: var(--mute); margin-top: 8px; line-height: 1.5; }
+  .erreur { background: var(--rouge-bg); border: 1px solid var(--rouge-bd); color: var(--rouge-tx); border-radius: 10px; padding: 10px 12px; font-size: 13px; margin-top: 10px; display: none; }
+
+  /* ═══ CONNEXION ═══ */
+  #ecran-login { position: fixed; inset: 0; background: linear-gradient(160deg, var(--bleu), var(--bleu2)); z-index: 100; overflow-y: auto; display: none; }
+  .login-boite { max-width: 400px; margin: 9vh auto 30px; background: #FFF; border-radius: 22px; padding: 26px 22px; box-shadow: 0 16px 50px rgba(0,0,0,.35); }
+  .login-boite .haut { text-align: center; margin-bottom: 16px; }
+  .login-boite .haut img { width: 74px; height: 74px; border-radius: 18px; }
+  .login-boite h2 { font-size: 21px; margin-top: 10px; }
+  .login-boite p { font-size: 12.5px; color: var(--mute); margin-top: 4px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<div id="splash">
+  <img src="/sms-center-192.png" alt="">
+  <div class="nom">SMS BLAFFA</div>
+  <div class="sous">Tes SMS opérateurs, en direct</div>
+</div>
+
+<!-- ═══ CONNEXION ═══ -->
+<div id="ecran-login">
+  <div class="login-boite">
+    <div class="haut">
+      <img src="/sms-center-192.png" alt="">
+      <h2>SMS BLAFFA</h2>
+      <p>Lis et recherche tous les SMS opérateurs de ton organisation.<br>Colle le token généré sur <b>BLAFFA FILE → SMS Center (token)</b>.</p>
+    </div>
+    <label style="font-size:11px;font-weight:800;color:#334155">Token de ton organisation</label>
+    <input id="in-token" style="width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:monospace" placeholder="colle ton token ici" autocomplete="off">
+    <label style="font-size:11px;font-weight:800;color:#334155;display:block;margin-top:12px">Adresse de l'API</label>
+    <input id="in-api" style="width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:monospace" value="https://blaffa-file.up.railway.app/api/public/sms-app">
+    <button class="btn" onclick="connecter()">Se connecter</button>
+    <div class="erreur" id="login-err"></div>
+  </div>
+</div>
+
+<!-- ═══ APPLICATION ═══ -->
+<div id="ecran-app" style="display:none">
+  <div class="entete">
+    <div class="row">
+      <img class="logo" src="/sms-center-192.png" alt="">
+      <div>
+        <div class="titre">SMS BLAFFA</div>
+        <div class="org" id="org-nom">—</div>
+      </div>
+      <div class="maj"><span class="pastille" id="pastille"></span><span id="statut">…</span></div>
+    </div>
+  </div>
+
+  <!-- PAGE MESSAGES -->
+  <div class="page on" id="page-messages">
+    <div class="bandeau" id="install-bar" style="display:none">
+      <span>📲 Installe <b>SMS BLAFFA</b> sur ton téléphone.</span>
+      <button onclick="installerAppli()">Installer</button>
+    </div>
+    <div class="bandeau" id="ios-bar" style="display:none">
+      <span>📲 Sur iPhone : <b>Partager</b> → <b>« Sur l'écran d'accueil »</b>.</span>
+      <button onclick="cacher('ios-bar')">OK</button>
+    </div>
+    <div class="bandeau" id="notif-bar" style="display:none">
+      <span>🔔 Sois prévenu dès qu'une <b>annulation</b> arrive.</span>
+      <button onclick="activerNotifs()">Activer</button>
+    </div>
+    <div class="chips">
+      <button class="chip on" data-f="tous" onclick="setFiltre('tous',this)">💬 Tous</button>
+      <button class="chip" data-f="depot" onclick="setFiltre('depot',this)">📥 Dépôt</button>
+      <button class="chip" data-f="retrait" onclick="setFiltre('retrait',this)">📤 Retrait</button>
+    </div>
+    <div id="liste-messages"></div>
+    <button class="plus" id="plus-messages" style="display:none" onclick="chargerPlus('messages')">Voir les SMS plus anciens</button>
+  </div>
+
+  <!-- PAGE RECHERCHE -->
+  <div class="page" id="page-recherche">
+    <div class="cherche">
+      <input id="in-q" placeholder="Numéro, montant, mot du message…" onkeydown="if(event.key==='Enter')lancerRecherche()">
+      <button onclick="lancerRecherche()">🔍</button>
+    </div>
+    <div class="note" style="margin:0 4px 10px">Pour une réclamation : tape le numéro du client (même écrit avec espaces ou +225), l'application retrouve tous ses SMS.</div>
+    <div id="liste-recherche"><div class="vide"><div class="ico">🔍</div>Tape un numéro ou un mot puis valide.</div></div>
+    <button class="plus" id="plus-recherche" style="display:none" onclick="chargerPlus('recherche')">Voir plus de résultats</button>
+  </div>
+
+  <!-- PAGE ANNULATIONS -->
+  <div class="page" id="page-annulations">
+    <div class="note" style="margin:0 4px 10px">Tous les SMS d'<b>annulation</b> reçus. Active les notifications (page Messages) pour être prévenu en direct.</div>
+    <div id="liste-annulations"></div>
+    <button class="plus" id="plus-annulations" style="display:none" onclick="chargerPlus('annulations')">Voir les annulations plus anciennes</button>
+  </div>
+
+  <!-- PAGE RÉGLAGES -->
+  <div class="page" id="page-reglages">
+    <div class="carte">
+      <h3>🔑 Connexion</h3>
+      <label>Token de l'organisation</label>
+      <input id="set-token" autocomplete="off">
+      <label>Adresse de l'API</label>
+      <input id="set-api">
+      <button class="btn" onclick="sauverReglages()">Enregistrer</button>
+      <div class="erreur" id="set-err"></div>
+    </div>
+    <div class="carte">
+      <h3>🔔 Notifications</h3>
+      <p class="note" id="notif-etat">…</p>
+      <button class="btn" id="btn-notifs" onclick="activerNotifs()">Activer les notifications d'annulation</button>
+    </div>
+    <div class="carte">
+      <h3>ℹ️ Application</h3>
+      <p class="note">SMS BLAFFA v2 — lecture seule des SMS opérateurs de ton organisation. Chaque organisation utilise son propre token (BLAFFA FILE → menu 💬 SMS → SMS Center).</p>
+      <button class="btn rouge-b" onclick="deconnecter()">Se déconnecter</button>
+    </div>
+  </div>
+
+  <!-- ONGLETS -->
+  <div class="tabs">
+    <button class="tab on" id="tab-messages" onclick="allerA('messages')"><span class="ico">💬</span>Messages</button>
+    <button class="tab" id="tab-recherche" onclick="allerA('recherche')"><span class="ico">🔍</span>Recherche</button>
+    <button class="tab" id="tab-annulations" onclick="allerA('annulations')"><span class="ico">⛔</span>Annulations<span class="bulle" id="badge-annul"></span></button>
+    <button class="tab" id="tab-reglages" onclick="allerA('reglages')"><span class="ico">⚙️</span>Réglages</button>
+  </div>
+</div>
+
+<script>
+// ════ ÉTAT ════
+let ongletActif = "messages";
+let filtreMessages = "tous";
+const listes = { messages: [], recherche: [], annulations: [] };
+const anciens = { messages: null, recherche: null, annulations: null };
+let timerAuto = null;
+let idsConnus = new Set();
+let annulationsVues = new Set();
+let premierChargement = true;
+
+const $ = (id) => document.getElementById(id);
+const conf = () => ({ token: localStorage.getItem("smsblaffa_token") || localStorage.getItem("smscenter_token") || "", api: localStorage.getItem("smsblaffa_api") || localStorage.getItem("smscenter_api") || "" });
+function cacher(id) { $(id).style.display = "none"; }
+
+// ════ NAVIGATION ════
+function allerA(nom) {
+  ongletActif = nom;
+  document.querySelectorAll(".page").forEach((p) => p.classList.remove("on"));
+  document.querySelectorAll(".tab").forEach((t) => t.classList.remove("on"));
+  $("page-" + nom).classList.add("on");
+  $("tab-" + nom).classList.add("on");
+  if (nom === "annulations") {
+    for (const s of listes.annulations) annulationsVues.add(s.id);
+    majBadge();
+    if (!listes.annulations.length) rafraichirListe("annulations");
+  }
+  if (nom === "reglages") { const c = conf(); $("set-token").value = c.token; $("set-api").value = c.api; majNotifEtat(); }
+  window.scrollTo(0, 0);
+}
+
+function setFiltre(f, el) {
+  filtreMessages = f;
+  document.querySelectorAll("#page-messages .chip").forEach((c) => c.classList.remove("on"));
+  el.classList.add("on");
+  rafraichirListe("messages");
+}
+
+// ════ API ════
+async function appel(filtre, q, avant) {
+  const c = conf();
+  const u = new URL(c.api);
+  u.searchParams.set("filtre", filtre);
+  u.searchParams.set("limit", "100");
+  if (q) u.searchParams.set("q", q);
+  if (avant) u.searchParams.set("avant", avant);
+  const r = await fetch(u.toString(), { headers: { Authorization: "Bearer " + c.token } });
+  if (r.status === 401) { deconnecter(); throw new Error("token refusé"); }
+  return r.json();
+}
+
+// ════ RENDU ════
+const COULEURS_AVATAR = { ORANGE: "#EA580C", MTN: "#CA8A04", MOMO: "#CA8A04", MOOV: "#2563EB", WAVE: "#0891B2", DEFAUT: "#475569" };
+function couleurExp(s) { s = (s || "").toUpperCase(); for (const k in COULEURS_AVATAR) if (k !== "DEFAUT" && s.includes(k)) return COULEURS_AVATAR[k]; return COULEURS_AVATAR.DEFAUT; }
+function esc(t) { const d = document.createElement("div"); d.textContent = String(t == null ? "" : t); return d.innerHTML; }
+function heure(d) {
+  const x = new Date(d); const now = new Date();
+  const memeJour = x.toDateString() === now.toDateString();
+  return memeJour
+    ? x.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Africa/Abidjan" })
+    : x.toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit", timeZone: "Africa/Abidjan" });
+}
+
+function rendreListe(nom) {
+  const L = $("liste-" + nom);
+  const sms = listes[nom];
+  if (!sms.length) {
+    const msgs = { messages: "Aucun SMS pour l'instant.", recherche: "Aucun résultat.", annulations: "Aucune annulation — tout va bien ✅" };
+    L.innerHTML = '<div class="vide"><div class="ico">' + (nom === "annulations" ? "✅" : "📭") + "</div>" + msgs[nom] + "</div>";
+    $("plus-" + nom).style.display = "none";
+    return;
+  }
+  L.innerHTML = sms.map(function (s) {
+    const cls = s.annulation ? "rouge" : s.sortant ? "bleu" : "jaune";
+    const tag = s.annulation ? '<span class="tag t-rouge">⛔ Annulation</span>' : s.sortant ? '<span class="tag t-bleu">💸 Sortant</span>' : '<span class="tag t-jaune">📥 Entrant</span>';
+    const initiale = (s.sender || "?").replace(/[^A-Za-z0-9]/g, "").slice(0, 2).toUpperCase() || "?";
+    return '<div class="msg ' + cls + '" onclick="this.classList.toggle(\'ouvert\')">'
+      + '<div class="avatar" style="background:' + couleurExp(s.sender) + '">' + esc(initiale) + "</div>"
+      + '<div class="contenu">'
+      + '<div class="ligne1"><span class="exp">' + esc(s.sender) + '</span><span class="quand">' + heure(s.receivedAt) + "</span></div>"
+      + '<div class="ligne2">' + tag + '<span class="tag t-plat">' + esc(s.platformCode) + '</span><span class="tag t-tel">📱 ' + esc(s.deviceLabel) + "</span></div>"
+      + '<div class="corps">' + esc(s.body) + "</div>"
+      + "</div></div>";
+  }).join("");
+  $("plus-" + nom).style.display = sms.length >= 100 || anciens[nom] ? "block" : "none";
+}
+
+function majBadge() {
+  const nouvelles = listes.annulations.filter((s) => !annulationsVues.has(s.id)).length;
+  const b = $("badge-annul");
+  if (nouvelles > 0 && ongletActif !== "annulations") { b.style.display = "flex"; b.textContent = nouvelles > 9 ? "9+" : nouvelles; }
+  else b.style.display = "none";
+}
+
+// ════ CHARGEMENT ════
+function paramsDe(nom) {
+  if (nom === "messages") return { filtre: filtreMessages, q: "" };
+  if (nom === "recherche") return { filtre: "tous", q: $("in-q").value.trim() };
+  return { filtre: "annulations", q: "" };
+}
+
+async function rafraichirListe(nom) {
+  try {
+    const p = paramsDe(nom);
+    const j = await appel(p.filtre, p.q, null);
+    if (!j.ok) throw new Error(j.error || "?");
+    if (j.org && j.org.name) $("org-nom").textContent = j.org.name;
+    listes[nom] = j.sms;
+    anciens[nom] = j.sms.length ? j.sms[j.sms.length - 1].receivedAt : null;
+    rendreListe(nom);
+    return j;
+  } catch (e) {
+    $("statut").textContent = "⚠️ " + (e.message || e);
+    $("pastille").className = "pastille off";
+    throw e;
+  }
+}
+
+async function chargerPlus(nom) {
+  if (!anciens[nom]) return;
+  try {
+    const p = paramsDe(nom);
+    const j = await appel(p.filtre, p.q, anciens[nom]);
+    if (j.ok && j.sms.length) {
+      listes[nom] = listes[nom].concat(j.sms);
+      anciens[nom] = j.sms[j.sms.length - 1].receivedAt;
+      rendreListe(nom);
+    } else { anciens[nom] = null; $("plus-" + nom).style.display = "none"; }
+  } catch (e) {}
+}
+
+function lancerRecherche() { rafraichirListe("recherche").catch(function () {}); }
+
+// ════ BOUCLE AUTO (messages + annulations + notifications) ════
+async function ticAuto() {
+  try {
+    await rafraichirListe(ongletActif === "recherche" ? "messages" : ongletActif === "reglages" ? "messages" : ongletActif);
+    // Annulations : toujours surveillées en fond pour badge + notification
+    const ja = await appel("annulations", "", null);
+    if (ja.ok) {
+      if (!premierChargement && Notification && Notification.permission === "granted") {
+        for (const s of ja.sms) {
+          if (!idsConnus.has(s.id)) {
+            try { new Notification("⛔ Annulation — SMS BLAFFA", { body: (s.body || "").slice(0, 130), icon: "/sms-center-192.png" }); } catch (e) {}
+          }
+        }
+      }
+      if (premierChargement) for (const s of ja.sms) annulationsVues.add(s.id);
+      for (const s of ja.sms) idsConnus.add(s.id);
+      listes.annulations = ja.sms;
+      if (ongletActif === "annulations") rendreListe("annulations");
+      majBadge();
+    }
+    premierChargement = false;
+    $("pastille").className = "pastille";
+    $("statut").textContent = new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  } catch (e) {}
+}
+
+// ════ CONNEXION / RÉGLAGES ════
+async function connecter() {
+  const token = $("in-token").value.trim();
+  const api = $("in-api").value.trim().replace(/\/+$/, "");
+  const err = $("login-err");
+  err.style.display = "none";
+  if (token.length < 20) { err.textContent = "Token trop court — copie le token complet."; err.style.display = "block"; return; }
+  try {
+    const r = await fetch(api + "?limit=1", { headers: { Authorization: "Bearer " + token } });
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.error || "token refusé");
+    localStorage.setItem("smsblaffa_token", token);
+    localStorage.setItem("smsblaffa_api", api);
+    ecran();
+  } catch (e) { err.textContent = "Connexion impossible : " + (e.message || e); err.style.display = "block"; }
+}
+
+function sauverReglages() {
+  const token = $("set-token").value.trim();
+  const api = $("set-api").value.trim().replace(/\/+$/, "");
+  localStorage.setItem("smsblaffa_token", token);
+  localStorage.setItem("smsblaffa_api", api);
+  const err = $("set-err");
+  err.style.display = "none";
+  appel("tous", "", null).then(function (j) {
+    if (!j.ok) throw new Error(j.error || "?");
+    allerA("messages");
+    rafraichirListe("messages");
+  }).catch(function (e) { err.textContent = "⚠️ " + (e.message || e); err.style.display = "block"; });
+}
+
+function deconnecter() {
+  localStorage.removeItem("smsblaffa_token");
+  localStorage.removeItem("smscenter_token");
+  if (timerAuto) clearInterval(timerAuto);
+  ecran();
+}
+
+// ════ NOTIFICATIONS ════
+function activerNotifs() {
+  if (!("Notification" in window)) return;
+  Notification.requestPermission().then(function (p) {
+    if (p === "granted") $("notif-bar").style.display = "none";
+    majNotifEtat();
+  });
+}
+function majNotifEtat() {
+  const el = $("notif-etat"); const btn = $("btn-notifs");
+  if (!el) return;
+  if (!("Notification" in window)) { el.textContent = "Notifications non prises en charge sur cet appareil."; btn.style.display = "none"; return; }
+  if (Notification.permission === "granted") { el.textContent = "✅ Notifications activées — tu seras prévenu à chaque annulation."; btn.style.display = "none"; }
+  else if (Notification.permission === "denied") { el.textContent = "⛔ Notifications refusées — autorise-les dans les réglages du navigateur."; btn.style.display = "none"; }
+  else { el.textContent = "Les notifications te préviennent dès qu'un SMS d'annulation arrive."; btn.style.display = "block"; }
+}
+
+// ════ PWA ════
+let promptInstall = null;
+const dejaInstallee = window.matchMedia && window.matchMedia("(display-mode: standalone)").matches;
+if ("serviceWorker" in navigator) {
+  const swScope = location.pathname.indexOf("sms-center") >= 0 ? "/sms-center" : "/";
+  navigator.serviceWorker.register("/sms-center-sw.js", { scope: swScope }).catch(function () {});
+}
+window.addEventListener("beforeinstallprompt", function (e) {
+  e.preventDefault();
+  promptInstall = e;
+  if (!dejaInstallee) { const b = $("install-bar"); if (b) b.style.display = "flex"; }
+});
+function installerAppli() {
+  if (!promptInstall) return;
+  promptInstall.prompt();
+  promptInstall.userChoice.then(function () { promptInstall = null; cacher("install-bar"); });
+}
+window.addEventListener("appinstalled", function () { cacher("install-bar"); });
+(function () {
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if (ios && !dejaInstallee && !localStorage.getItem("smsblaffa_ios_hint")) {
+    const b = $("ios-bar"); if (b) b.style.display = "flex";
+    localStorage.setItem("smsblaffa_ios_hint", "1");
+  }
+})();
+
+// ════ DÉMARRAGE ════
+function ecran() {
+  const c = conf();
+  if (c.token && c.api) {
+    $("ecran-login").style.display = "none";
+    $("ecran-app").style.display = "block";
+    if ("Notification" in window && Notification.permission === "default") $("notif-bar").style.display = "flex";
+    ticAuto();
+    if (timerAuto) clearInterval(timerAuto);
+    timerAuto = setInterval(ticAuto, 10000);
+  } else {
+    $("ecran-login").style.display = "block";
+    $("ecran-app").style.display = "none";
+  }
+}
+ecran();
+setTimeout(function () { const s = $("splash"); s.style.opacity = "0"; setTimeout(function () { s.style.display = "none"; }, 380); }, 900);
+</script>
+</body>
+</html>
