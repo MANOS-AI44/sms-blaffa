@@ -3,7 +3,7 @@
 // démarrage instantané et un fonctionnement même avec un réseau instable.
 // Les appels à l'API (/api/public/sms-app) ne sont PAS interceptés : ce SW est
 // limité au scope /sms-center.
-const CACHE = "sms-center-v5";
+const CACHE = "sms-center-v6";
 const SHELL = [
   "/sms-center.html",
   "/sms-center-manifest.json",

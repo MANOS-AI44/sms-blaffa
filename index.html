@@ -58,6 +58,7 @@
   .chips::-webkit-scrollbar { display: none; }
   .chip { flex: 0 0 auto; border: 1px solid var(--border); background: #FFF; border-radius: 999px; padding: 8px 15px; font-size: 12.5px; font-weight: 700; color: #475569; }
   .chip.on { background: var(--bleu); color: #FFF; border-color: var(--bleu); }
+  .plat-select { width: 100%; margin: 0 0 10px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 12px; font-size: 13.5px; font-weight: 700; color: #334155; background: #FFF; }
 
   /* ═══ MESSAGES ═══ */
   .msg { display: flex; gap: 11px; background: #FFF; border: 1px solid var(--border); border-radius: 16px; padding: 12px 13px; margin-bottom: 8px; }
@@ -168,6 +169,7 @@
       <button class="chip" data-f="depot" onclick="setFiltre('depot',this)">📥 Dépôt</button>
       <button class="chip" data-f="retrait" onclick="setFiltre('retrait',this)">📤 Retrait</button>
     </div>
+    <select class="plat-select" id="sel-plat-messages" onchange="setPlateforme(this.value)"><option value="">🏢 Toutes les plateformes</option></select>
     <div id="liste-messages"></div>
     <button class="plus" id="plus-messages" style="display:none" onclick="chargerPlus('messages')">Voir les SMS plus anciens</button>
   </div>
@@ -179,6 +181,7 @@
       <button onclick="lancerRecherche()">🔍</button>
     </div>
     <div class="note" style="margin:0 4px 10px">Pour une réclamation : tape le numéro du client (même écrit avec espaces ou +225), l'application retrouve tous ses SMS.</div>
+    <select class="plat-select" id="sel-plat-recherche" onchange="setPlateforme(this.value)"><option value="">🏢 Toutes les plateformes</option></select>
     <div id="liste-recherche"><div class="vide"><div class="ico">🔍</div>Tape un numéro ou un mot puis valide.</div></div>
     <button class="plus" id="plus-recherche" style="display:none" onclick="chargerPlus('recherche')">Voir plus de résultats</button>
   </div>
@@ -186,6 +189,7 @@
   <!-- PAGE ANNULATIONS -->
   <div class="page" id="page-annulations">
     <div class="note" style="margin:0 4px 10px">Tous les SMS d'<b>annulation</b> reçus. Active les notifications (page Messages) pour être prévenu en direct.</div>
+    <select class="plat-select" id="sel-plat-annulations" onchange="setPlateforme(this.value)"><option value="">🏢 Toutes les plateformes</option></select>
     <div id="liste-annulations"></div>
     <button class="plus" id="plus-annulations" style="display:none" onclick="chargerPlus('annulations')">Voir les annulations plus anciennes</button>
   </div>
@@ -238,6 +242,8 @@ let timerAuto = null;
 let idsConnus = new Set();
 let annulationsVues = new Set();
 let premierChargement = true;
+let platformSel = "";           // code plateforme choisi ("" = toutes)
+let platformsListe = null;      // liste connue [{code,name}]
 
 const $ = (id) => document.getElementById(id);
 const conf = () => ({ token: localStorage.getItem("smsblaffa_token") || localStorage.getItem("smscenter_token") || "", api: localStorage.getItem("smsblaffa_api") || localStorage.getItem("smscenter_api") || "" });
@@ -266,6 +272,35 @@ function setFiltre(f, el) {
   rafraichirListe("messages");
 }
 
+// ════ FILTRE PLATEFORME ════
+// Le code plateforme N'EST JAMAIS affiché sur les messages (captures propres) :
+// il sert uniquement à filtrer la liste via ce menu déroulant.
+function setPlateforme(v) {
+  platformSel = v || "";
+  ["messages", "recherche", "annulations"].forEach(function (n) {
+    const s = $("sel-plat-" + n); if (s) s.value = platformSel;
+  });
+  // Recharge ce que l'onglet courant affiche
+  if (ongletActif === "recherche") lancerRecherche();
+  else if (ongletActif === "annulations") rafraichirListe("annulations");
+  else rafraichirListe("messages");
+}
+
+function remplirSelectsPlateformes(liste) {
+  if (!liste || platformsListe) return;
+  platformsListe = liste;
+  ["messages", "recherche", "annulations"].forEach(function (n) {
+    const s = $("sel-plat-" + n);
+    if (!s) return;
+    let html = '<option value="">🏢 Toutes les plateformes</option>';
+    liste.forEach(function (p) {
+      html += '<option value="' + esc(p.code) + '">' + esc(p.name || p.code) + " (" + esc(p.code) + ")</option>";
+    });
+    s.innerHTML = html;
+    s.value = platformSel;
+  });
+}
+
 // ════ API ════
 async function appel(filtre, q, avant) {
   const c = conf();
@@ -274,6 +309,7 @@ async function appel(filtre, q, avant) {
   u.searchParams.set("limit", "100");
   if (q) u.searchParams.set("q", q);
   if (avant) u.searchParams.set("avant", avant);
+  if (platformSel) u.searchParams.set("platform", platformSel);
   const r = await fetch(u.toString(), { headers: { Authorization: "Bearer " + c.token } });
   if (r.status === 401) { deconnecter(); throw new Error("token refusé"); }
   return r.json();
@@ -335,6 +371,7 @@ async function rafraichirListe(nom) {
     const j = await appel(p.filtre, p.q, null);
     if (!j.ok) throw new Error(j.error || "?");
     if (j.org && j.org.name) $("org-nom").textContent = j.org.name;
+    if (j.platforms) remplirSelectsPlateformes(j.platforms);
     listes[nom] = j.sms;
     anciens[nom] = j.sms.length ? j.sms[j.sms.length - 1].receivedAt : null;
     rendreListe(nom);
