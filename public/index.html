@@ -18,6 +18,8 @@
     --jaune-bg: #FEFCE8; --jaune-bd: #FDE047; --jaune-tx: #854D0E;
     --bleu-bg: #EFF6FF; --bleu-bd: #93C5FD; --bleu-tx: #1E40AF;
     --rouge-bg: #FEF2F2; --rouge-bd: #FCA5A5; --rouge-tx: #991B1B;
+    --vert-bg: #ECFDF5; --vert-bd: #86EFAC; --vert-tx: #166534;
+    --gris-bg: #F8FAFC; --gris-bd: #CBD5E1; --gris-tx: #475569;
     --mute: #64748B; --border: #E2E8F0; --fond: #F1F5F9;
     --safe-b: env(safe-area-inset-bottom, 0px);
     --safe-t: env(safe-area-inset-top, 0px);
@@ -53,6 +55,8 @@
   .cherche input { flex: 1; padding: 13px 16px; border: 1px solid var(--border); border-radius: 999px; font-size: 15px; outline: none; background: #FFF; }
   .cherche input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
   .cherche button { background: var(--accent); color: #FFF; border: 0; border-radius: 999px; width: 48px; font-size: 17px; }
+  .search-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin: 0 0 10px; }
+  .search-filters select, .search-filters input { width: 100%; min-width: 0; padding: 9px 10px; border: 1px solid var(--border); border-radius: 10px; background: #FFF; color: #334155; font-size: 11.5px; }
 
   .chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .chips::-webkit-scrollbar { display: none; }
@@ -64,6 +68,8 @@
   .msg.jaune { background: var(--jaune-bg); border-color: var(--jaune-bd); }
   .msg.bleu  { background: var(--bleu-bg);  border-color: var(--bleu-bd); }
   .msg.rouge { background: var(--rouge-bg); border-color: var(--rouge-bd); }
+  .msg.vert  { background: var(--vert-bg); border-color: var(--vert-bd); }
+  .msg.gris  { background: var(--gris-bg); border-color: var(--gris-bd); }
   .avatar { flex: 0 0 auto; width: 42px; height: 42px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; color: #FFF; }
   .contenu { flex: 1; min-width: 0; }
   .ligne1 { display: flex; align-items: baseline; gap: 8px; }
@@ -74,12 +80,25 @@
   .t-bleu { background: #DBEAFE; color: var(--bleu-tx); }
   .t-jaune { background: #FEF9C3; color: var(--jaune-tx); }
   .t-rouge { background: #FEE2E2; color: var(--rouge-tx); }
+  .t-vert { background: #DCFCE7; color: var(--vert-tx); }
+  .t-gris { background: #E2E8F0; color: var(--gris-tx); }
   .t-plat { background: #EDE9FE; color: #5B21B6; }
   .t-tel { background: #F1F5F9; color: #475569; }
   .corps { font-size: 13.5px; line-height: 1.5; word-break: break-word; color: #1E293B; max-height: 3.1em; overflow: hidden; }
   .msg.ouvert .corps { max-height: none; white-space: pre-wrap; }
   .msg.bleu .corps { color: #1D4ED8; font-weight: 600; }
   .msg.rouge .corps { color: #991B1B; font-weight: 600; }
+  .msg.vert .corps { color: #166534; font-weight: 600; }
+  .msg.gris .corps { color: #475569; }
+  .details-financiers { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 3px 8px; margin: 5px 0; font-size: 9.5px; color: #64748B; }
+  .details-financiers span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .details-financiers b { color: #334155; }
+  .refs { margin: 5px 0; padding: 6px 8px; border-radius: 8px; background: rgba(255,255,255,.65); font: 9.5px ui-monospace, SFMono-Regular, Menlo, monospace; color: #475569; }
+  .event-count { margin-left: auto; background: rgba(255,255,255,.72); color: #475569; }
+  .event-history { display: none; border-top: 1px dashed rgba(100,116,139,.35); margin-top: 8px; padding-top: 7px; }
+  .msg.ouvert .event-history { display: block; }
+  .event-history div { font-size: 10.5px; line-height: 1.4; margin: 4px 0; color: #475569; }
+  .event-history b { color: #0F172A; }
 
   .vide { text-align: center; color: var(--mute); padding: 60px 16px; font-size: 14px; }
   .vide .ico { font-size: 44px; margin-bottom: 8px; }
@@ -168,7 +187,7 @@
       <button class="chip" data-f="depot" onclick="setFiltre('depot',this)">📥 Dépôt</button>
       <button class="chip" data-f="retrait" onclick="setFiltre('retrait',this)">📤 Retrait</button>
     </div>
-    <div class="note" style="margin:0 4px 10px">Seuls les SMS et notifications Mobile Money reconnus par les modèles BLAFFA sont affichés. R2 héberge l'application ; la lecture sécurisée vient directement de BLAFFA FILE.</div>
+    <div class="note" style="margin:0 4px 10px">Les transactions utilisent des modèles financiers stricts. Un format opérateur encore inconnu reste « À classer » sans devenir un dépôt ou un retrait. Les promotions sont exclues.</div>
     <div id="liste-messages"></div>
     <button class="plus" id="plus-messages" style="display:none" onclick="chargerPlus('messages')">Voir les SMS plus anciens</button>
   </div>
@@ -176,17 +195,23 @@
   <!-- PAGE RECHERCHE -->
   <div class="page" id="page-recherche">
     <div class="cherche">
-      <input id="in-q" placeholder="Numéro, montant, mot du message…" onkeydown="if(event.key==='Enter')lancerRecherche()">
+      <input id="in-q" placeholder="Numéro, montant, ID, PP ou TC…" onkeydown="if(event.key==='Enter')lancerRecherche()">
       <button onclick="lancerRecherche()">🔍</button>
     </div>
-    <div class="note" style="margin:0 4px 10px">Pour une réclamation : tape le numéro du client (même écrit avec espaces ou +225), l'application retrouve tous ses SMS.</div>
+    <div class="search-filters">
+      <select id="search-platform" aria-label="Plateforme"><option value="">Toutes les plateformes</option></select>
+      <select id="search-operator" aria-label="Opérateur"><option value="">Tous les opérateurs</option></select>
+      <input id="search-from" type="date" aria-label="Date de début">
+      <input id="search-to" type="date" aria-label="Date de fin">
+    </div>
+    <div class="note" style="margin:0 4px 10px">Recherche par numéro, montant, identifiant de transaction, références PP/TC, plateforme, opérateur et période.</div>
     <div id="liste-recherche"><div class="vide"><div class="ico">🔍</div>Tape un numéro ou un mot puis valide.</div></div>
     <button class="plus" id="plus-recherche" style="display:none" onclick="chargerPlus('recherche')">Voir plus de résultats</button>
   </div>
 
   <!-- PAGE ANNULATIONS -->
   <div class="page" id="page-annulations">
-    <div class="note" style="margin:0 4px 10px">Tous les SMS d'<b>annulation</b> reçus. Active les notifications (page Messages) pour être prévenu en direct.</div>
+    <div class="note" style="margin:0 4px 10px">Uniquement les annulations financières reconnues. Les événements « initiée » et « terminée » portant les mêmes références PP/TC sont regroupés dans un seul dossier.</div>
     <div id="liste-annulations"></div>
     <button class="plus" id="plus-annulations" style="display:none" onclick="chargerPlus('annulations')">Voir les annulations plus anciennes</button>
   </div>
@@ -209,7 +234,7 @@
     </div>
     <div class="carte">
       <h3>ℹ️ Application</h3>
-      <p class="note">SMS BLAFFA v3 — lecture seule des SMS opérateurs de ton organisation. L'application utilise automatiquement le serveur BLAFFA FILE actif ; aucune ancienne adresse Railway ne peut rester mémorisée.</p>
+      <p class="note">SMS BLAFFA v4 — lecture seule, moteur de modèles financiers stricts et annulations regroupées par références PP/TC. L'application utilise automatiquement le serveur BLAFFA FILE actif.</p>
       <button class="btn rouge-b" onclick="deconnecter()">Se déconnecter</button>
     </div>
   </div>
@@ -267,10 +292,10 @@ function setFiltre(f, el) {
 }
 
 // ════ API ════
-async function appel(filtre, q, avant) {
+async function appel(filtre, q, avant, options) {
   const c = conf();
   try {
-    return await appelAvecToken(c.token, filtre, q, avant);
+    return await appelAvecToken(c.token, filtre, q, avant, options || {});
   } catch (e) {
     // Un token révoqué ne laisse pas l'application bloquée sur un écran vide.
     if (e && e.status === 401) deconnecter();
@@ -278,12 +303,17 @@ async function appel(filtre, q, avant) {
   }
 }
 
-async function appelAvecToken(token, filtre, q, avant) {
+async function appelAvecToken(token, filtre, q, avant, options) {
   const u = new URL(API_ENDPOINT);
   u.searchParams.set("filtre", filtre);
   u.searchParams.set("limit", "100");
   if (q) u.searchParams.set("q", q);
   if (avant) u.searchParams.set("avant", avant);
+  options = options || {};
+  if (options.platform) u.searchParams.set("platform", options.platform);
+  if (options.operator) u.searchParams.set("operator", options.operator);
+  if (options.from) u.searchParams.set("from", options.from);
+  if (options.to) u.searchParams.set("to", options.to);
   const r = await fetch(u.toString(), {
     method: "GET",
     headers: { Authorization: "Bearer " + token, Accept: "application/json" },
@@ -317,6 +347,32 @@ function heure(d) {
     : x.toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit", timeZone: "Africa/Abidjan" });
 }
 
+function presentationMessage(s) {
+  if (s.status === "ANNULATION_COMPLETED") return { cls: "vert", tag: '<span class="tag t-vert">✅ Annulation terminée</span>' };
+  if (s.status === "ANNULATION_INITIATED") return { cls: "rouge", tag: '<span class="tag t-rouge">🔴 Annulation initiée</span>' };
+  if (s.status === "BLOCKED") return { cls: "rouge", tag: '<span class="tag t-rouge">🛑 Transaction bloquée</span>' };
+  if (s.transactionType === "PAYOUT" && s.direction === "OUTGOING") return { cls: "bleu", tag: '<span class="tag t-bleu">📤 Sortant payé</span>' };
+  if (s.transactionType === "DEPOSIT" && s.direction === "INCOMING") return { cls: "jaune", tag: '<span class="tag t-jaune">📥 Dépôt reçu</span>' };
+  return { cls: "gris", tag: '<span class="tag t-gris">❔ À classer — non reconnu</span>' };
+}
+
+function directionLabel(s) {
+  if (s.direction === "INCOMING") return "Entrant";
+  if (s.direction === "OUTGOING") return "Sortant";
+  if (s.transactionType === "CANCELLATION") return "Annulation";
+  if (s.transactionType === "ANOMALY") return "Bloquée";
+  return "Aucune décision";
+}
+
+function eventHistory(s) {
+  const events = Array.isArray(s.events) ? s.events : [];
+  if (events.length <= 1) return "";
+  return '<div class="event-history"><b>Historique du même dossier PP/TC</b>' + events.map(function (event) {
+    const status = event.status === "ANNULATION_COMPLETED" ? "✅ Terminée" : "🔴 Initiée";
+    return '<div><b>' + status + " · " + heure(event.receivedAt) + '</b><br>' + esc(event.body) + '</div>';
+  }).join("") + "</div>";
+}
+
 function rendreListe(nom) {
   const L = $("liste-" + nom);
   const sms = listes[nom];
@@ -327,18 +383,26 @@ function rendreListe(nom) {
     return;
   }
   L.innerHTML = sms.map(function (s) {
-    const cls = s.annulation ? "rouge" : s.sortant ? "bleu" : "jaune";
-    const tag = s.annulation ? '<span class="tag t-rouge">⛔ Annulation</span>' : s.sortant ? '<span class="tag t-bleu">💸 Sortant</span>' : '<span class="tag t-jaune">📥 Entrant</span>';
+    const presentation = presentationMessage(s);
     const initiale = (s.sender || "?").replace(/[^A-Za-z0-9]/g, "").slice(0, 2).toUpperCase() || "?";
-    return '<div class="msg ' + cls + '" onclick="this.classList.toggle(\'ouvert\')">'
+    const phone = s.senderPhone || s.beneficiary || s.devicePhone || s.deviceLabel || "—";
+    const network = [s.operator, s.country].filter(Boolean).join(" · ") || "Non déterminé";
+    const refs = [s.originalTransferRef ? "PP: " + s.originalTransferRef : "", s.cancellationRef ? "TC: " + s.cancellationRef : "", s.transactionId ? "ID: " + s.transactionId : ""].filter(Boolean);
+    if (s.amount != null) refs.unshift("Montant: " + s.amount + " F");
+    if (s.balance != null) refs.push("Solde: " + s.balance + " F");
+    const count = Number(s.relatedEventCount || 0);
+    return '<div class="msg ' + presentation.cls + '" onclick="this.classList.toggle(\'ouvert\')">'
       + '<div class="avatar" style="background:' + couleurExp(s.sender) + '">' + esc(initiale) + "</div>"
       + '<div class="contenu">'
       + '<div class="ligne1"><span class="exp">' + esc(s.sender) + '</span><span class="quand">' + heure(s.receivedAt) + "</span></div>"
-      + '<div class="ligne2">' + tag + '<span class="tag t-plat">' + esc(s.platformCode) + '</span><span class="tag t-tel">📱 ' + esc(s.deviceLabel) + "</span></div>"
+      + '<div class="ligne2">' + presentation.tag + '<span class="tag t-plat">' + esc(s.platformCode) + '</span>' + (count > 1 ? '<span class="tag event-count">' + count + ' événements</span>' : '') + '</div>'
+      + '<div class="details-financiers"><span><b>TYPE</b> ' + esc(s.transactionType || "UNKNOWN") + '</span><span><b>DIRECTION</b> ' + esc(directionLabel(s)) + '</span><span><b>PLATEFORME</b> ' + esc(s.platformCode) + '</span><span><b>TÉLÉPHONE</b> ' + esc(phone) + '</span><span><b>RÉSEAU</b> ' + esc(network) + '</span><span><b>HEURE</b> ' + esc(heure(s.receivedAt)) + '</span></div>'
+      + (refs.length ? '<div class="refs">' + esc(refs.join(" · ")) + '</div>' : '')
       + '<div class="corps">' + esc(s.body) + "</div>"
+      + eventHistory(s)
       + "</div></div>";
   }).join("");
-  $("plus-" + nom).style.display = sms.length >= 100 || anciens[nom] ? "block" : "none";
+  $("plus-" + nom).style.display = anciens[nom] ? "block" : "none";
 }
 
 function majBadge() {
@@ -350,19 +414,44 @@ function majBadge() {
 
 // ════ CHARGEMENT ════
 function paramsDe(nom) {
-  if (nom === "messages") return { filtre: filtreMessages, q: "" };
-  if (nom === "recherche") return { filtre: "tous", q: $("in-q").value.trim() };
-  return { filtre: "annulations", q: "" };
+  if (nom === "messages") return { filtre: filtreMessages, q: "", options: {} };
+  if (nom === "recherche") return {
+    filtre: "tous",
+    q: $("in-q").value.trim(),
+    options: {
+      platform: $("search-platform").value,
+      operator: $("search-operator").value,
+      from: $("search-from").value,
+      to: $("search-to").value,
+    },
+  };
+  return { filtre: "annulations", q: "", options: {} };
+}
+
+function mettreAJourFiltres(j) {
+  const platform = $("search-platform");
+  const operator = $("search-operator");
+  if (platform && Array.isArray(j.platforms)) {
+    const selected = platform.value;
+    platform.innerHTML = '<option value="">Toutes les plateformes</option>' + j.platforms.map(function (p) { return '<option value="' + esc(p.code) + '">' + esc(p.code) + '</option>'; }).join("");
+    platform.value = selected;
+  }
+  if (operator && Array.isArray(j.operators)) {
+    const selected = operator.value;
+    operator.innerHTML = '<option value="">Tous les opérateurs</option>' + j.operators.map(function (name) { return '<option value="' + esc(name) + '">' + esc(name) + '</option>'; }).join("");
+    operator.value = selected;
+  }
 }
 
 async function rafraichirListe(nom) {
   try {
     const p = paramsDe(nom);
-    const j = await appel(p.filtre, p.q, null);
+    const j = await appel(p.filtre, p.q, null, p.options);
     if (!j.ok) throw new Error(j.error || "?");
     if (j.org && j.org.name) $("org-nom").textContent = j.org.name;
+    mettreAJourFiltres(j);
     listes[nom] = j.sms;
-    anciens[nom] = j.sms.length ? j.sms[j.sms.length - 1].receivedAt : null;
+    anciens[nom] = j.hasMore ? j.nextBefore : null;
     rendreListe(nom);
     return j;
   } catch (e) {
@@ -376,16 +465,41 @@ async function chargerPlus(nom) {
   if (!anciens[nom]) return;
   try {
     const p = paramsDe(nom);
-    const j = await appel(p.filtre, p.q, anciens[nom]);
+    const j = await appel(p.filtre, p.q, anciens[nom], p.options);
     if (j.ok && j.sms.length) {
-      listes[nom] = listes[nom].concat(j.sms);
-      anciens[nom] = j.sms[j.sms.length - 1].receivedAt;
+      listes[nom] = fusionnerMessages(listes[nom], j.sms);
+      anciens[nom] = j.hasMore ? j.nextBefore : null;
       rendreListe(nom);
     } else { anciens[nom] = null; $("plus-" + nom).style.display = "none"; }
   } catch (e) {}
 }
 
 function lancerRecherche() { rafraichirListe("recherche").catch(function () {}); }
+
+function fusionnerMessages(actuels, nouveaux) {
+  const map = new Map();
+  for (const item of actuels.concat(nouveaux)) {
+    const current = map.get(item.id);
+    if (!current || item.transactionType !== "CANCELLATION") { map.set(item.id, item); continue; }
+    const events = [];
+    const seen = new Set();
+    for (const event of (current.events || [current]).concat(item.events || [item])) {
+      if (seen.has(event.id)) continue;
+      seen.add(event.id); events.push(event);
+    }
+    events.sort(function (a, b) { return new Date(a.receivedAt) - new Date(b.receivedAt); });
+    const completed = events.slice().reverse().find(function (event) { return event.status === "ANNULATION_COMPLETED"; });
+    const latest = events.slice().sort(function (a, b) { return new Date(b.receivedAt) - new Date(a.receivedAt); })[0];
+    map.set(item.id, Object.assign({}, completed || latest, {
+      id: item.id,
+      cancellationCaseKey: item.cancellationCaseKey || current.cancellationCaseKey,
+      events: events,
+      relatedEventCount: events.length,
+      receivedAt: latest.receivedAt,
+    }));
+  }
+  return Array.from(map.values()).sort(function (a, b) { return new Date(b.receivedAt) - new Date(a.receivedAt); });
+}
 
 // ════ BOUCLE AUTO (messages + annulations + notifications) ════
 async function ticAuto() {
@@ -396,13 +510,20 @@ async function ticAuto() {
     if (ja.ok) {
       if (!premierChargement && "Notification" in window && Notification.permission === "granted") {
         for (const s of ja.sms) {
-          if (!idsConnus.has(s.id)) {
-            try { new Notification("⛔ Annulation — SMS BLAFFA", { body: (s.body || "").slice(0, 130), icon: "/sms-center-192.png" }); } catch (e) {}
+          const events = Array.isArray(s.events) && s.events.length ? s.events : [s];
+          for (const event of events) {
+            if (!idsConnus.has(event.id)) {
+              const titre = event.status === "ANNULATION_COMPLETED" ? "✅ Annulation terminée — SMS BLAFFA" : "🔴 Annulation initiée — SMS BLAFFA";
+              try { new Notification(titre, { body: (event.body || "").slice(0, 130), icon: "/sms-center-192.png" }); } catch (e) {}
+            }
           }
         }
       }
       if (premierChargement) for (const s of ja.sms) annulationsVues.add(s.id);
-      for (const s of ja.sms) idsConnus.add(s.id);
+      for (const s of ja.sms) {
+        const events = Array.isArray(s.events) && s.events.length ? s.events : [s];
+        for (const event of events) idsConnus.add(event.id);
+      }
       listes.annulations = ja.sms;
       if (ongletActif === "annulations") rendreListe("annulations");
       majBadge();
