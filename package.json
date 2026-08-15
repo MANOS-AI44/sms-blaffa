@@ -1,7 +1,7 @@
 {
-  "name": "sms-blaffa",
-  "version": "2.0.0",
-  "description": "SMS BLAFFA — application PWA de lecture des SMS opérateurs (multi-organisation par token)",
+  "name": "blaffa-sms-center",
+  "version": "3.0.0",
+  "description": "SMS Center — lecture et recherche des SMS opérateurs BLAFFA (multi-organisation par token)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
