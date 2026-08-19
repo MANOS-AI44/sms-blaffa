@@ -93,6 +93,32 @@
   .details-financiers { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 3px 8px; margin: 5px 0; font-size: 9.5px; color: #64748B; }
   .details-financiers span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .details-financiers b { color: #334155; }
+  /* Même fil compact que BLAFFA FILE : aspect téléphone sur mobile et bureau. */
+  .phone-thread { border: 1px solid #C7D8D7; border-radius: 28px; overflow: hidden; background: #EEF6F5; box-shadow: 0 14px 34px rgba(15,42,67,.12); }
+  .phone-thread-head { display: flex; align-items: center; gap: 9px; padding: 8px 13px; border-bottom: 1px solid #D5E2E1; background: rgba(255,255,255,.72); }
+  .phone-thread-head span:first-child { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: #46686A; color: #FFF; }
+  .phone-thread-head strong, .phone-thread-head small { display: block; }
+  .phone-thread-head strong { font-size: 12px; color: #14282D; }
+  .phone-thread-head small { font-size: 9px; color: #66797B; margin-top: 2px; }
+  .phone-thread-list { padding: 9px; }
+  .phone-thread .msg { display: block; padding: 0; margin-bottom: 8px; border: 0; background: transparent; }
+  .phone-thread .avatar { display: none; }
+  .phone-thread .contenu { border-radius: 17px 17px 17px 5px; padding: 8px 10px; background: #4E696B; color: #FFF; box-shadow: 0 4px 10px rgba(34,66,70,.14); }
+  .phone-thread .msg.bleu .contenu { background: #27648B; }
+  .phone-thread .msg.vert .contenu { background: #167A64; }
+  .phone-thread .msg.jaune .contenu { background: #726426; }
+  .phone-thread .msg.rouge .contenu { background: #9F3A46; }
+  .phone-thread .ligne1 { align-items: center; }
+  .phone-thread .exp { color: #FFF; font-size: 11.5px; }
+  .phone-thread .quand { color: rgba(255,255,255,.78); font-size: 9px; }
+  .phone-thread .ligne2 { margin: 3px 0 5px; }
+  .phone-thread .details-financiers { color: rgba(255,255,255,.82); font-size: 8.5px; margin: 4px 0; }
+  .phone-thread .details-financiers b { color: #FFF; }
+  .phone-thread .refs { margin: 4px 0; padding: 5px 7px; background: rgba(255,255,255,.13); color: #FFF; font-size: 8.5px; }
+  .phone-thread .corps, .phone-thread .msg.bleu .corps, .phone-thread .msg.vert .corps, .phone-thread .msg.rouge .corps, .phone-thread .msg.gris .corps { color: #FFF; font-size: 11.5px; line-height: 1.35; font-weight: 500; max-height: 4.05em; }
+  .phone-thread .msg.ouvert .corps { max-height: none; }
+  .phone-thread .event-history { border-color: rgba(255,255,255,.3); }
+  .phone-thread .event-history div, .phone-thread .event-history b { color: #FFF; }
   .refs { margin: 5px 0; padding: 6px 8px; border-radius: 8px; background: rgba(255,255,255,.65); font: 9.5px ui-monospace, SFMono-Regular, Menlo, monospace; color: #475569; }
   .event-count { margin-left: auto; background: rgba(255,255,255,.72); color: #475569; }
   .event-history { display: none; border-top: 1px dashed rgba(100,116,139,.35); margin-top: 8px; padding-top: 7px; }
@@ -187,7 +213,6 @@
       <button class="chip" data-f="depot" onclick="setFiltre('depot',this)">📥 Dépôt</button>
       <button class="chip" data-f="retrait" onclick="setFiltre('retrait',this)">📤 Retrait</button>
     </div>
-    <div class="note" style="margin:0 4px 10px">Les transactions utilisent des modèles financiers stricts. Un format opérateur encore inconnu reste « À classer » sans devenir un dépôt ou un retrait. Les promotions sont exclues.</div>
     <div id="liste-messages"></div>
     <button class="plus" id="plus-messages" style="display:none" onclick="chargerPlus('messages')">Voir les SMS plus anciens</button>
   </div>
@@ -195,7 +220,8 @@
   <!-- PAGE RECHERCHE -->
   <div class="page" id="page-recherche">
     <div class="cherche">
-      <input id="in-q" placeholder="Numéro, montant, ID, PP ou TC…" onkeydown="if(event.key==='Enter')lancerRecherche()">
+      <input id="in-q" inputmode="search" placeholder="Numéro, montant, ID, PP ou TC…" onkeydown="if(event.key==='Enter')lancerRecherche()">
+      <button id="clear-search" onclick="effacerRecherche()" aria-label="Effacer" style="display:none;background:#E2E8F0;color:#334155">×</button>
       <button onclick="lancerRecherche()">🔍</button>
     </div>
     <div class="search-filters">
@@ -234,7 +260,7 @@
     </div>
     <div class="carte">
       <h3>ℹ️ Application</h3>
-      <p class="note">SMS BLAFFA v4 — lecture seule, moteur de modèles financiers stricts et annulations regroupées par références PP/TC. L'application utilise automatiquement le serveur BLAFFA FILE actif.</p>
+      <p class="note">SMS BLAFFA v5 — affichage téléphone compact, recherche instantanée et annulations regroupées par références PP/TC. L'application utilise automatiquement le serveur BLAFFA FILE actif.</p>
       <button class="btn rouge-b" onclick="deconnecter()">Se déconnecter</button>
     </div>
   </div>
@@ -339,6 +365,15 @@ async function appelAvecToken(token, filtre, q, avant, options) {
 const COULEURS_AVATAR = { ORANGE: "#EA580C", MTN: "#CA8A04", MOMO: "#CA8A04", MOOV: "#2563EB", WAVE: "#0891B2", DEFAUT: "#475569" };
 function couleurExp(s) { s = (s || "").toUpperCase(); for (const k in COULEURS_AVATAR) if (k !== "DEFAUT" && s.includes(k)) return COULEURS_AVATAR[k]; return COULEURS_AVATAR.DEFAUT; }
 function esc(t) { const d = document.createElement("div"); d.textContent = String(t == null ? "" : t); return d.innerHTML; }
+function numeroLocal(value) {
+  const digits = String(value || "").replace(/\D/g, "");
+  const countries = [{ code:"225", size:10 },{ code:"221", size:9 },{ code:"223", size:8 },{ code:"226", size:8 },{ code:"229", size:8 },{ code:"228", size:8 },{ code:"227", size:8 },{ code:"245", size:9 }];
+  for (const country of countries) {
+    if (digits.startsWith("00" + country.code) && digits.length >= country.size + 5) return digits.slice(5);
+    if (digits.startsWith(country.code) && digits.length >= country.size + 3) return digits.slice(3);
+  }
+  return digits || String(value || "").trim();
+}
 function heure(d) {
   const x = new Date(d); const now = new Date();
   const memeJour = x.toDateString() === now.toDateString();
@@ -382,10 +417,10 @@ function rendreListe(nom) {
     $("plus-" + nom).style.display = "none";
     return;
   }
-  L.innerHTML = sms.map(function (s) {
+  L.innerHTML = '<div class="phone-thread"><div class="phone-thread-head"><span>💬</span><div><strong>' + (nom === "recherche" ? "Résultats de recherche" : nom === "annulations" ? "Annulations" : "Tous les messages") + '</strong><small>' + sms.length + ' message' + (sms.length > 1 ? 's' : '') + ' · SMS BLAFFA</small></div></div><div class="phone-thread-list">' + sms.map(function (s) {
     const presentation = presentationMessage(s);
     const initiale = (s.sender || "?").replace(/[^A-Za-z0-9]/g, "").slice(0, 2).toUpperCase() || "?";
-    const phone = s.senderPhone || s.beneficiary || s.devicePhone || s.deviceLabel || "—";
+    const phone = numeroLocal(s.senderPhone || s.beneficiary || s.devicePhone || s.deviceLabel) || "—";
     const network = [s.operator, s.country].filter(Boolean).join(" · ") || "Non déterminé";
     const refs = [s.originalTransferRef ? "PP: " + s.originalTransferRef : "", s.cancellationRef ? "TC: " + s.cancellationRef : "", s.transactionId ? "ID: " + s.transactionId : ""].filter(Boolean);
     if (s.amount != null) refs.unshift("Montant: " + s.amount + " F");
@@ -401,7 +436,7 @@ function rendreListe(nom) {
       + '<div class="corps">' + esc(s.body) + "</div>"
       + eventHistory(s)
       + "</div></div>";
-  }).join("");
+  }).join("") + '</div></div>';
   $("plus-" + nom).style.display = anciens[nom] ? "block" : "none";
 }
 
@@ -474,7 +509,27 @@ async function chargerPlus(nom) {
   } catch (e) {}
 }
 
-function lancerRecherche() { rafraichirListe("recherche").catch(function () {}); }
+let rechercheTimer = null;
+function lancerRecherche() {
+  const input = $("in-q");
+  input.value = numeroLocal(input.value);
+  $("clear-search").style.display = input.value ? "block" : "none";
+  rafraichirListe("recherche").catch(function () {});
+}
+function effacerRecherche() {
+  $("in-q").value = "";
+  $("clear-search").style.display = "none";
+  listes.recherche = [];
+  rendreListe("recherche");
+}
+$("in-q").addEventListener("input", function () {
+  const before = this.value;
+  const normalized = numeroLocal(before);
+  if (normalized && /\d/.test(before) && !/[A-Za-zÀ-ÿ]/.test(before)) this.value = normalized;
+  $("clear-search").style.display = this.value ? "block" : "none";
+  clearTimeout(rechercheTimer);
+  rechercheTimer = setTimeout(lancerRecherche, 450);
+});
 
 function fusionnerMessages(actuels, nouveaux) {
   const map = new Map();
