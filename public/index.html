@@ -335,25 +335,47 @@
     });
     return ks;
   }
+  // Transaction references embedded in SMS text, e.g. "PP260919.1244.B58289".
+  function refsFromText(t){
+    var out=[], re=/[A-Z]{2}\d{3,8}\.\d{2,6}\.[A-Z0-9]{3,}/g, m;
+    while((m=re.exec(String(t||"")))){ out.push(m[0].toUpperCase()); }
+    return out;
+  }
+  // Keys that identify the ORIGINAL transaction from a cancellation.
+  // The link often lives only in the body text, and the cancellation's own
+  // transactionId must be excluded (it is not the original's id).
   function linkKeysOf(cancel){
-    var ks=[];
-    [cancel.cancellationRef, cancel.originalTransferRef, cancel.transactionId].forEach(function(v){
-      if(v) ks.push(String(v).trim().toUpperCase());
+    var ks=[], own = cancel.transactionId ? String(cancel.transactionId).trim().toUpperCase() : "";
+    [cancel.cancellationRef, cancel.originalTransferRef].forEach(function(v){
+      if(v){ var k=String(v).trim().toUpperCase(); if(k!==own && ks.indexOf(k)<0) ks.push(k); }
     });
+    refsFromText(cancel.body).forEach(function(r){ if(r!==own && ks.indexOf(r)<0) ks.push(r); });
     return ks;
+  }
+  // Tolerant key comparison: exact, or one reference contained in the other
+  // (handles "B58289" vs "PP260919.1244.B58289").
+  function keysMatch(origKeys, linkKeys){
+    for(var i=0;i<origKeys.length;i++){
+      for(var j=0;j<linkKeys.length;j++){
+        var a=origKeys[i], b=linkKeys[j];
+        if(!a||!b) continue;
+        if(a===b || (a.length>=5 && b.indexOf(a)>-1) || (b.length>=5 && a.indexOf(b)>-1)) return true;
+      }
+    }
+    return false;
   }
 
   // Build display sequence: cancellations get their original attached beneath them.
   function buildSequence(items){
-    // index originals by their keys
-    var byKey = {};
-    items.forEach(function(m){
-      if(isCancel(m)) return;
-      keysOf(m).forEach(function(k){ if(!byKey[k]) byKey[k]=m; });
-    });
     function findOriginal(cancel){
-      var lk = linkKeysOf(cancel);
-      for(var i=0;i<lk.length;i++){ if(byKey[lk[i]] && byKey[lk[i]]!==cancel) return byKey[lk[i]]; }
+      var lk = linkKeysOf(cancel), found=null;
+      if(lk.length){
+        for(var i=0;i<items.length && !found;i++){
+          var m=items[i]; if(m===cancel||isCancel(m)) continue;
+          if(keysMatch(keysOf(m), lk)) found=m;
+        }
+      }
+      if(found) return found;
       // fallback: same phone + amount + platform, earlier in time
       var ct = cancel.receivedAt ? new Date(cancel.receivedAt).getTime() : 0;
       var best=null;
@@ -444,8 +466,11 @@
       return;
     }
     if(cached === null){ slot.innerHTML = '<div class="pair-missing">Message d\'origine non trouvé.</div>'; return; }
-    var term = cancel.senderPhone || cancel.cancellationRef || cancel.originalTransferRef || cancel.transactionId || "";
-    if(!term){ origCache[cancel.id]=null; slot.innerHTML = '<div class="pair-missing">Message d\'origine introuvable.</div>'; return; }
+    var lk0 = linkKeysOf(cancel);
+    var term = "";
+    lk0.slice().sort(function(a,b){return b.length-a.length;}).some(function(k){ if(k && k.length>=5){ term=k; return true; } return false; });
+    if(!term) term = cancel.senderPhone || "";
+    if(!term){ origCache[cancel.id]=null; slot.innerHTML = '<div class="pair-missing">Message d\'origine non trouvé.</div>'; return; }
     origCache[cancel.id] = "pending";
     var u = new URL(state.api.replace(/\/+$/,"") + ENDPOINT);
     u.searchParams.set("q", String(term));
@@ -458,8 +483,7 @@
           var lk = linkKeysOf(cancel);
           for(var i=0;i<data.sms.length && !found;i++){
             var m=data.sms[i]; if(isCancel(m)||m.id===cancel.id) continue;
-            var mk = keysOf(m);
-            for(var j=0;j<mk.length;j++){ if(lk.indexOf(mk[j])>-1){ found=m; break; } }
+            if(keysMatch(keysOf(m), lk)) found=m;
           }
           if(!found){
             var ct = cancel.receivedAt ? new Date(cancel.receivedAt).getTime() : 0;
