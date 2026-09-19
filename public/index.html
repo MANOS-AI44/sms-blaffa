@@ -3,28 +3,30 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="theme-color" content="#0f172a" />
+<meta name="theme-color" content="#f3f6fa" />
 <title>SMS BLAFFA</title>
 <link rel="manifest" href="/sms-center-manifest.json" />
 <link rel="icon" href="/sms-center-192.png" />
 <link rel="apple-touch-icon" href="/sms-center-192.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <style>
   :root{
-    --bg:#0b1220; --panel:#111a2e; --panel2:#152139; --line:#22314f;
-    --txt:#e8eefc; --muted:#94a6c7; --muted2:#6b7ea3;
-    --accent:#3b82f6; --accent2:#1d4ed8;
-    --green:#16a34a; --greenbg:#0f2a1c; --greenln:#1f5136;
-    --amber:#d97706; --amberbg:#2a2010; --amberln:#5a4318;
-    --red:#dc2626; --redbg:#2a1417; --redln:#5a2530;
-    --purple:#a855f7; --purplebg:#221333; --purpleln:#4a2b6b;
-    --radius:14px; --shadow:0 6px 24px rgba(0,0,0,.35);
+    --bg:#f3f6fa; --card:#ffffff; --card2:#f7f9fc; --line:#e4e9f2; --line2:#eef2f8;
+    --txt:#0f1729; --muted:#64748b; --muted2:#94a3b8;
+    --accent:#2563eb; --accent-soft:#eaf1ff;
+    --green:#0f9d58; --green-soft:#e7f6ec;
+    --amber:#c2740a; --amber-soft:#fdf1e3;
+    --red:#dc2626; --red-soft:#fdeaea; --red-line:#f6c9c9;
+    --radius:16px; --shadow:0 1px 2px rgba(16,32,64,.06),0 4px 16px rgba(16,32,64,.05);
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
   body{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     background:var(--bg); color:var(--txt); -webkit-font-smoothing:antialiased;
-    padding-bottom:env(safe-area-inset-bottom);
+    padding-bottom:calc(env(safe-area-inset-bottom) + 8px);
   }
   button{font-family:inherit;cursor:pointer}
   input,select{font-family:inherit}
@@ -32,133 +34,133 @@
   /* ---------- LOGIN ---------- */
   #login{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px}
   .card-login{
-    width:100%;max-width:380px;background:var(--panel);border:1px solid var(--line);
-    border-radius:20px;padding:28px 24px;box-shadow:var(--shadow);text-align:center;
+    width:100%;max-width:380px;background:var(--card);border:1px solid var(--line);
+    border-radius:22px;padding:30px 24px;box-shadow:var(--shadow);text-align:center;
   }
-  .brand{font-size:26px;font-weight:800;letter-spacing:.5px}
+  .brand{font-size:26px;font-weight:800;letter-spacing:-.5px}
   .brand span{color:var(--accent)}
-  .sub{color:var(--muted);font-size:13px;margin:6px 0 22px}
+  .sub{color:var(--muted);font-size:13.5px;margin:8px 0 24px;line-height:1.5}
   .field{text-align:left;margin-bottom:14px}
-  .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600}
+  .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:7px;font-weight:600}
   .field input{
-    width:100%;padding:14px 14px;border-radius:12px;border:1px solid var(--line);
-    background:var(--panel2);color:var(--txt);font-size:18px;letter-spacing:2px;text-align:center;
-    text-transform:uppercase;font-weight:700;
+    width:100%;padding:15px 14px;border-radius:13px;border:1.5px solid var(--line);
+    background:var(--card2);color:var(--txt);font-size:19px;letter-spacing:3px;text-align:center;
+    text-transform:uppercase;font-weight:700;transition:border-color .15s;
   }
+  .field input:focus{outline:none;border-color:var(--accent)}
   .field input.small{font-size:13px;letter-spacing:0;text-transform:none;text-align:left;font-weight:400}
   .btn-primary{
-    width:100%;padding:14px;border:none;border-radius:12px;background:var(--accent);
-    color:#fff;font-size:16px;font-weight:700;margin-top:6px;
+    width:100%;padding:15px;border:none;border-radius:13px;background:var(--accent);
+    color:#fff;font-size:16px;font-weight:700;margin-top:6px;transition:filter .15s;
   }
-  .btn-primary:disabled{opacity:.5}
-  .err{color:#fca5a5;font-size:13px;margin-top:12px;min-height:16px}
-  .advToggle{background:none;border:none;color:var(--muted);font-size:12px;margin-top:14px;text-decoration:underline}
+  .btn-primary:active{filter:brightness(.94)}
+  .btn-primary:disabled{opacity:.55}
+  .err{color:var(--red);font-size:13px;margin-top:12px;min-height:16px}
+  .advToggle{background:none;border:none;color:var(--muted);font-size:12px;margin-top:16px;text-decoration:underline}
 
   /* ---------- APP SHELL ---------- */
-  #app{display:none;max-width:820px;margin:0 auto}
+  #app{display:none;max-width:760px;margin:0 auto}
   .topbar{
-    position:sticky;top:0;z-index:20;background:rgba(11,18,32,.92);backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-top));
-    padding-top:max(10px,env(safe-area-inset-top));
+    position:sticky;top:0;z-index:20;background:rgba(243,246,250,.9);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);
+    padding:max(10px,env(safe-area-inset-top)) 14px 10px;
   }
   .topbar-row{display:flex;align-items:center;gap:10px}
   .topbar .brand{font-size:18px}
-  .org{font-size:12px;color:var(--muted);margin-left:auto;text-align:right;line-height:1.2;max-width:45%;overflow:hidden}
-  .icon-btn{background:var(--panel2);border:1px solid var(--line);color:var(--muted);border-radius:10px;padding:8px 10px;font-size:13px}
+  .org{font-size:12px;color:var(--muted);margin-left:auto;text-align:right;line-height:1.2;max-width:44%;overflow:hidden;font-weight:600}
+  .icon-btn{background:var(--card);border:1px solid var(--line);color:var(--muted);border-radius:10px;padding:8px 11px;font-size:14px}
+  .icon-btn:active{background:var(--card2)}
   .search{
-    display:flex;align-items:center;gap:8px;margin-top:10px;background:var(--panel2);
-    border:1px solid var(--line);border-radius:12px;padding:2px 10px;
+    display:flex;align-items:center;gap:8px;margin-top:11px;background:var(--card);
+    border:1.5px solid var(--line);border-radius:13px;padding:2px 12px;transition:border-color .15s;
   }
-  .search svg{flex:0 0 auto;opacity:.6}
+  .search:focus-within{border-color:var(--accent)}
+  .search svg{flex:0 0 auto;color:var(--muted2)}
   .search input{flex:1;background:none;border:none;outline:none;color:var(--txt);font-size:16px;padding:12px 0}
-  .search .clear{background:none;border:none;color:var(--muted);font-size:20px;padding:0 6px;display:none}
+  .search .clear{background:none;border:none;color:var(--muted);font-size:22px;padding:0 4px;display:none;line-height:1}
 
-  .chips{display:flex;gap:8px;overflow-x:auto;padding:10px 14px 4px;-webkit-overflow-scrolling:touch}
+  .chips{display:flex;gap:8px;overflow-x:auto;padding:11px 14px 3px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .chips::-webkit-scrollbar{display:none}
   .chip{
-    flex:0 0 auto;padding:8px 14px;border-radius:999px;border:1px solid var(--line);
-    background:var(--panel2);color:var(--muted);font-size:13px;font-weight:600;white-space:nowrap;
+    flex:0 0 auto;padding:8px 15px;border-radius:999px;border:1.5px solid var(--line);
+    background:var(--card);color:var(--muted);font-size:13.5px;font-weight:600;white-space:nowrap;transition:all .12s;
   }
+  .chip:active{transform:scale(.96)}
   .chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .chip.cancel.active{background:var(--red);border-color:var(--red)}
 
-  .advanced{padding:0 14px;overflow:hidden;max-height:0;transition:max-height .25s ease}
+  .advanced{padding:0 14px;overflow:hidden;max-height:0;transition:max-height .28s ease}
   .advanced.open{max-height:260px;padding-bottom:6px}
-  .adv-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
-  .adv-grid .full{grid-column:1 / -1}
-  .adv-grid label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px}
+  .adv-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  .adv-grid label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px;font-weight:600}
   .adv-grid select,.adv-grid input{
-    width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);
-    background:var(--panel2);color:var(--txt);font-size:14px;
+    width:100%;padding:11px;border-radius:11px;border:1.5px solid var(--line);
+    background:var(--card);color:var(--txt);font-size:14px;
   }
   .adv-actions{display:flex;justify-content:flex-end;margin-top:8px}
   .link-btn{background:none;border:none;color:var(--accent);font-size:13px;font-weight:600}
 
-  .meta{padding:8px 16px;color:var(--muted2);font-size:12px;display:flex;align-items:center;gap:8px}
-  .meta .dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block}
+  .meta{padding:9px 16px 3px;color:var(--muted);font-size:12px;display:flex;align-items:center;gap:7px;font-weight:500}
+  .meta .dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block}
 
-  #list{padding:4px 12px 40px}
+  #list{padding:6px 12px 40px}
 
   /* ---------- MESSAGE CARD ---------- */
   .msg{
-    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
-    padding:12px 14px;margin:10px 0;box-shadow:0 2px 8px rgba(0,0,0,.2);
-    border-left:4px solid var(--line);
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:13px 15px;margin:10px 0;box-shadow:var(--shadow);
+    animation:fade .25s ease both;
   }
-  .msg.in{border-left-color:var(--green)}
-  .msg.out{border-left-color:var(--amber)}
-  .msg.cancel{border-left-color:var(--red)}
-  .msg-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .amount{font-size:19px;font-weight:800}
-  .amount.in{color:#4ade80}
-  .amount.out{color:#fbbf24}
-  .amount.cancel{color:#f87171}
-  .op{font-size:13px;color:var(--muted);font-weight:600}
-  .pill{margin-left:auto;font-size:11px;font-weight:700;padding:4px 9px;border-radius:999px;border:1px solid}
-  .pill.SUCCESS{color:#4ade80;background:var(--greenbg);border-color:var(--greenln)}
-  .pill.PENDING{color:#fbbf24;background:var(--amberbg);border-color:var(--amberln)}
-  .pill.FAILED,.pill.ERROR{color:#f87171;background:var(--redbg);border-color:var(--redln)}
-  .pill.NEUTRAL{color:var(--muted);background:var(--panel2);border-color:var(--line)}
-  .msg-sub{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:12.5px;color:var(--muted)}
-  .msg-sub b{color:var(--txt);font-weight:600}
-  .tag{font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:6px;background:var(--panel2);border:1px solid var(--line);color:var(--muted)}
-  .body{
-    margin-top:10px;font-size:13px;line-height:1.45;color:#c7d3ea;background:var(--panel2);
-    border:1px solid var(--line);border-radius:10px;padding:9px 11px;white-space:pre-wrap;word-break:break-word;
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .m-head{display:flex;align-items:center;gap:10px}
+  .m-type{font-size:14.5px;font-weight:700;display:flex;align-items:center;gap:6px}
+  .m-amt{margin-left:auto;font-size:18px;font-weight:800;white-space:nowrap}
+  .m-amt.in{color:var(--green)}
+  .m-amt.out{color:var(--amber)}
+  .m-amt.cancel{color:var(--red)}
+  .m-plat{margin-top:8px;font-size:13.5px;color:var(--muted)}
+  .m-plat b{color:var(--txt);font-weight:700;background:var(--accent-soft);color:var(--accent);
+    padding:2px 9px;border-radius:7px;font-size:12.5px;margin-left:2px;display:inline-block}
+  .m-status{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap}
+  .m-status.PENDING{color:var(--amber);background:var(--amber-soft)}
+  .m-status.FAILED{color:var(--red);background:var(--red-soft)}
+  .m-meta{margin-top:8px;font-size:12.5px;color:var(--muted2);display:flex;flex-wrap:wrap;gap:4px 8px}
+  .m-body{
+    margin-top:10px;font-size:13px;line-height:1.5;color:#475569;background:var(--card2);
+    border:1px solid var(--line2);border-radius:11px;padding:10px 12px;white-space:pre-wrap;word-break:break-word;
   }
-  .time{font-size:11.5px;color:var(--muted2);margin-top:8px}
+  .msg.cancel{border-color:var(--red-line);background:linear-gradient(180deg,var(--red-soft),#fff 60%)}
 
   /* ---------- CANCELLATION PAIR ---------- */
   .pair{
-    margin:16px 0;border:1.5px dashed var(--redln);border-radius:18px;padding:8px 8px 4px;
-    background:linear-gradient(180deg,rgba(220,38,38,.06),rgba(0,0,0,0));
+    margin:14px 0;border:1.5px solid var(--red-line);border-radius:20px;padding:6px;
+    background:var(--red-soft);
   }
   .pair-label{
-    display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:#f87171;
-    padding:2px 8px 6px;text-transform:uppercase;letter-spacing:.4px;
+    display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:var(--red);
+    padding:6px 10px 2px;text-transform:uppercase;letter-spacing:.3px;
   }
-  .pair .msg{margin:6px 4px}
-  .pair-link{
-    display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;font-weight:600;
-    padding:2px 12px;
-  }
-  .pair-link .arrow{color:#f87171;font-size:15px}
-  .pair-missing{color:var(--muted2);font-size:12px;padding:6px 12px 8px;font-style:italic}
+  .pair .msg{margin:6px}
+  .pair-link{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12.5px;font-weight:700;padding:2px 12px}
+  .pair-link .arrow{color:var(--red);font-size:15px}
+  .pair-missing{color:var(--muted);font-size:12.5px;padding:6px 12px 10px;font-style:italic}
 
   /* ---------- STATES ---------- */
-  .state{text-align:center;color:var(--muted);padding:50px 20px;font-size:14px}
+  .state{text-align:center;color:var(--muted);padding:54px 20px;font-size:14px;line-height:1.6}
   .spinner{
     width:26px;height:26px;border:3px solid var(--line);border-top-color:var(--accent);
     border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px;
   }
   @keyframes spin{to{transform:rotate(360deg)}}
   .more{
-    display:block;width:calc(100% - 24px);margin:8px 12px 30px;padding:14px;border-radius:12px;
-    background:var(--panel2);border:1px solid var(--line);color:var(--txt);font-size:14px;font-weight:600;
+    display:block;width:calc(100% - 24px);margin:8px 12px 30px;padding:14px;border-radius:13px;
+    background:var(--card);border:1.5px solid var(--line);color:var(--accent);font-size:14px;font-weight:700;
   }
+  .more:active{background:var(--card2)}
   .toast{
-    position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1e293b;color:#fff;
-    padding:11px 18px;border-radius:10px;font-size:13px;box-shadow:var(--shadow);z-index:50;
-    border:1px solid var(--line);opacity:0;transition:opacity .2s;pointer-events:none;max-width:90%;
+    position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0f1729;color:#fff;
+    padding:11px 18px;border-radius:11px;font-size:13px;box-shadow:0 6px 24px rgba(0,0,0,.25);z-index:50;
+    opacity:0;transition:opacity .2s;pointer-events:none;max-width:90%;font-weight:500;
   }
   .toast.show{opacity:1}
 </style>
@@ -169,7 +171,7 @@
 <div id="login">
   <div class="card-login">
     <div class="brand">SMS <span>BLAFFA</span></div>
-    <div class="sub">Centre de messages — saisissez votre code d'accès</div>
+    <div class="sub">Consultez et recherchez vos SMS.<br>Saisissez votre code d'accès.</div>
     <div class="field">
       <label for="code">Code d'accès</label>
       <input id="code" autocomplete="off" autocapitalize="characters" spellcheck="false"
@@ -207,9 +209,9 @@
 
   <div class="chips" id="chips">
     <button class="chip active" data-f="">Tous</button>
-    <button class="chip" data-f="depot">Dépôts</button>
-    <button class="chip" data-f="retrait">Retraits</button>
-    <button class="chip" data-f="annulations">Annulations</button>
+    <button class="chip" data-f="depot">💰 Dépôts</button>
+    <button class="chip" data-f="retrait">📤 Retraits</button>
+    <button class="chip cancel" data-f="annulations">🚫 Annulations</button>
     <button class="chip" data-f="__adv" id="advChip">Filtres +</button>
   </div>
 
@@ -247,7 +249,6 @@
 (function(){
   "use strict";
 
-  // ---------- config / state ----------
   var DEFAULT_API = "https://blaffa-file.onrender.com";
   var LS_TOKEN = "smsblaffa_token";
   var LS_API   = "smsblaffa_api";
@@ -255,482 +256,287 @@
   var PAGE = 60;
 
   var state = {
-    code: "",
-    api: DEFAULT_API,
-    q: "",
-    filtre: "",
-    platform: "",
-    operator: "",
-    from: "",
-    to: "",
-    before: null,
-    hasMore: false,
-    loading: false,
-    items: [],
-    seq: 0
+    code:"", api:DEFAULT_API, q:"", filtre:"", platform:"", operator:"",
+    from:"", to:"", before:null, hasMore:false, loading:false, items:[], seq:0
   };
 
-  // ---------- helpers ----------
   function $(id){ return document.getElementById(id); }
   function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){
     return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]; }); }
-
-  function fmtAmount(n){
-    if(n==null||isNaN(n)) return "";
-    return Number(n).toLocaleString("fr-FR");
-  }
+  function fmtAmount(n){ return (n==null||isNaN(n))?"":Number(n).toLocaleString("fr-FR"); }
   function fmtDate(iso){
     if(!iso) return "";
-    var d = new Date(iso); if(isNaN(d)) return String(iso);
-    var now = new Date();
-    var sameDay = d.toDateString()===now.toDateString();
-    var y = new Date(now); y.setDate(now.getDate()-1);
-    var yest = d.toDateString()===y.toDateString();
-    var hm = d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
-    if(sameDay) return "Aujourd'hui " + hm;
-    if(yest) return "Hier " + hm;
-    return d.toLocaleDateString("fr-FR",{day:"2-digit",month:"short"}) + " " + hm;
+    var d=new Date(iso); if(isNaN(d)) return String(iso);
+    var now=new Date(), y=new Date(now); y.setDate(now.getDate()-1);
+    var hm=d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+    if(d.toDateString()===now.toDateString()) return "Aujourd'hui "+hm;
+    if(d.toDateString()===y.toDateString()) return "Hier "+hm;
+    return d.toLocaleDateString("fr-FR",{day:"2-digit",month:"short"})+" "+hm;
   }
-  function last4(s){ s=String(s||""); return s.length>4 ? "…"+s.slice(-4) : s; }
+  function toast(msg){ var t=$("toast"); t.textContent=msg; t.classList.add("show");
+    clearTimeout(t._h); t._h=setTimeout(function(){ t.classList.remove("show"); },2400); }
 
-  function toast(msg){
-    var t=$("toast"); t.textContent=msg; t.classList.add("show");
-    clearTimeout(t._h); t._h=setTimeout(function(){ t.classList.remove("show"); },2600);
-  }
-
-  function statusClass(s){
-    s=String(s||"").toUpperCase();
+  function statusClass(s){ s=String(s||"").toUpperCase();
     if(s.indexOf("SUCC")>-1||s==="OK"||s==="CONFIRMED") return "SUCCESS";
-    if(s.indexOf("PEND")>-1||s.indexOf("WAIT")>-1) return "PENDING";
+    if(s.indexOf("PEND")>-1||s.indexOf("WAIT")>-1||s.indexOf("INITIATED")>-1) return "PENDING";
     if(s.indexOf("FAIL")>-1||s.indexOf("ERR")>-1||s.indexOf("REJ")>-1) return "FAILED";
-    return "NEUTRAL";
-  }
-  function statusLabel(s){
-    var c=statusClass(s);
-    return c==="SUCCESS"?"Réussi":c==="PENDING"?"En attente":c==="FAILED"?"Échec":(s||"—");
-  }
+    return "NEUTRAL"; }
+  function statusLabel(s){ var c=statusClass(s);
+    return c==="PENDING"?"⏳ En attente":c==="FAILED"?"❌ Échec":""; }
 
-  function isCancel(m){
-    return m && (m.annulation===true ||
-      String(m.transactionType||"").toUpperCase().indexOf("CANCEL")>-1 ||
-      String(m.transactionType||"").toUpperCase().indexOf("ANNUL")>-1);
-  }
+  function isCancel(m){ return m && (m.annulation===true ||
+    String(m.transactionType||"").toUpperCase().indexOf("CANCEL")>-1 ||
+    String(m.transactionType||"").toUpperCase().indexOf("ANNUL")>-1); }
   function isOut(m){ return m && (m.sortant===true || String(m.direction||"").toUpperCase()==="OUTGOING"); }
   function kindClass(m){ return isCancel(m)?"cancel":(isOut(m)?"out":"in"); }
-
   function typeLabel(m){
     var t=String(m.transactionType||"").toUpperCase();
     if(isCancel(m)) return "Annulation";
     if(t==="DEPOSIT"||t==="DEPOT") return "Dépôt";
     if(t==="PAYOUT"||t==="WITHDRAWAL"||t==="RETRAIT") return "Retrait";
-    if(isOut(m)) return "Sortant";
-    return t? (t.charAt(0)+t.slice(1).toLowerCase()) : "SMS";
+    if(isOut(m)) return "Retrait";
+    return "Dépôt";
   }
+  function icon(k){ return k==="cancel"?"🚫":(k==="out"?"📤":(k==="in"?"💰":"✉️")); }
 
-  // ---------- pairing (cancellation <-> original) ----------
-  function keysOf(m){
-    var ks=[];
-    [m.transactionId, m.originalTransferRef].forEach(function(v){
-      if(v) ks.push(String(v).trim().toUpperCase());
-    });
-    return ks;
-  }
-  // Transaction references embedded in SMS text, e.g. "PP260919.1244.B58289".
-  function refsFromText(t){
-    var out=[], re=/[A-Z]{2}\d{3,8}\.\d{2,6}\.[A-Z0-9]{3,}/g, m;
-    while((m=re.exec(String(t||"")))){ out.push(m[0].toUpperCase()); }
-    return out;
-  }
-  // Keys that identify the ORIGINAL transaction from a cancellation.
-  // The link often lives only in the body text, and the cancellation's own
-  // transactionId must be excluded (it is not the original's id).
+  // ---------- pairing ----------
+  function keysOf(m){ var ks=[]; [m.transactionId,m.originalTransferRef].forEach(function(v){ if(v) ks.push(String(v).trim().toUpperCase()); }); return ks; }
+  function refsFromText(t){ var out=[],re=/[A-Z]{2}\d{3,8}\.\d{2,6}\.[A-Z0-9]{3,}/g,m; while((m=re.exec(String(t||"")))){ out.push(m[0].toUpperCase()); } return out; }
   function linkKeysOf(cancel){
     var ks=[], own = cancel.transactionId ? String(cancel.transactionId).trim().toUpperCase() : "";
-    [cancel.cancellationRef, cancel.originalTransferRef].forEach(function(v){
-      if(v){ var k=String(v).trim().toUpperCase(); if(k!==own && ks.indexOf(k)<0) ks.push(k); }
-    });
-    refsFromText(cancel.body).forEach(function(r){ if(r!==own && ks.indexOf(r)<0) ks.push(r); });
+    [cancel.cancellationRef,cancel.originalTransferRef].forEach(function(v){ if(v){ var k=String(v).trim().toUpperCase(); if(k!==own&&ks.indexOf(k)<0) ks.push(k); } });
+    refsFromText(cancel.body).forEach(function(r){ if(r!==own&&ks.indexOf(r)<0) ks.push(r); });
     return ks;
   }
-  // Tolerant key comparison: exact, or one reference contained in the other
-  // (handles "B58289" vs "PP260919.1244.B58289").
-  function keysMatch(origKeys, linkKeys){
-    for(var i=0;i<origKeys.length;i++){
-      for(var j=0;j<linkKeys.length;j++){
-        var a=origKeys[i], b=linkKeys[j];
-        if(!a||!b) continue;
-        if(a===b || (a.length>=5 && b.indexOf(a)>-1) || (b.length>=5 && a.indexOf(b)>-1)) return true;
-      }
-    }
+  function keysMatch(origKeys,linkKeys){
+    for(var i=0;i<origKeys.length;i++){ for(var j=0;j<linkKeys.length;j++){
+      var a=origKeys[i],b=linkKeys[j]; if(!a||!b) continue;
+      if(a===b||(a.length>=5&&b.indexOf(a)>-1)||(b.length>=5&&a.indexOf(b)>-1)) return true; } }
     return false;
   }
-
-  // Build display sequence: cancellations get their original attached beneath them.
   function buildSequence(items){
     function findOriginal(cancel){
-      var lk = linkKeysOf(cancel), found=null;
-      if(lk.length){
-        for(var i=0;i<items.length && !found;i++){
-          var m=items[i]; if(m===cancel||isCancel(m)) continue;
-          if(keysMatch(keysOf(m), lk)) found=m;
-        }
-      }
+      var lk=linkKeysOf(cancel), found=null;
+      if(lk.length){ for(var i=0;i<items.length&&!found;i++){ var m=items[i]; if(m===cancel||isCancel(m)) continue; if(keysMatch(keysOf(m),lk)) found=m; } }
       if(found) return found;
-      // fallback: same phone + amount + platform, earlier in time
-      var ct = cancel.receivedAt ? new Date(cancel.receivedAt).getTime() : 0;
-      var best=null;
+      var ct=cancel.receivedAt?new Date(cancel.receivedAt).getTime():0, best=null;
       items.forEach(function(m){
         if(m===cancel||isCancel(m)) return;
         if(!cancel.senderPhone||!m.senderPhone) return;
         if(String(m.senderPhone)!==String(cancel.senderPhone)) return;
-        if(cancel.amount!=null && m.amount!=null && Number(m.amount)!==Number(cancel.amount)) return;
-        if(cancel.platformId && m.platformId && cancel.platformId!==m.platformId) return;
-        var mt = m.receivedAt ? new Date(m.receivedAt).getTime() : 0;
-        if(ct && mt && mt>ct) return;
-        if(!best || mt>(best._t||0)){ best=m; best._t=mt; }
+        if(cancel.amount!=null&&m.amount!=null&&Number(m.amount)!==Number(cancel.amount)) return;
+        if(cancel.platformId&&m.platformId&&cancel.platformId!==m.platformId) return;
+        var mt=m.receivedAt?new Date(m.receivedAt).getTime():0; if(ct&&mt&&mt>ct) return;
+        if(!best||mt>(best._t||0)){ best=m; best._t=mt; }
       });
       return best;
     }
-
-    // Pass 1: each cancellation claims its original.
+    items.forEach(function(m){ if(isCancel(m)) m._pairOriginal=findOriginal(m)||null; });
+    var used={}; items.forEach(function(m){ if(isCancel(m)&&m._pairOriginal) used[m._pairOriginal.id]=true; });
+    var seq=[];
     items.forEach(function(m){
-      if(!isCancel(m)) return;
-      m._pairOriginal = findOriginal(m) || null;
-    });
-    // Pass 2: mark originals consumed by a cancellation so they are not shown twice.
-    var usedAsOriginal = {};
-    items.forEach(function(m){
-      if(isCancel(m) && m._pairOriginal) usedAsOriginal[m._pairOriginal.id] = true;
-    });
-    // Pass 3: emit in original order; cancellations become pairs, consumed originals are skipped.
-    var seq = [];
-    items.forEach(function(m){
-      if(isCancel(m)){
-        seq.push({type:"pair", cancel:m, original:m._pairOriginal});
-      } else if(usedAsOriginal[m.id]){
-        /* shown inside its cancellation pair above — skip standalone */
-      } else {
-        seq.push({type:"single", msg:m});
-      }
+      if(isCancel(m)) seq.push({type:"pair",cancel:m,original:m._pairOriginal});
+      else if(used[m.id]){} else seq.push({type:"single",msg:m});
     });
     return seq;
   }
 
   // ---------- rendering ----------
   function renderMsg(m){
-    var k = kindClass(m);
-    var amt = m.amount!=null ? fmtAmount(m.amount) + " F" : "";
-    var sign = k==="in" ? "+" : (k==="out"||k==="cancel" ? "−" : "");
-    var head =
-      '<div class="msg-head">' +
-        (amt ? '<span class="amount '+k+'">'+esc(sign+amt)+'</span>' : '<span class="op">'+esc(typeLabel(m))+'</span>') +
-        (amt ? '<span class="op">'+esc(m.operator||"")+'</span>' : '') +
-        '<span class="pill '+statusClass(m.status)+'">'+esc(statusLabel(m.status))+'</span>' +
-      '</div>';
-
-    var sub = [];
-    sub.push('<span class="tag">'+esc(typeLabel(m))+'</span>');
-    if(m.platformCode) sub.push('<span class="tag">'+esc(m.platformCode)+'</span>');
-    if(m.senderPhone) sub.push('<span>N° <b>'+esc(m.senderPhone)+'</b></span>');
-    else if(m.sender) sub.push('<span>De <b>'+esc(m.sender)+'</b></span>');
-    if(m.beneficiary) sub.push('<span>Bénéf. <b>'+esc(m.beneficiary)+'</b></span>');
-    if(m.transactionId) sub.push('<span>Réf <b>'+esc(last4(m.transactionId))+'</b></span>');
-    if(m.balance!=null) sub.push('<span>Solde <b>'+esc(fmtAmount(m.balance))+' F</b></span>');
-
-    var body = m.body ? '<div class="body">'+esc(m.body)+'</div>' : '';
-    var time = '<div class="time">'+esc(fmtDate(m.receivedAt))+
-               (m.deviceLabel?' · '+esc(m.deviceLabel):'')+'</div>';
-
-    return '<div class="msg '+k+'">'+head+'<div class="msg-sub">'+sub.join("")+'</div>'+body+time+'</div>';
+    var k=kindClass(m);
+    var amt=m.amount!=null?fmtAmount(m.amount)+" F":"";
+    var st=statusLabel(m.status), stc=statusClass(m.status);
+    var head='<div class="m-head"><span class="m-type">'+icon(k)+" "+esc(typeLabel(m))+"</span>"
+      + (st?'<span class="m-status '+stc+'">'+esc(st)+"</span>":"")
+      + (amt?'<span class="m-amt '+k+'">'+esc(amt)+"</span>":"") + "</div>";
+    var plat="";
+    if(m.platformCode){
+      var lead = k==="in"?"Reçu sur ":(k==="out"?"Retrait sur ":(k==="cancel"?"Annulé sur ":"Sur "));
+      plat='<div class="m-plat">'+lead+"<b>"+esc(m.platformCode)+"</b></div>";
+    }
+    var meta=[];
+    if(m.senderPhone) meta.push("📞 "+esc(m.senderPhone));
+    else if(m.sender) meta.push(esc(m.sender));
+    if(m.operator) meta.push(esc(m.operator));
+    if(m.receivedAt) meta.push(esc(fmtDate(m.receivedAt)));
+    var metaLine=meta.length?'<div class="m-meta">'+meta.join(" · ")+"</div>":"";
+    var body=m.body?'<div class="m-body">'+esc(m.body)+"</div>":"";
+    return '<div class="msg '+k+'">'+head+plat+metaLine+body+"</div>";
   }
-
-  function renderPair(cancel, original){
-    var inner = '<div class="pair-label">⟲ Annulation</div>' + renderMsg(cancel);
+  function renderPair(cancel,original){
+    var inner='<div class="pair-label">🚫 Annulation</div>'+renderMsg(cancel);
     if(original){
-      inner += '<div class="pair-link"><span class="arrow">↳</span> Transaction d\'origine</div>' + renderMsg(original);
-    } else {
-      inner += '<div class="pair-orig" data-cancel="'+esc(cancel.id)+'">' +
-               '<div class="pair-missing">Recherche du message d\'origine…</div></div>';
+      inner+='<div class="pair-link"><span class="arrow">↳</span> Transaction d\'origine</div>'+renderMsg(original);
+    }else{
+      inner+='<div class="pair-orig" data-cancel="'+esc(cancel.id)+'"><div class="pair-missing">Recherche du message d\'origine…</div></div>';
     }
-    return '<div class="pair" id="pair-'+esc(cancel.id)+'">'+inner+'</div>';
+    return '<div class="pair" id="pair-'+esc(cancel.id)+'">'+inner+"</div>";
   }
 
-  // When the original isn't in the loaded page (e.g. under the "Annulations"
-  // filter, which only returns cancellations), fetch it on demand and slot it in.
-  var origCache = {};
-  function resolveOriginal(cancel, slot){
-    var cached = origCache[cancel.id];
-    if(cached === "pending") return;
-    if(cached && typeof cached === "object"){
-      slot.innerHTML = '<div class="pair-link"><span class="arrow">↳</span> Transaction d\'origine</div>' + renderMsg(cached);
-      return;
-    }
-    if(cached === null){ slot.innerHTML = '<div class="pair-missing">Message d\'origine non trouvé.</div>'; return; }
-    var lk0 = linkKeysOf(cancel);
-    var term = "";
-    lk0.slice().sort(function(a,b){return b.length-a.length;}).some(function(k){ if(k && k.length>=5){ term=k; return true; } return false; });
-    if(!term) term = cancel.senderPhone || "";
-    if(!term){ origCache[cancel.id]=null; slot.innerHTML = '<div class="pair-missing">Message d\'origine non trouvé.</div>'; return; }
-    origCache[cancel.id] = "pending";
-    var u = new URL(state.api.replace(/\/+$/,"") + ENDPOINT);
-    u.searchParams.set("q", String(term));
-    u.searchParams.set("limit", "30");
-    fetch(u.toString(), {cache:"no-store", headers:{ "Authorization":"Bearer "+state.code, "Accept":"application/json" }})
-      .then(function(r){ return r.ok ? r.json() : null; })
+  var origCache={};
+  function resolveOriginal(cancel,slot){
+    var cached=origCache[cancel.id];
+    if(cached==="pending") return;
+    if(cached&&typeof cached==="object"){ slot.innerHTML='<div class="pair-link"><span class="arrow">↳</span> Transaction d\'origine</div>'+renderMsg(cached); return; }
+    if(cached===null){ slot.innerHTML='<div class="pair-missing">Message d\'origine non trouvé.</div>'; return; }
+    var lk0=linkKeysOf(cancel), term="";
+    lk0.slice().sort(function(a,b){return b.length-a.length;}).some(function(k){ if(k&&k.length>=5){ term=k; return true; } return false; });
+    if(!term) term=cancel.senderPhone||"";
+    if(!term){ origCache[cancel.id]=null; slot.innerHTML='<div class="pair-missing">Message d\'origine non trouvé.</div>'; return; }
+    origCache[cancel.id]="pending";
+    var u=new URL(state.api.replace(/\/+$/,"")+ENDPOINT);
+    u.searchParams.set("q",String(term)); u.searchParams.set("limit","30");
+    fetch(u.toString(),{cache:"no-store",headers:{"Authorization":"Bearer "+state.code,"Accept":"application/json"}})
+      .then(function(r){ return r.ok?r.json():null; })
       .then(function(data){
-        var found = null;
-        if(data && data.sms){
-          var lk = linkKeysOf(cancel);
-          for(var i=0;i<data.sms.length && !found;i++){
-            var m=data.sms[i]; if(isCancel(m)||m.id===cancel.id) continue;
-            if(keysMatch(keysOf(m), lk)) found=m;
-          }
+        var found=null;
+        if(data&&data.sms){
+          var lk=linkKeysOf(cancel);
+          for(var i=0;i<data.sms.length&&!found;i++){ var m=data.sms[i]; if(isCancel(m)||m.id===cancel.id) continue; if(keysMatch(keysOf(m),lk)) found=m; }
           if(!found){
-            var ct = cancel.receivedAt ? new Date(cancel.receivedAt).getTime() : 0;
+            var ct=cancel.receivedAt?new Date(cancel.receivedAt).getTime():0;
             data.sms.forEach(function(m){
               if(found||isCancel(m)||m.id===cancel.id) return;
-              if(!cancel.senderPhone || String(m.senderPhone)!==String(cancel.senderPhone)) return;
-              if(cancel.amount!=null && m.amount!=null && Number(m.amount)!==Number(cancel.amount)) return;
-              var mt = m.receivedAt ? new Date(m.receivedAt).getTime() : 0;
-              if(ct&&mt&&mt>ct) return;
-              found = m;
+              if(!cancel.senderPhone||String(m.senderPhone)!==String(cancel.senderPhone)) return;
+              if(cancel.amount!=null&&m.amount!=null&&Number(m.amount)!==Number(cancel.amount)) return;
+              var mt=m.receivedAt?new Date(m.receivedAt).getTime():0; if(ct&&mt&&mt>ct) return;
+              found=m;
             });
           }
         }
-        if(found){
-          origCache[cancel.id] = found;
-          slot.innerHTML = '<div class="pair-link"><span class="arrow">↳</span> Transaction d\'origine</div>' + renderMsg(found);
-        } else {
-          origCache[cancel.id] = null;
-          slot.innerHTML = '<div class="pair-missing">Message d\'origine non trouvé.</div>';
-        }
-      }).catch(function(){
-        origCache[cancel.id] = null;
-        slot.innerHTML = '<div class="pair-missing">Message d\'origine non trouvé.</div>';
-      });
+        if(found){ origCache[cancel.id]=found; slot.innerHTML='<div class="pair-link"><span class="arrow">↳</span> Transaction d\'origine</div>'+renderMsg(found); }
+        else { origCache[cancel.id]=null; slot.innerHTML='<div class="pair-missing">Message d\'origine non trouvé.</div>'; }
+      }).catch(function(){ origCache[cancel.id]=null; slot.innerHTML='<div class="pair-missing">Message d\'origine non trouvé.</div>'; });
   }
 
   function render(){
-    var list = $("list");
-    if(state.loading && state.items.length===0){
-      list.innerHTML = '<div class="state"><div class="spinner"></div>Chargement…</div>';
-      return;
-    }
+    var list=$("list");
+    if(state.loading&&state.items.length===0){ list.innerHTML='<div class="state"><div class="spinner"></div>Chargement…</div>'; return; }
     if(state.items.length===0){
-      list.innerHTML = '<div class="state">Aucun message trouvé.<br>Modifiez la recherche ou les filtres.</div>';
-      return;
+      var msg = state.filtre==="annulations"
+        ? "Aucune annulation pour le moment."
+        : "Aucun message trouvé.<br>Modifiez la recherche ou les filtres.";
+      list.innerHTML='<div class="state">'+msg+'</div>'; return;
     }
-    var seq = buildSequence(state.items);
-    var html = seq.map(function(e){
-      return e.type==="pair" ? renderPair(e.cancel, e.original) : renderMsg(e.msg);
-    }).join("");
-    if(state.hasMore){
-      html += '<button class="more" id="moreBtn">Charger plus de messages</button>';
-    }
-    list.innerHTML = html;
-    var mb = $("moreBtn");
-    if(mb) mb.onclick = function(){ loadMore(); };
-    // fill in any missing originals on demand
-    [].forEach.call(list.querySelectorAll(".pair-orig"), function(slot){
-      var cid = slot.getAttribute("data-cancel"), cancel=null;
+    var seq=buildSequence(state.items);
+    var html=seq.map(function(e){ return e.type==="pair"?renderPair(e.cancel,e.original):renderMsg(e.msg); }).join("");
+    if(state.hasMore) html+='<button class="more" id="moreBtn">Charger plus de messages</button>';
+    list.innerHTML=html;
+    var mb=$("moreBtn"); if(mb) mb.onclick=function(){ loadMore(); };
+    [].forEach.call(list.querySelectorAll(".pair-orig"),function(slot){
+      var cid=slot.getAttribute("data-cancel"),cancel=null;
       for(var i=0;i<state.items.length;i++){ if(state.items[i].id===cid){ cancel=state.items[i]; break; } }
-      if(cancel) resolveOriginal(cancel, slot);
+      if(cancel) resolveOriginal(cancel,slot);
     });
   }
-
   function renderMeta(){
     var m=$("meta");
-    if(state.loading){ m.innerHTML='<span class="dot" style="background:var(--amber)"></span> Recherche en cours…'; return; }
+    if(state.loading){ m.innerHTML='<span class="dot" style="background:var(--amber)"></span> Recherche…'; return; }
     var n=state.items.length;
-    var txt = n===0 ? "" : (n + (state.hasMore?"+ ":" ") + "message"+(n>1?"s":""));
-    m.innerHTML = txt ? ('<span class="dot"></span> '+esc(txt)) : "";
+    m.innerHTML=n?('<span class="dot"></span> '+n+(state.hasMore?"+ ":" ")+"message"+(n>1?"s":"")):"";
   }
 
-  // ---------- API ----------
   function buildUrl(){
-    var u = new URL(state.api.replace(/\/+$/,"") + ENDPOINT);
-    if(state.q) u.searchParams.set("q", state.q);
-    if(state.filtre) u.searchParams.set("filtre", state.filtre);
-    if(state.platform) u.searchParams.set("platform", state.platform);
-    if(state.operator) u.searchParams.set("operator", state.operator);
-    if(state.from) u.searchParams.set("from", state.from);
-    if(state.to) u.searchParams.set("to", state.to);
-    u.searchParams.set("limit", String(PAGE));
-    if(state.before) u.searchParams.set("avant", state.before);
+    var u=new URL(state.api.replace(/\/+$/,"")+ENDPOINT);
+    if(state.q) u.searchParams.set("q",state.q);
+    if(state.filtre) u.searchParams.set("filtre",state.filtre);
+    if(state.platform) u.searchParams.set("platform",state.platform);
+    if(state.operator) u.searchParams.set("operator",state.operator);
+    if(state.from) u.searchParams.set("from",state.from);
+    if(state.to) u.searchParams.set("to",state.to);
+    u.searchParams.set("limit",String(PAGE));
+    if(state.before) u.searchParams.set("avant",state.before);
     return u.toString();
   }
-
-  function apiFetch(){
-    return fetch(buildUrl(), {
-      cache:"no-store",
-      headers:{ "Authorization":"Bearer "+state.code, "Accept":"application/json" }
-    });
-  }
+  function apiFetch(){ return fetch(buildUrl(),{cache:"no-store",headers:{"Authorization":"Bearer "+state.code,"Accept":"application/json"}}); }
 
   function fillFilters(data){
-    if(data.platforms && data.platforms.length){
-      var sel=$("fPlatform"), cur=state.platform;
-      sel.innerHTML='<option value="">Toutes</option>' + data.platforms.map(function(p){
-        return '<option value="'+esc(p.code)+'">'+esc(p.name||p.code)+'</option>';
-      }).join("");
+    if(data.platforms&&data.platforms.length){
+      var sel=$("fPlatform"),cur=state.platform;
+      sel.innerHTML='<option value="">Toutes</option>'+data.platforms.map(function(p){ return '<option value="'+esc(p.code)+'">'+esc(p.name||p.code)+"</option>"; }).join("");
       sel.value=cur;
     }
-    if(data.operators && data.operators.length){
-      var so=$("fOperator"), co=state.operator;
-      so.innerHTML='<option value="">Tous</option>' + data.operators.map(function(o){
-        return '<option value="'+esc(o)+'">'+esc(o)+'</option>';
-      }).join("");
+    if(data.operators&&data.operators.length){
+      var so=$("fOperator"),co=state.operator;
+      so.innerHTML='<option value="">Tous</option>'+data.operators.map(function(o){ return '<option value="'+esc(o)+'">'+esc(o)+"</option>"; }).join("");
       so.value=co;
     }
-    if(data.org){
-      $("orgName").textContent = (data.org.name||data.org.code||"") ;
-    }
+    if(data.org) $("orgName").textContent=(data.org.name||data.org.code||"");
   }
 
   function search(reset){
-    var mySeq = ++state.seq;
+    var mySeq=++state.seq;
     if(reset){ state.before=null; state.items=[]; }
     state.loading=true; renderMeta(); if(reset) render();
     apiFetch().then(function(r){
-      if(r.status===401||r.status===403){ throw {auth:true}; }
+      if(r.status===401||r.status===403) throw {auth:true};
       if(!r.ok) throw {msg:"Erreur serveur ("+r.status+")"};
       return r.json();
     }).then(function(data){
-      if(mySeq!==state.seq) return; // stale
-      state.loading=false;
-      state.hasMore = !!data.hasMore;
-      state.before = data.nextBefore || null;
-      var arr = data.sms||[];
-      state.items = state.items.concat(arr);
-      fillFilters(data);
-      render(); renderMeta();
+      if(mySeq!==state.seq) return;
+      state.loading=false; state.hasMore=!!data.hasMore; state.before=data.nextBefore||null;
+      state.items=state.items.concat(data.sms||[]);
+      fillFilters(data); render(); renderMeta();
     }).catch(function(e){
       if(mySeq!==state.seq) return;
       state.loading=false;
       if(e&&e.auth){ toast("Code refusé ou expiré."); logout(); return; }
-      $("list").innerHTML='<div class="state">Impossible de charger les messages.<br>'+
-        esc((e&&e.msg)||"Vérifiez votre connexion.")+'</div>';
+      $("list").innerHTML='<div class="state">Impossible de charger les messages.<br>'+esc((e&&e.msg)||"Vérifiez votre connexion.")+"</div>";
       renderMeta();
     });
   }
+  function loadMore(){ if(state.loading||!state.hasMore) return; var mb=$("moreBtn"); if(mb){ mb.textContent="Chargement…"; mb.disabled=true; } search(false); }
 
-  function loadMore(){
-    if(state.loading||!state.hasMore) return;
-    var mb=$("moreBtn"); if(mb){ mb.textContent="Chargement…"; mb.disabled=true; }
-    search(false);
-  }
-
-  // ---------- events ----------
   var qTimer=null;
-  function onSearchInput(){
-    var v=$("q").value.trim();
-    $("qClear").style.display = v?"block":"none";
-    clearTimeout(qTimer);
-    qTimer=setTimeout(function(){ state.q=v; search(true); }, 320);
-  }
-
+  function onSearchInput(){ var v=$("q").value.trim(); $("qClear").style.display=v?"block":"none";
+    clearTimeout(qTimer); qTimer=setTimeout(function(){ state.q=v; search(true); },300); }
   function setFiltre(f){
     if(f==="__adv"){ toggleAdvanced(); return; }
     state.filtre=f;
-    [].forEach.call(document.querySelectorAll("#chips .chip"), function(c){
-      if(c.id==="advChip") return;
-      c.classList.toggle("active", c.getAttribute("data-f")===f);
-    });
+    [].forEach.call(document.querySelectorAll("#chips .chip"),function(c){ if(c.id==="advChip") return; c.classList.toggle("active",c.getAttribute("data-f")===f); });
     search(true);
   }
+  function toggleAdvanced(){ var a=$("advanced"); a.classList.toggle("open"); $("advChip").classList.toggle("active",a.classList.contains("open")); }
 
-  function toggleAdvanced(){
-    var a=$("advanced"); a.classList.toggle("open");
-    $("advChip").classList.toggle("active", a.classList.contains("open"));
-  }
-
-  // ---------- auth ----------
-  function showApp(){
-    $("login").style.display="none";
-    $("app").style.display="block";
-  }
-  function showLogin(){
-    $("app").style.display="none";
-    $("login").style.display="flex";
-    $("code").value="";
-    $("loginErr").textContent="";
-  }
-  function logout(){
-    try{ localStorage.removeItem(LS_TOKEN); }catch(e){}
-    state.code=""; state.items=[]; state.before=null;
-    showLogin();
-  }
+  function showApp(){ $("login").style.display="none"; $("app").style.display="block"; }
+  function showLogin(){ $("app").style.display="none"; $("login").style.display="flex"; $("code").value=""; $("loginErr").textContent=""; }
+  function logout(){ try{ localStorage.removeItem(LS_TOKEN); }catch(e){} state.code=""; state.items=[]; state.before=null; showLogin(); }
 
   function doLogin(){
-    var code = $("code").value.trim().toUpperCase();
-    var api  = ($("apiUrl").value.trim()) || DEFAULT_API;
+    var code=$("code").value.trim().toUpperCase();
+    var api=($("apiUrl").value.trim())||DEFAULT_API;
     if(code.length<4){ $("loginErr").textContent="Code trop court."; return; }
-    var btn=$("loginBtn"); btn.disabled=true; btn.textContent="Connexion…";
-    $("loginErr").textContent="";
+    var btn=$("loginBtn"); btn.disabled=true; btn.textContent="Connexion…"; $("loginErr").textContent="";
     state.code=code; state.api=api;
-    // validate by a light request
     var u=new URL(api.replace(/\/+$/,"")+ENDPOINT); u.searchParams.set("limit","1");
     fetch(u.toString(),{cache:"no-store",headers:{"Authorization":"Bearer "+code,"Accept":"application/json"}})
-      .then(function(r){
-        if(r.status===401||r.status===403){ throw {auth:true}; }
-        if(!r.ok) throw {msg:"Serveur indisponible ("+r.status+")"};
-        return r.json();
-      }).then(function(){
-        try{ localStorage.setItem(LS_TOKEN, code); localStorage.setItem(LS_API, api); }catch(e){}
-        btn.disabled=false; btn.textContent="Se connecter";
-        showApp(); search(true);
-      }).catch(function(e){
-        btn.disabled=false; btn.textContent="Se connecter";
-        state.code="";
-        $("loginErr").textContent = (e&&e.auth) ? "Code d'accès invalide." : ((e&&e.msg)||"Connexion impossible.");
-      });
+      .then(function(r){ if(r.status===401||r.status===403) throw {auth:true}; if(!r.ok) throw {msg:"Serveur indisponible ("+r.status+")"}; return r.json(); })
+      .then(function(){ try{ localStorage.setItem(LS_TOKEN,code); localStorage.setItem(LS_API,api); }catch(e){} btn.disabled=false; btn.textContent="Se connecter"; showApp(); search(true); })
+      .catch(function(e){ btn.disabled=false; btn.textContent="Se connecter"; state.code="";
+        $("loginErr").textContent=(e&&e.auth)?"Code d'accès invalide.":((e&&e.msg)||"Connexion impossible."); });
   }
 
-  // ---------- wire up ----------
   function init(){
-    // login screen
-    $("loginBtn").onclick = doLogin;
-    $("code").addEventListener("keydown", function(e){ if(e.key==="Enter") doLogin(); });
-    $("apiToggle").onclick = function(){
-      var f=$("apiField"); f.style.display = f.style.display==="none"?"block":"none";
-    };
-
-    // app screen
-    $("q").addEventListener("input", onSearchInput);
-    $("qClear").onclick = function(){ $("q").value=""; $("qClear").style.display="none"; state.q=""; search(true); };
-    [].forEach.call(document.querySelectorAll("#chips .chip"), function(c){
-      c.onclick = function(){ setFiltre(c.getAttribute("data-f")); };
-    });
-    $("fPlatform").onchange = function(){ state.platform=this.value; search(true); };
-    $("fOperator").onchange = function(){ state.operator=this.value; search(true); };
-    $("fFrom").onchange = function(){ state.from=this.value; search(true); };
-    $("fTo").onchange = function(){ state.to=this.value; search(true); };
-    $("resetAdv").onclick = function(){
-      state.platform=state.operator=state.from=state.to="";
-      $("fPlatform").value=""; $("fOperator").value=""; $("fFrom").value=""; $("fTo").value="";
-      search(true);
-    };
-    $("refreshBtn").onclick = function(){ search(true); toast("Actualisé"); };
-    $("logoutBtn").onclick = logout;
-
-    // restore session
-    var saved="", savedApi="";
+    $("loginBtn").onclick=doLogin;
+    $("code").addEventListener("keydown",function(e){ if(e.key==="Enter") doLogin(); });
+    $("apiToggle").onclick=function(){ var f=$("apiField"); f.style.display=f.style.display==="none"?"block":"none"; };
+    $("q").addEventListener("input",onSearchInput);
+    $("qClear").onclick=function(){ $("q").value=""; $("qClear").style.display="none"; state.q=""; search(true); };
+    [].forEach.call(document.querySelectorAll("#chips .chip"),function(c){ c.onclick=function(){ setFiltre(c.getAttribute("data-f")); }; });
+    $("fPlatform").onchange=function(){ state.platform=this.value; search(true); };
+    $("fOperator").onchange=function(){ state.operator=this.value; search(true); };
+    $("fFrom").onchange=function(){ state.from=this.value; search(true); };
+    $("fTo").onchange=function(){ state.to=this.value; search(true); };
+    $("resetAdv").onclick=function(){ state.platform=state.operator=state.from=state.to=""; $("fPlatform").value=""; $("fOperator").value=""; $("fFrom").value=""; $("fTo").value=""; search(true); };
+    $("refreshBtn").onclick=function(){ search(true); toast("Actualisé"); };
+    $("logoutBtn").onclick=logout;
+    var saved="",savedApi="";
     try{ saved=localStorage.getItem(LS_TOKEN)||""; savedApi=localStorage.getItem(LS_API)||""; }catch(e){}
     if(savedApi){ state.api=savedApi; $("apiUrl").value=savedApi; }
-    if(saved){
-      state.code=saved; showApp(); search(true);
-    } else {
-      showLogin();
-    }
-
-    // PWA service worker (network-first version handles updates)
-    if("serviceWorker" in navigator){
-      navigator.serviceWorker.register("/sms-center-sw.js").catch(function(){});
-    }
+    if(saved){ state.code=saved; showApp(); search(true); } else showLogin();
+    if("serviceWorker" in navigator) navigator.serviceWorker.register("/sms-center-sw.js").catch(function(){});
   }
-
-  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", init);
-  else init();
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",init); else init();
 })();
 </script>
 </body>
