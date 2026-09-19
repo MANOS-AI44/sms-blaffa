@@ -427,9 +427,63 @@
     if(original){
       inner += '<div class="pair-link"><span class="arrow">↳</span> Transaction d\'origine</div>' + renderMsg(original);
     } else {
-      inner += '<div class="pair-missing">Message d\'origine non trouvé dans les résultats chargés — affinez la recherche par numéro.</div>';
+      inner += '<div class="pair-orig" data-cancel="'+esc(cancel.id)+'">' +
+               '<div class="pair-missing">Recherche du message d\'origine…</div></div>';
     }
-    return '<div class="pair">'+inner+'</div>';
+    return '<div class="pair" id="pair-'+esc(cancel.id)+'">'+inner+'</div>';
+  }
+
+  // When the original isn't in the loaded page (e.g. under the "Annulations"
+  // filter, which only returns cancellations), fetch it on demand and slot it in.
+  var origCache = {};
+  function resolveOriginal(cancel, slot){
+    var cached = origCache[cancel.id];
+    if(cached === "pending") return;
+    if(cached && typeof cached === "object"){
+      slot.innerHTML = '<div class="pair-link"><span class="arrow">↳</span> Transaction d\'origine</div>' + renderMsg(cached);
+      return;
+    }
+    if(cached === null){ slot.innerHTML = '<div class="pair-missing">Message d\'origine non trouvé.</div>'; return; }
+    var term = cancel.senderPhone || cancel.cancellationRef || cancel.originalTransferRef || cancel.transactionId || "";
+    if(!term){ origCache[cancel.id]=null; slot.innerHTML = '<div class="pair-missing">Message d\'origine introuvable.</div>'; return; }
+    origCache[cancel.id] = "pending";
+    var u = new URL(state.api.replace(/\/+$/,"") + ENDPOINT);
+    u.searchParams.set("q", String(term));
+    u.searchParams.set("limit", "30");
+    fetch(u.toString(), {cache:"no-store", headers:{ "Authorization":"Bearer "+state.code, "Accept":"application/json" }})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(data){
+        var found = null;
+        if(data && data.sms){
+          var lk = linkKeysOf(cancel);
+          for(var i=0;i<data.sms.length && !found;i++){
+            var m=data.sms[i]; if(isCancel(m)||m.id===cancel.id) continue;
+            var mk = keysOf(m);
+            for(var j=0;j<mk.length;j++){ if(lk.indexOf(mk[j])>-1){ found=m; break; } }
+          }
+          if(!found){
+            var ct = cancel.receivedAt ? new Date(cancel.receivedAt).getTime() : 0;
+            data.sms.forEach(function(m){
+              if(found||isCancel(m)||m.id===cancel.id) return;
+              if(!cancel.senderPhone || String(m.senderPhone)!==String(cancel.senderPhone)) return;
+              if(cancel.amount!=null && m.amount!=null && Number(m.amount)!==Number(cancel.amount)) return;
+              var mt = m.receivedAt ? new Date(m.receivedAt).getTime() : 0;
+              if(ct&&mt&&mt>ct) return;
+              found = m;
+            });
+          }
+        }
+        if(found){
+          origCache[cancel.id] = found;
+          slot.innerHTML = '<div class="pair-link"><span class="arrow">↳</span> Transaction d\'origine</div>' + renderMsg(found);
+        } else {
+          origCache[cancel.id] = null;
+          slot.innerHTML = '<div class="pair-missing">Message d\'origine non trouvé.</div>';
+        }
+      }).catch(function(){
+        origCache[cancel.id] = null;
+        slot.innerHTML = '<div class="pair-missing">Message d\'origine non trouvé.</div>';
+      });
   }
 
   function render(){
@@ -452,6 +506,12 @@
     list.innerHTML = html;
     var mb = $("moreBtn");
     if(mb) mb.onclick = function(){ loadMore(); };
+    // fill in any missing originals on demand
+    [].forEach.call(list.querySelectorAll(".pair-orig"), function(slot){
+      var cid = slot.getAttribute("data-cancel"), cancel=null;
+      for(var i=0;i<state.items.length;i++){ if(state.items[i].id===cid){ cancel=state.items[i]; break; } }
+      if(cancel) resolveOriginal(cancel, slot);
+    });
   }
 
   function renderMeta(){
