@@ -284,9 +284,14 @@
   function statusLabel(s){ var c=statusClass(s);
     return c==="PENDING"?"⏳ En attente":c==="FAILED"?"❌ Échec":""; }
 
-  function isCancel(m){ return m && (m.annulation===true ||
-    String(m.transactionType||"").toUpperCase().indexOf("CANCEL")>-1 ||
-    String(m.transactionType||"").toUpperCase().indexOf("ANNUL")>-1); }
+  function isCancel(m){
+    if(m && (m.annulation===true ||
+      String(m.transactionType||"").toUpperCase().indexOf("CANCEL")>-1 ||
+      String(m.transactionType||"").toUpperCase().indexOf("ANNUL")>-1)) return true;
+    // Détecte aussi les annulations Wave par le texte ("Transfert annulé", "a été annulé")
+    var b=String(m&&m.body||"");
+    return /annul[ée]/i.test(b) && /transfert|solde|service client/i.test(b);
+  }
   function isOut(m){ return m && (m.sortant===true || String(m.direction||"").toUpperCase()==="OUTGOING"); }
   function kindClass(m){ return isCancel(m)?"cancel":(isOut(m)?"out":"in"); }
   function typeLabel(m){
@@ -314,11 +319,49 @@
       if(a===b||(a.length>=5&&b.indexOf(a)>-1)||(b.length>=5&&a.indexOf(b)>-1)) return true; } }
     return false;
   }
+  // Rapprochement par NOM (Wave : l'annulation porte le nom, pas une réf)
+  function normName(s){ return String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim(); }
+  function nameFromCancel(body){
+    var b=String(body||"");
+    var m=b.match(/re[çc]u\s+de\s+(.+?)\s+le\s/i);            // "reçu de <NOM> le 20/09..."
+    if(m) return m[1].trim();
+    m=b.match(/(?:envoy[ée]|transf[ée]r[ée]?|transfert)\s+(?:à|a|au|vers)\s+(.+?)\s+(?:le|a\s+[ée]t[ée]|d['’]un|au\s+num)/i);
+    if(m) return m[1].trim();
+    return "";
+  }
+  function amountFromCancel(m){
+    if(m && m.amount!=null) return Number(m.amount);
+    var b=String(m&&m.body||"");
+    var mm=b.match(/transfert\s+de\s+([\d][\d .]*)\s*F/i) || b.match(/\bde\s+([\d][\d .]*)\s*F/i);
+    return mm? Number(mm[1].replace(/[ .]/g,"")) : null;
+  }
+  function nameMatch(origMsg,name){
+    if(!name) return false;
+    var nn=normName(name); if(nn.length<4) return false;
+    var hay=normName((origMsg.body||"")+" "+(origMsg.sender||"")+" "+(origMsg.beneficiary||""));
+    if(hay.indexOf(nn)>-1) return true;
+    var toks=nn.split(" ").filter(function(t){return t.length>=2;});
+    if(toks.length>=2) return toks.every(function(t){ return hay.indexOf(t)>-1; });
+    return false;
+  }
   function buildSequence(items){
     function findOriginal(cancel){
       var lk=linkKeysOf(cancel), found=null;
       if(lk.length){ for(var i=0;i<items.length&&!found;i++){ var m=items[i]; if(m===cancel||isCancel(m)) continue; if(keysMatch(keysOf(m),lk)) found=m; } }
       if(found) return found;
+      // Rapprochement par NOM + montant (Wave)
+      var cname=nameFromCancel(cancel.body), camt=amountFromCancel(cancel);
+      if(cname){
+        var ctN=cancel.receivedAt?new Date(cancel.receivedAt).getTime():0, bestN=null;
+        for(var n=0;n<items.length;n++){
+          var mn=items[n]; if(mn===cancel||isCancel(mn)) continue;
+          if(!nameMatch(mn,cname)) continue;
+          if(camt!=null&&mn.amount!=null&&Number(mn.amount)!==camt) continue;
+          var mtN=mn.receivedAt?new Date(mn.receivedAt).getTime():0; if(ctN&&mtN&&mtN>ctN) continue;
+          if(!bestN||mtN>(bestN._t||0)){ bestN=mn; bestN._t=mtN; }
+        }
+        if(bestN) return bestN;
+      }
       var ct=cancel.receivedAt?new Date(cancel.receivedAt).getTime():0, best=null;
       items.forEach(function(m){
         if(m===cancel||isCancel(m)) return;
@@ -381,6 +424,7 @@
     if(cached===null){ slot.innerHTML='<div class="pair-missing">Message d\'origine non trouvé.</div>'; return; }
     var lk0=linkKeysOf(cancel), term="";
     lk0.slice().sort(function(a,b){return b.length-a.length;}).some(function(k){ if(k&&k.length>=5){ term=k; return true; } return false; });
+    if(!term){ var cnm=nameFromCancel(cancel.body); if(cnm) term=cnm; }
     if(!term) term=cancel.senderPhone||"";
     if(!term){ origCache[cancel.id]=null; slot.innerHTML='<div class="pair-missing">Message d\'origine non trouvé.</div>'; return; }
     origCache[cancel.id]="pending";
@@ -393,6 +437,17 @@
         if(data&&data.sms){
           var lk=linkKeysOf(cancel);
           for(var i=0;i<data.sms.length&&!found;i++){ var m=data.sms[i]; if(isCancel(m)||m.id===cancel.id) continue; if(keysMatch(keysOf(m),lk)) found=m; }
+          var cname=nameFromCancel(cancel.body), camt=amountFromCancel(cancel);
+          if(!found&&cname){
+            var ctN=cancel.receivedAt?new Date(cancel.receivedAt).getTime():0;
+            data.sms.forEach(function(m){
+              if(found||isCancel(m)||m.id===cancel.id) return;
+              if(!nameMatch(m,cname)) return;
+              if(camt!=null&&m.amount!=null&&Number(m.amount)!==camt) return;
+              var mt=m.receivedAt?new Date(m.receivedAt).getTime():0; if(ctN&&mt&&mt>ctN) return;
+              found=m;
+            });
+          }
           if(!found){
             var ct=cancel.receivedAt?new Date(cancel.receivedAt).getTime():0;
             data.sms.forEach(function(m){
