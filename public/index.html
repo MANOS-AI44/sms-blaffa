@@ -24,6 +24,7 @@
     --safe-b: env(safe-area-inset-bottom, 0px);
     --safe-t: env(safe-area-inset-top, 0px);
   }
+  .btn-origine { margin-top: 8px; background: #EFF6FF; color: #1E40AF; border: 1px solid #93C5FD; border-radius: 8px; padding: 7px 12px; font-size: 12px; font-weight: 800; cursor: pointer; }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; }
   body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--fond); color: #0F172A; overscroll-behavior-y: contain; }
@@ -170,10 +171,11 @@
     <div class="haut">
       <img src="/sms-center-192.png" alt="">
       <h2>SMS BLAFFA</h2>
-      <p>Lis et recherche tous les SMS opérateurs de ton organisation.<br>Colle le token généré sur <b>BLAFFA FILE → SMS Center (token)</b>.</p>
+      <p>Lis et recherche tous les SMS opérateurs de ton organisation.<br>Saisis ton <b>code d'accès</b>, créé sur <b>BLAFFA FILE → /admin/sms-code</b>.</p>
     </div>
-    <label style="font-size:11px;font-weight:800;color:#334155">Token de ton organisation</label>
-    <input id="in-token" style="width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:monospace" placeholder="colle ton token ici" autocomplete="off">
+    <label style="font-size:11px;font-weight:800;color:#334155">Code d'accès de ton organisation</label>
+    <input id="in-token" style="width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:16px;font-weight:800;letter-spacing:2px;text-transform:uppercase;font-family:monospace" placeholder="ex. BLF303" autocomplete="off" autocapitalize="characters" spellcheck="false">
+    <div style="font-size:11px;color:var(--mute);margin-top:6px">6 caractères minimum. Un ancien token long fonctionne toujours.</div>
     <label style="font-size:11px;font-weight:800;color:#334155;display:block;margin-top:12px">Serveur BLAFFA FILE</label>
     <input id="in-api" aria-label="Serveur BLAFFA FILE" aria-readonly="true" readonly style="width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:monospace;background:#F8FAFC;color:#475569" value="https://blaffa-file.onrender.com/api/public/sms-app">
     <button class="btn" onclick="connecter()">Se connecter</button>
@@ -248,8 +250,8 @@
   <div class="page" id="page-reglages">
     <div class="carte">
       <h3>🔑 Connexion</h3>
-      <label>Token de l'organisation</label>
-      <input id="set-token" autocomplete="off">
+      <label>Code d'accès de l'organisation</label>
+      <input id="set-token" autocomplete="off" autocapitalize="characters" spellcheck="false" style="text-transform:uppercase;letter-spacing:1px;font-weight:700">
       <label>Serveur BLAFFA FILE</label>
       <input id="set-api" aria-readonly="true" readonly style="background:#F8FAFC;color:#475569">
       <button class="btn" onclick="sauverReglages()">Enregistrer</button>
@@ -427,6 +429,11 @@ function rendreListe(nom) {
     const phone = numeroLocal(s.senderPhone || s.beneficiary || s.devicePhone || s.deviceLabel) || "—";
     const network = [s.operator, s.country].filter(Boolean).join(" · ") || "Non déterminé";
     const refs = [s.originalTransferRef ? "PP: " + s.originalTransferRef : "", s.cancellationRef ? "TC: " + s.cancellationRef : "", s.transactionId ? "ID: " + s.transactionId : ""].filter(Boolean);
+    // Wave n'écrit aucune référence dans ses annulations : le NOM du payeur
+    // est le seul lien avec le message d'origine. Le serveur l'extrait
+    // (counterpartyName) ; on le montre et on en fait un raccourci de
+    // recherche, pour retrouver la transaction annulée en un geste.
+    if (s.counterpartyName) refs.push("Payeur: " + s.counterpartyName);
     if (s.amount != null) refs.unshift("Montant: " + s.amount + " F");
     if (s.balance != null) refs.push("Solde: " + s.balance + " F");
     const count = Number(s.relatedEventCount || 0);
@@ -437,6 +444,9 @@ function rendreListe(nom) {
       + '<div class="ligne2">' + presentation.tag + '<span class="tag t-plat">' + esc(s.platformCode) + '</span>' + (count > 1 ? '<span class="tag event-count">' + count + ' événements</span>' : '') + '</div>'
       + '<div class="details-financiers"><span><b>TYPE</b> ' + esc(s.transactionType || "UNKNOWN") + '</span><span><b>DIRECTION</b> ' + esc(directionLabel(s)) + '</span><span><b>PLATEFORME</b> ' + esc(s.platformCode) + '</span><span><b>TÉLÉPHONE</b> ' + esc(phone) + '</span><span><b>RÉSEAU</b> ' + esc(network) + '</span><span><b>HEURE</b> ' + esc(heure(s.receivedAt)) + '</span></div>'
       + (refs.length ? '<div class="refs">' + esc(refs.join(" · ")) + '</div>' : '')
+      + (s.counterpartyName && s.transactionType === "CANCELLATION"
+          ? '<button class="btn-origine" onclick="event.stopPropagation();chercherOrigine(' + JSON.stringify(s.counterpartyName).replace(/"/g, "&quot;") + ')">↳ Retrouver la transaction d\'origine</button>'
+          : '')
       + '<div class="corps">' + esc(s.body) + "</div>"
       + eventHistory(s)
       + "</div></div>";
@@ -449,6 +459,18 @@ function majBadge() {
   const b = $("badge-annul");
   if (nouvelles > 0 && ongletActif !== "annulations") { b.style.display = "flex"; b.textContent = nouvelles > 9 ? "9+" : nouvelles; }
   else b.style.display = "none";
+}
+
+/**
+ * Une annulation Wave ne cite aucune référence, seulement le nom du payeur.
+ * Ce raccourci bascule sur l'onglet Recherche avec ce nom comme terme : le
+ * message de paiement d'origine porte le même nom, il remonte donc avec.
+ */
+function chercherOrigine(nom) {
+  allerA("recherche");
+  $("in-q").value = nom;
+  $("search-scope").value = "tous";
+  rafraichirListe("recherche");
 }
 
 // ════ CHARGEMENT ════
@@ -594,11 +616,25 @@ async function ticAuto() {
 }
 
 // ════ CONNEXION / RÉGLAGES ════
+/**
+ * Un code court est insensible à la casse et aux espaces : « blf 303 » doit
+ * ouvrir la même organisation que « BLF303 ». Un token long hexadécimal est
+ * laissé tel quel — le mettre en majuscules le casserait.
+ */
+function normaliserAcces(valeur) {
+  const brut = String(valeur || "").trim();
+  if (/^[0-9a-f]{32,}$/i.test(brut)) return brut;
+  return brut.replace(/\s+/g, "").toUpperCase();
+}
 async function connecter() {
-  const token = $("in-token").value.trim();
+  // 24/09 — Les codes courts (6 caractères, type BLF303) remplacent les
+  // tokens longs. Le serveur les accepte depuis septembre ; c'est ce contrôle
+  // a 20 caractères, cote navigateur, qui rendait l'application inutilisable
+  // avec le code. Les anciens tokens hexadécimaux passent toujours.
+  const token = normaliserAcces($("in-token").value);
   const err = $("login-err");
   err.style.display = "none";
-  if (token.length < 20) { err.textContent = "Token trop court — copie le token complet."; err.style.display = "block"; return; }
+  if (token.length < 6) { err.textContent = "Code trop court — 6 caractères minimum."; err.style.display = "block"; return; }
   try {
     const j = await appelAvecToken(token, "tous", "", null);
     if (!j.ok) throw new Error(j.error || "token refusé");
@@ -609,11 +645,11 @@ async function connecter() {
 }
 
 async function sauverReglages() {
-  const token = $("set-token").value.trim();
+  const token = normaliserAcces($("set-token").value);
   const err = $("set-err");
   err.style.display = "none";
   try {
-    if (token.length < 20) throw new Error("token trop court — copie le token complet");
+    if (token.length < 6) throw new Error("code trop court — 6 caractères minimum");
     const j = await appelAvecToken(token, "tous", "", null);
     if (!j.ok) throw new Error(j.error || "?");
     localStorage.setItem("smsblaffa_token", token);
