@@ -1,27 +1,43 @@
-/* SMS BLAFFA — Service Worker (passe-plat réseau)
-   Ne met RIEN en cache et n'intercepte AUCUNE requête : tout passe
-   directement au réseau. Sert uniquement à rendre l'app installable (PWA)
-   et à purger les anciens caches d'une version précédente.
-   -> garantit que l'application est toujours à jour, jamais bloquée par un
-      cache périmé. */
+// SMS Center — service worker (PWA installable).
+// Cache le "coquillage" de l'application (page + icônes + manifeste) pour un
+// démarrage instantané et un fonctionnement même avec un réseau instable.
+// Les appels à l'API (/api/public/sms-app) ne sont PAS interceptés : ce SW est
+// limité au scope /sms-center.
+const CACHE = "sms-center-v7";
+const SHELL = [
+  "/sms-center.html",
+  "/sms-center-manifest.json",
+  "/sms-center-192.png",
+  "/sms-center-512.png",
+];
 
-self.addEventListener("install", function(e){
-  self.skipWaiting();
+self.addEventListener("install", (e) => {
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
 });
 
-self.addEventListener("activate", function(e){
-  e.waitUntil((async function(){
-    try{
-      var keys = await caches.keys();
-      await Promise.all(keys.map(function(k){ return caches.delete(k); }));
-    }catch(_){}
-    await self.clients.claim();
-  })());
+self.addEventListener("activate", (e) => {
+  e.waitUntil(
+    caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim())
+  );
 });
 
-/* Écouteur fetch présent (pour l'installabilité PWA) mais volontairement
-   passif : on n'appelle jamais respondWith, donc le navigateur fait la
-   requête réseau normale. */
-self.addEventListener("fetch", function(e){
-  /* passe-plat : aucune interception */
+self.addEventListener("fetch", (e) => {
+  const url = new URL(e.request.url);
+  if (e.request.method !== "GET") return;
+  if (!SHELL.includes(url.pathname)) return;
+  // Réseau d'abord pour la page (toujours à jour), cache en secours.
+  if (url.pathname === "/sms-center.html") {
+    e.respondWith(
+      fetch(e.request, { cache: "no-store" })
+        .then((r) => {
+          const copy = r.clone();
+          caches.open(CACHE).then((c) => c.put(e.request, copy)).catch(() => {});
+          return r;
+        })
+        .catch(() => caches.match(e.request))
+    );
+    return;
+  }
+  // Cache d'abord pour icônes/manifeste.
+  e.respondWith(caches.match(e.request).then((hit) => hit || fetch(e.request)));
 });

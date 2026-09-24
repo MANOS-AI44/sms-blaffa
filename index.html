@@ -212,6 +212,7 @@
       <button class="chip on" data-f="tous" onclick="setFiltre('tous',this)">💬 Tous</button>
       <button class="chip" data-f="depot" onclick="setFiltre('depot',this)">📥 Dépôt</button>
       <button class="chip" data-f="retrait" onclick="setFiltre('retrait',this)">📤 Retrait</button>
+      <button class="chip" data-f="autres" onclick="setFiltre('autres',this)">🗂️ Autres SMS</button>
     </div>
     <div id="liste-messages"></div>
     <button class="plus" id="plus-messages" style="display:none" onclick="chargerPlus('messages')">Voir les SMS plus anciens</button>
@@ -225,12 +226,13 @@
       <button onclick="lancerRecherche()">🔍</button>
     </div>
     <div class="search-filters">
+      <select id="search-scope" aria-label="Type de messages"><option value="tous">Messages financiers</option><option value="autres">Autres SMS et notifications</option></select>
       <select id="search-platform" aria-label="Plateforme"><option value="">Toutes les plateformes</option></select>
       <select id="search-operator" aria-label="Opérateur"><option value="">Tous les opérateurs</option></select>
       <input id="search-from" type="date" aria-label="Date de début">
       <input id="search-to" type="date" aria-label="Date de fin">
     </div>
-    <div class="note" style="margin:0 4px 10px">Recherche par numéro, montant, identifiant de transaction, références PP/TC, plateforme, opérateur et période.</div>
+    <div class="note" style="margin:0 4px 10px">Les messages financiers et les contenus hors modèles restent séparés. Choisis la catégorie, puis recherche par numéro, montant, identifiant, références PP/TC, plateforme ou période.</div>
     <div id="liste-recherche"><div class="vide"><div class="ico">🔍</div>Tape un numéro ou un mot puis valide.</div></div>
     <button class="plus" id="plus-recherche" style="display:none" onclick="chargerPlus('recherche')">Voir plus de résultats</button>
   </div>
@@ -260,7 +262,7 @@
     </div>
     <div class="carte">
       <h3>ℹ️ Application</h3>
-      <p class="note">SMS BLAFFA v5 — affichage téléphone compact, recherche instantanée et annulations regroupées par références PP/TC. L'application utilise automatiquement le serveur BLAFFA FILE actif.</p>
+      <p class="note">SMS BLAFFA v6 — tous les SMS et toutes les notifications sont consultables, avec un espace « Autres SMS » pour les contenus hors modèles financiers.</p>
       <button class="btn rouge-b" onclick="deconnecter()">Se déconnecter</button>
     </div>
   </div>
@@ -388,7 +390,8 @@ function presentationMessage(s) {
   if (s.status === "BLOCKED") return { cls: "rouge", tag: '<span class="tag t-rouge">🛑 Transaction bloquée</span>' };
   if (s.transactionType === "PAYOUT" && s.direction === "OUTGOING") return { cls: "bleu", tag: '<span class="tag t-bleu">📤 Sortant payé</span>' };
   if (s.transactionType === "DEPOSIT" && s.direction === "INCOMING") return { cls: "jaune", tag: '<span class="tag t-jaune">📥 Dépôt reçu</span>' };
-  return { cls: "gris", tag: '<span class="tag t-gris">❔ À classer — non reconnu</span>' };
+  if (s.source === "NOTIFICATION") return { cls: "gris", tag: '<span class="tag t-gris">🔔 Autre notification</span>' };
+  return { cls: "gris", tag: '<span class="tag t-gris">💬 Autre SMS</span>' };
 }
 
 function directionLabel(s) {
@@ -417,7 +420,8 @@ function rendreListe(nom) {
     $("plus-" + nom).style.display = "none";
     return;
   }
-  L.innerHTML = '<div class="phone-thread"><div class="phone-thread-head"><span>💬</span><div><strong>' + (nom === "recherche" ? "Résultats de recherche" : nom === "annulations" ? "Annulations" : "Tous les messages") + '</strong><small>' + sms.length + ' message' + (sms.length > 1 ? 's' : '') + ' · SMS BLAFFA</small></div></div><div class="phone-thread-list">' + sms.map(function (s) {
+  const titreListe = nom === "recherche" ? "Résultats de recherche" : nom === "annulations" ? "Annulations" : filtreMessages === "autres" ? "Autres SMS et notifications" : "Tous les messages";
+  L.innerHTML = '<div class="phone-thread"><div class="phone-thread-head"><span>💬</span><div><strong>' + titreListe + '</strong><small>' + sms.length + ' message' + (sms.length > 1 ? 's' : '') + ' · SMS BLAFFA</small></div></div><div class="phone-thread-list">' + sms.map(function (s) {
     const presentation = presentationMessage(s);
     const initiale = (s.sender || "?").replace(/[^A-Za-z0-9]/g, "").slice(0, 2).toUpperCase() || "?";
     const phone = numeroLocal(s.senderPhone || s.beneficiary || s.devicePhone || s.deviceLabel) || "—";
@@ -451,7 +455,7 @@ function majBadge() {
 function paramsDe(nom) {
   if (nom === "messages") return { filtre: filtreMessages, q: "", options: {} };
   if (nom === "recherche") return {
-    filtre: "tous",
+    filtre: $("search-scope").value,
     q: $("in-q").value.trim(),
     options: {
       platform: $("search-platform").value,
