@@ -65,63 +65,30 @@
   .chip.on { background: var(--bleu); color: #FFF; border-color: var(--bleu); }
 
   /* ═══ MESSAGES ═══ */
-  .msg { display: flex; gap: 11px; background: #FFF; border: 1px solid var(--border); border-radius: 16px; padding: 12px 13px; margin-bottom: 8px; }
-  .msg.jaune { background: var(--jaune-bg); border-color: var(--jaune-bd); }
-  .msg.bleu  { background: var(--bleu-bg);  border-color: var(--bleu-bd); }
-  .msg.rouge { background: var(--rouge-bg); border-color: var(--rouge-bd); }
-  .msg.vert  { background: var(--vert-bg); border-color: var(--vert-bd); }
-  .msg.gris  { background: var(--gris-bg); border-color: var(--gris-bd); }
-  .avatar { flex: 0 0 auto; width: 42px; height: 42px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; color: #FFF; }
-  .contenu { flex: 1; min-width: 0; }
-  .ligne1 { display: flex; align-items: baseline; gap: 8px; }
-  .exp { font-weight: 800; font-size: 14px; }
-  .quand { margin-left: auto; font-size: 10.5px; color: var(--mute); font-weight: 700; white-space: nowrap; }
-  .ligne2 { display: flex; align-items: center; gap: 6px; margin: 2px 0 4px; flex-wrap: wrap; }
-  .tag { font-size: 9.5px; font-weight: 800; border-radius: 999px; padding: 1.5px 8px; }
-  .t-bleu { background: #DBEAFE; color: var(--bleu-tx); }
-  .t-jaune { background: #FEF9C3; color: var(--jaune-tx); }
-  .t-rouge { background: #FEE2E2; color: var(--rouge-tx); }
-  .t-vert { background: #DCFCE7; color: var(--vert-tx); }
-  .t-gris { background: #E2E8F0; color: var(--gris-tx); }
-  .t-plat { background: #EDE9FE; color: #5B21B6; }
-  .t-tel { background: #F1F5F9; color: #475569; }
-  .corps { font-size: 13.5px; line-height: 1.5; word-break: break-word; color: #1E293B; max-height: 3.1em; overflow: hidden; }
-  .msg.ouvert .corps { max-height: none; white-space: pre-wrap; }
-  .msg.bleu .corps { color: #1D4ED8; font-weight: 600; }
-  .msg.rouge .corps { color: #991B1B; font-weight: 600; }
-  .msg.vert .corps { color: #166534; font-weight: 600; }
-  .msg.gris .corps { color: #475569; }
-  .details-financiers { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 3px 8px; margin: 5px 0; font-size: 9.5px; color: #64748B; }
-  .details-financiers span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .details-financiers b { color: #334155; }
-  /* Même fil compact que BLAFFA FILE : aspect téléphone sur mobile et bureau. */
-  .phone-thread { border: 1px solid #C7D8D7; border-radius: 28px; overflow: hidden; background: #EEF6F5; box-shadow: 0 14px 34px rgba(15,42,67,.12); }
-  .phone-thread-head { display: flex; align-items: center; gap: 9px; padding: 8px 13px; border-bottom: 1px solid #D5E2E1; background: rgba(255,255,255,.72); }
-  .phone-thread-head span:first-child { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: #46686A; color: #FFF; }
-  .phone-thread-head strong, .phone-thread-head small { display: block; }
-  .phone-thread-head strong { font-size: 12px; color: #14282D; }
-  .phone-thread-head small { font-size: 9px; color: #66797B; margin-top: 2px; }
-  .phone-thread-list { padding: 9px; }
-  .phone-thread .msg { display: block; padding: 0; margin-bottom: 8px; border: 0; background: transparent; }
-  .phone-thread .avatar { display: none; }
-  .phone-thread .contenu { border-radius: 17px 17px 17px 5px; padding: 8px 10px; background: #4E696B; color: #FFF; box-shadow: 0 4px 10px rgba(34,66,70,.14); }
-  .phone-thread .msg.bleu .contenu { background: #27648B; }
-  .phone-thread .msg.vert .contenu { background: #167A64; }
-  .phone-thread .msg.jaune .contenu { background: #726426; }
-  .phone-thread .msg.rouge .contenu { background: #9F3A46; }
-  .phone-thread .ligne1 { align-items: center; }
-  .phone-thread .exp { color: #FFF; font-size: 11.5px; }
-  .phone-thread .quand { color: rgba(255,255,255,.78); font-size: 9px; }
-  .phone-thread .ligne2 { margin: 3px 0 5px; }
-  .phone-thread .details-financiers { color: rgba(255,255,255,.82); font-size: 8.5px; margin: 4px 0; }
-  .phone-thread .details-financiers b { color: #FFF; }
-  .phone-thread .refs { margin: 4px 0; padding: 5px 7px; background: rgba(255,255,255,.13); color: #FFF; font-size: 8.5px; }
-  .phone-thread .corps, .phone-thread .msg.bleu .corps, .phone-thread .msg.vert .corps, .phone-thread .msg.rouge .corps, .phone-thread .msg.gris .corps { color: #FFF; font-size: 11.5px; line-height: 1.35; font-weight: 500; max-height: 4.05em; }
-  .phone-thread .msg.ouvert .corps { max-height: none; }
-  .phone-thread .event-history { border-color: rgba(255,255,255,.3); }
-  .phone-thread .event-history div, .phone-thread .event-history b { color: #FFF; }
-  .refs { margin: 5px 0; padding: 6px 8px; border-radius: 8px; background: rgba(255,255,255,.65); font: 9.5px ui-monospace, SFMono-Regular, Menlo, monospace; color: #475569; }
-  .event-count { margin-left: auto; background: rgba(255,255,255,.72); color: #475569; }
+  /* ═══ CARTE MESSAGE — modèle de /admin/messages (BLAFFA FILE) ═══
+     Fiche blanche, type à gauche, montant coloré à droite, « Reçu sur
+     <PLATEFORME> », puis téléphone · opérateur · heure, puis le SMS.
+     Volontairement sobre : pas de grille TYPE/DIRECTION/RÉSEAU, pas de
+     bulle colorée pleine — c'est ce qui rendait l'écran illisible. */
+  .msg { background: #FFF; border: 1px solid var(--border); border-radius: 16px; padding: 13px 15px; margin-bottom: 10px; box-shadow: 0 1px 2px rgba(16,32,64,.06), 0 4px 16px rgba(16,32,64,.05); animation: fade .25s ease both; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .msg.rouge { border-color: #F6C9C9; background: linear-gradient(180deg, #FDEAEA, #FFF 60%); }
+  .m-head { display: flex; align-items: center; gap: 10px; }
+  .m-type { font-size: 14.5px; font-weight: 700; display: flex; align-items: center; gap: 6px; color: #0F1729; }
+  .m-amt { margin-left: auto; font-size: 18px; font-weight: 800; white-space: nowrap; }
+  .m-amt.jaune { color: #0F9D58; }
+  .m-amt.bleu  { color: #C2740A; }
+  .m-amt.rouge, .m-amt.vert { color: #DC2626; }
+  .m-amt.gris  { color: #64748B; }
+  .m-plat { margin-top: 8px; font-size: 13.5px; color: var(--mute); }
+  .m-plat b { background: #EAF1FF; color: #2563EB; padding: 2px 9px; border-radius: 7px; font-size: 12.5px; margin-left: 2px; display: inline-block; font-weight: 700; }
+  .m-meta { margin-top: 8px; font-size: 12.5px; color: #94A3B8; display: flex; flex-wrap: wrap; gap: 4px 8px; }
+  .corps { margin-top: 10px; font-size: 13px; line-height: 1.5; color: #475569; background: #F7F9FC; border: 1px solid #EEF2F8; border-radius: 11px; padding: 10px 12px; white-space: pre-wrap; word-break: break-word; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .msg.ouvert .corps { -webkit-line-clamp: unset; display: block; }
+  .refs { display: none; margin-top: 8px; padding: 6px 9px; border-radius: 8px; background: #F1F5F9; font: 10.5px ui-monospace, SFMono-Regular, Menlo, monospace; color: #475569; }
+  .msg.ouvert .refs { display: block; }
+  .entete-liste { display: flex; align-items: center; gap: 9px; padding: 2px 4px 12px; color: var(--mute); font-size: 12.5px; font-weight: 600; }
+  .entete-liste strong { color: #0F1729; font-size: 14px; display: block; }
   .event-history { display: none; border-top: 1px dashed rgba(100,116,139,.35); margin-top: 8px; padding-top: 7px; }
   .msg.ouvert .event-history { display: block; }
   .event-history div { font-size: 10.5px; line-height: 1.4; margin: 4px 0; color: #475569; }
@@ -368,6 +335,10 @@ async function appelAvecToken(token, filtre, q, avant, options) {
 // ════ RENDU ════
 const COULEURS_AVATAR = { ORANGE: "#EA580C", MTN: "#CA8A04", MOMO: "#CA8A04", MOOV: "#2563EB", WAVE: "#0891B2", DEFAUT: "#475569" };
 function couleurExp(s) { s = (s || "").toUpperCase(); for (const k in COULEURS_AVATAR) if (k !== "DEFAUT" && s.includes(k)) return COULEURS_AVATAR[k]; return COULEURS_AVATAR.DEFAUT; }
+function formaterMontant(v) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n.toLocaleString("fr-FR").replace(/\u202f|\u00a0/g, " ") : String(v);
+}
 function esc(t) { const d = document.createElement("div"); d.textContent = String(t == null ? "" : t); return d.innerHTML; }
 function numeroLocal(value) {
   const digits = String(value || "").replace(/\D/g, "");
@@ -387,13 +358,13 @@ function heure(d) {
 }
 
 function presentationMessage(s) {
-  if (s.status === "ANNULATION_COMPLETED") return { cls: "vert", tag: '<span class="tag t-vert">✅ Annulation terminée</span>' };
-  if (s.status === "ANNULATION_INITIATED") return { cls: "rouge", tag: '<span class="tag t-rouge">🔴 Annulation initiée</span>' };
-  if (s.status === "BLOCKED") return { cls: "rouge", tag: '<span class="tag t-rouge">🛑 Transaction bloquée</span>' };
-  if (s.transactionType === "PAYOUT" && s.direction === "OUTGOING") return { cls: "bleu", tag: '<span class="tag t-bleu">📤 Sortant payé</span>' };
-  if (s.transactionType === "DEPOSIT" && s.direction === "INCOMING") return { cls: "jaune", tag: '<span class="tag t-jaune">📥 Dépôt reçu</span>' };
-  if (s.source === "NOTIFICATION") return { cls: "gris", tag: '<span class="tag t-gris">🔔 Autre notification</span>' };
-  return { cls: "gris", tag: '<span class="tag t-gris">💬 Autre SMS</span>' };
+  if (s.status === "ANNULATION_COMPLETED") return { cls: "vert", tag: "✅ Annulation terminée" };
+  if (s.status === "ANNULATION_INITIATED") return { cls: "rouge", tag: "🔴 Annulation initiée" };
+  if (s.status === "BLOCKED") return { cls: "rouge", tag: "🛑 Transaction bloquée" };
+  if (s.transactionType === "PAYOUT" && s.direction === "OUTGOING") return { cls: "bleu", tag: "📤 Retrait payé" };
+  if (s.transactionType === "DEPOSIT" && s.direction === "INCOMING") return { cls: "jaune", tag: "📥 Dépôt reçu" };
+  if (s.source === "NOTIFICATION") return { cls: "gris", tag: "🔔 Autre notification" };
+  return { cls: "gris", tag: "💬 Autre SMS" };
 }
 
 function directionLabel(s) {
@@ -423,34 +394,45 @@ function rendreListe(nom) {
     return;
   }
   const titreListe = nom === "recherche" ? "Résultats de recherche" : nom === "annulations" ? "Annulations" : filtreMessages === "autres" ? "Autres SMS et notifications" : "Tous les messages";
-  L.innerHTML = '<div class="phone-thread"><div class="phone-thread-head"><span>💬</span><div><strong>' + titreListe + '</strong><small>' + sms.length + ' message' + (sms.length > 1 ? 's' : '') + ' · SMS BLAFFA</small></div></div><div class="phone-thread-list">' + sms.map(function (s) {
+  L.innerHTML = '<div class="entete-liste"><span>💬</span><div><strong>' + titreListe + '</strong>' + sms.length + ' message' + (sms.length > 1 ? 's' : '') + ' · SMS BLAFFA</div></div>' + sms.map(function (s) {
     const presentation = presentationMessage(s);
-    const initiale = (s.sender || "?").replace(/[^A-Za-z0-9]/g, "").slice(0, 2).toUpperCase() || "?";
-    const phone = numeroLocal(s.senderPhone || s.beneficiary || s.devicePhone || s.deviceLabel) || "—";
-    const network = [s.operator, s.country].filter(Boolean).join(" · ") || "Non déterminé";
+    const phone = numeroLocal(s.senderPhone || s.beneficiary || s.devicePhone || s.deviceLabel) || "";
+    const montant = s.amount != null ? formaterMontant(s.amount) + " F" : "";
     const refs = [s.originalTransferRef ? "PP: " + s.originalTransferRef : "", s.cancellationRef ? "TC: " + s.cancellationRef : "", s.transactionId ? "ID: " + s.transactionId : ""].filter(Boolean);
     // Wave n'écrit aucune référence dans ses annulations : le NOM du payeur
     // est le seul lien avec le message d'origine. Le serveur l'extrait
     // (counterpartyName) ; on le montre et on en fait un raccourci de
     // recherche, pour retrouver la transaction annulée en un geste.
     if (s.counterpartyName) refs.push("Payeur: " + s.counterpartyName);
-    if (s.amount != null) refs.unshift("Montant: " + s.amount + " F");
     if (s.balance != null) refs.push("Solde: " + s.balance + " F");
     const count = Number(s.relatedEventCount || 0);
+    if (count > 1) refs.push(count + " événements");
+
+    // « Reçu sur MEGA MLI » / « Retrait sur MEGA MLI » — la plateforme en
+    // évidence, jamais deux plateformes confondues sur une même carte.
+    const tete = s.transactionType === "DEPOSIT" ? "Reçu sur "
+      : s.transactionType === "PAYOUT" ? "Retrait sur "
+      : s.transactionType === "CANCELLATION" ? "Annulé sur " : "Sur ";
+    const meta = [];
+    if (phone) meta.push("📞 " + esc(phone));
+    else if (s.sender) meta.push(esc(s.sender));
+    if (s.operator && String(s.operator).toLowerCase() !== String(s.sender || "").toLowerCase()) meta.push(esc(s.operator));
+    meta.push(esc(heure(s.receivedAt)));
+
     return '<div class="msg ' + presentation.cls + '" onclick="this.classList.toggle(\'ouvert\')">'
-      + '<div class="avatar" style="background:' + couleurExp(s.sender) + '">' + esc(initiale) + "</div>"
-      + '<div class="contenu">'
-      + '<div class="ligne1"><span class="exp">' + esc(s.sender) + '</span><span class="quand">' + heure(s.receivedAt) + "</span></div>"
-      + '<div class="ligne2">' + presentation.tag + '<span class="tag t-plat">' + esc(s.platformCode) + '</span>' + (count > 1 ? '<span class="tag event-count">' + count + ' événements</span>' : '') + '</div>'
-      + '<div class="details-financiers"><span><b>TYPE</b> ' + esc(s.transactionType || "UNKNOWN") + '</span><span><b>DIRECTION</b> ' + esc(directionLabel(s)) + '</span><span><b>PLATEFORME</b> ' + esc(s.platformCode) + '</span><span><b>TÉLÉPHONE</b> ' + esc(phone) + '</span><span><b>RÉSEAU</b> ' + esc(network) + '</span><span><b>HEURE</b> ' + esc(heure(s.receivedAt)) + '</span></div>'
+      + '<div class="m-head"><span class="m-type">' + presentation.tag + '</span>'
+      + (montant ? '<span class="m-amt ' + presentation.cls + '">' + esc(montant) + '</span>' : '')
+      + '</div>'
+      + (s.platformCode ? '<div class="m-plat">' + tete + '<b>' + esc(s.platformCode) + '</b></div>' : '')
+      + '<div class="m-meta">' + meta.join(" · ") + '</div>'
+      + '<div class="corps">' + esc(s.body) + "</div>"
       + (refs.length ? '<div class="refs">' + esc(refs.join(" · ")) + '</div>' : '')
       + (s.counterpartyName && s.transactionType === "CANCELLATION"
           ? '<button class="btn-origine" onclick="event.stopPropagation();chercherOrigine(' + JSON.stringify(s.counterpartyName).replace(/"/g, "&quot;") + ')">↳ Retrouver la transaction d\'origine</button>'
           : '')
-      + '<div class="corps">' + esc(s.body) + "</div>"
       + eventHistory(s)
-      + "</div></div>";
-  }).join("") + '</div></div>';
+      + "</div>";
+  }).join("");
   $("plus-" + nom).style.display = anciens[nom] ? "block" : "none";
 }
 
