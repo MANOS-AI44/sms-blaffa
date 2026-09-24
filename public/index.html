@@ -155,7 +155,7 @@
     <div class="haut">
       <img src="/sms-center-192.png" alt="">
       <h2>SMS BLAFFA</h2>
-      <p>Lis et recherche tous les SMS opérateurs de ton organisation.<br>Saisis ton <b>code d'accès</b>, créé sur <b>BLAFFA FILE → /admin/sms-code</b>.</p>
+      <p>Lis et recherche les SMS opérateurs.<br>Saisis ton <b>code d'accès</b> — celui de l'organisation, ou celui que le responsable t'a donné.</p>
     </div>
     <label style="font-size:11px;font-weight:800;color:#334155">Code d'accès de ton organisation</label>
     <input id="in-token" style="width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:16px;font-weight:800;letter-spacing:2px;text-transform:uppercase;font-family:monospace" placeholder="ex. BLF303" autocomplete="off" autocapitalize="characters" spellcheck="false">
@@ -177,6 +177,7 @@
       <div class="ident">
         <div class="titre">SMS BLAFFA</div>
         <div class="org" id="org-nom">—</div>
+        <div class="org" id="acces-portee" style="display:none"></div>
       </div>
       <div class="maj"><span class="pastille" id="pastille"></span><span id="statut">…</span></div>
       <button class="icone-btn" onclick="ouvrirReglages()" aria-label="Réglages">⚙️</button>
@@ -456,16 +457,17 @@ async function resoudreOrigine(id) {
   const annulation = messages.find((m) => m.id === id);
   if (!annulation || enCoursDeResolution[id]) return;
   const terme = (clefsDeRattachement(annulation)[0] || annulation.counterpartyName || "").trim();
-  if (!terme) return;
+  if (!terme) { originesResolues[id] = null; rendreListe(); return; }
   enCoursDeResolution[id] = true;
+  rendreListe();
   try {
     const j = await appel("tous", terme, null, {});
-    if (j && j.ok) {
-      const trouve = trouverOrigine(annulation, j.sms || []);
-      if (trouve) { originesResolues[id] = trouve; rendreListe(); }
-      else { originesResolues[id] = null; rendreListe(); }
-    }
-  } catch (e) { originesResolues[id] = null; }
+    originesResolues[id] = (j && j.ok) ? (trouverOrigine(annulation, j.sms || []) || null) : null;
+  } catch (e) {
+    originesResolues[id] = null;
+  }
+  enCoursDeResolution[id] = false;
+  rendreListe();
 }
 
 // ════ RENDU DE LA LISTE ════
@@ -490,7 +492,6 @@ function rendreListe() {
       : trouverOrigine(m, messages);
     paires[m.id] = trouve || null;
     if (trouve && trouve.id) consommes[trouve.id] = true;
-    if (!trouve && !Object.prototype.hasOwnProperty.call(originesResolues, m.id)) resoudreOrigine(m.id);
   }
 
   const titre = filtreActif === "annulations" ? "Annulations"
@@ -515,10 +516,13 @@ function rendrePaire(annulation, origine) {
   let dedans = '<div class="pair-label">🚫 Annulation</div>' + carte(annulation);
   if (origine) {
     dedans += '<div class="pair-lien"><span class="fleche">↳</span> Transaction d\'origine</div>' + carte(origine);
+  } else if (enCoursDeResolution[annulation.id]) {
+    dedans += '<div class="pair-absent">Recherche de la transaction d\'origine…</div>';
   } else if (Object.prototype.hasOwnProperty.call(originesResolues, annulation.id)) {
     dedans += '<div class="pair-absent">Transaction d\'origine introuvable dans les 30 derniers jours.</div>';
   } else {
-    dedans += '<div class="pair-absent">Recherche de la transaction d\'origine…</div>';
+    dedans += '<div class="pair-absent"><button class="btn-origine" onclick="event.stopPropagation();resoudreOrigine(\''
+      + esc(annulation.id) + '\')">🔎 Chercher la transaction d\'origine</button></div>';
   }
   return '<div class="pair">' + dedans + "</div>";
 }
@@ -624,6 +628,21 @@ function parametres() {
   };
 }
 
+/**
+ * Un assistant doit voir, sans avoir à le demander, l'étendue de son accès :
+ * son nom et le nombre de plateformes qu'on lui a confiées. Le propriétaire,
+ * lui, n'a besoin d'aucune mention — il voit tout.
+ */
+function majPortee(acces) {
+  const el = $("acces-portee");
+  if (!el) return;
+  if (!acces || acces.type !== "assistant") { el.style.display = "none"; return; }
+  const n = Number(acces.plateformes || 0);
+  el.textContent = "👤 " + (acces.label || "Assistant") + " · "
+    + (n ? n + " plateforme" + (n > 1 ? "s" : "") : "aucune plateforme attribuée");
+  el.style.display = "block";
+}
+
 function mettreAJourFiltres(j) {
   const platform = $("search-platform");
   const operator = $("search-operator");
@@ -645,11 +664,12 @@ async function charger() {
     const j = await appel(p.filtre, p.q, null, p.options);
     if (!j.ok) throw new Error(j.error || "?");
     if (j.org && j.org.name) $("org-nom").textContent = j.org.name;
+    majPortee(j.acces);
     mettreAJourFiltres(j);
     messages = (j.sms || []).filter(gardeLocale);
     plusAncien = j.hasMore ? j.nextBefore : null;
-    for (const k in originesResolues) delete originesResolues[k];
-    for (const k in enCoursDeResolution) delete enCoursDeResolution[k];
+    const presents = new Set(messages.map((m) => m.id));
+    for (const k in originesResolues) if (!presents.has(k)) delete originesResolues[k];
     rendreListe();
     majBadge();
     return j;
@@ -699,10 +719,14 @@ function fusionnerMessages(actuels, nouveaux) {
 }
 
 // ════ BOUCLE AUTO : la liste courante, et les annulations en fond ════
+let ticEnCours = false;
 async function ticAuto() {
+  if (ticEnCours) return; // jamais deux rafraichissements en vol
+  ticEnCours = true;
   try {
     await charger();
-    const ja = await appel("annulations", "", null);
+    // Inutile de redemander les annulations quand on les regarde deja.
+    const ja = filtreActif === "annulations" ? { ok: true, sms: messages } : await appel("annulations", "", null);
     if (ja.ok) {
       if (!premierChargement && "Notification" in window && Notification.permission === "granted") {
         for (const s of ja.sms) {
@@ -730,7 +754,7 @@ async function ticAuto() {
     premierChargement = false;
     $("pastille").className = "pastille";
     $("statut").textContent = new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
-  } catch (e) {}
+  } catch (e) {} finally { ticEnCours = false; }
 }
 
 // ════ CONNEXION / RÉGLAGES ════
@@ -755,7 +779,7 @@ async function connecter() {
   if (token.length < 6) { err.textContent = "Code trop court — 6 caractères minimum."; err.style.display = "block"; return; }
   try {
     const j = await appelAvecToken(token, "tous", "", null);
-    if (!j.ok) throw new Error(j.error || "token refusé");
+    if (!j.ok) throw new Error(j.error || "code refusé");
     localStorage.setItem("smsblaffa_token", token);
     localStorage.removeItem("smscenter_token");
     ecran();
@@ -837,6 +861,11 @@ $("in-q").addEventListener("input", function () {
   rechercheTimer = setTimeout(lancerRecherche, 420);
 });
 
+// Un onglet en arrière-plan ne consomme rien ; au retour, on remet à jour.
+document.addEventListener("visibilitychange", function () {
+  if (!document.hidden) ticAuto();
+});
+
 // ════ DÉMARRAGE ════
 function ecran() {
   const c = conf();
@@ -846,7 +875,10 @@ function ecran() {
     if ("Notification" in window && Notification.permission === "default") $("notif-bar").style.display = "flex";
     ticAuto();
     if (timerAuto) clearInterval(timerAuto);
-    timerAuto = setInterval(ticAuto, 10000);
+    // 20 s : assez pour ne rien rater, assez peu pour que l'écran ne saute
+    // jamais pendant qu'on lit. Une recherche ou un filtre rafraîchit tout de
+    // suite, sans attendre le tic.
+    timerAuto = setInterval(ticAuto, 20000);
   } else {
     $("ecran-login").style.display = "block";
     $("ecran-app").style.display = "none";
