@@ -36,76 +36,93 @@
   #splash .sous { color: rgba(255,255,255,.6); font-size: 13px; }
 
   /* ═══ EN-TÊTE ═══ */
-  .entete { background: linear-gradient(135deg, var(--bleu), var(--bleu2)); color: #FFF; padding: calc(12px + var(--safe-t)) 16px 12px; position: sticky; top: 0; z-index: 50; }
+  /* ═══ EN-TÊTE FIXE : identité, recherche, filtres ═══
+     Tout ce qui sert à trouver est en haut, sous le pouce du lecteur et
+     toujours visible. Le menu du bas a disparu : il coûtait une bande
+     entière d'écran pour quatre boutons dont trois sont des filtres. */
+  .entete { background: linear-gradient(135deg, var(--bleu), var(--bleu2)); color: #FFF; padding: calc(10px + var(--safe-t)) 14px 10px; position: sticky; top: 0; z-index: 50; box-shadow: 0 6px 20px rgba(11,37,69,.18); }
   .entete .row { display: flex; align-items: center; gap: 10px; }
-  .entete img.logo { width: 34px; height: 34px; border-radius: 9px; }
-  .entete .titre { font-size: 17px; font-weight: 900; letter-spacing: .4px; }
-  .entete .org { font-size: 11px; opacity: .8; }
-  .entete .maj { margin-left: auto; text-align: right; font-size: 10px; opacity: .75; line-height: 1.5; }
+  .entete img.logo { width: 32px; height: 32px; border-radius: 9px; }
+  .entete .ident { min-width: 0; }
+  .entete .titre { font-size: 16px; font-weight: 900; letter-spacing: .4px; }
+  .entete .org { font-size: 11px; opacity: .8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .entete .maj { margin-left: auto; text-align: right; font-size: 10px; opacity: .75; white-space: nowrap; }
+  .icone-btn { background: rgba(255,255,255,.14); border: 0; color: #FFF; width: 34px; height: 34px; border-radius: 10px; font-size: 16px; flex: 0 0 auto; }
   .pastille { display: inline-block; width: 8px; height: 8px; border-radius: 99px; background: #22C55E; margin-right: 4px; }
   .pastille.off { background: #F59E0B; }
 
-  /* ═══ CONTENU ═══ */
-  .page { max-width: 720px; margin: 0 auto; padding: 12px 12px calc(84px + var(--safe-b)); display: none; }
-  .page.on { display: block; }
+  .cherche { position: relative; margin-top: 11px; }
+  .cherche .loupe { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 14px; opacity: .55; }
+  .cherche input { width: 100%; padding: 12px 40px 12px 38px; border: 0; border-radius: 12px; font-size: 15px; outline: none; background: rgba(255,255,255,.96); color: #0F1729; }
+  .cherche input:focus { box-shadow: 0 0 0 3px rgba(255,255,255,.28); }
+  .cherche #clear-search { position: absolute; right: 7px; top: 50%; transform: translateY(-50%); background: #E2E8F0; color: #334155; border: 0; width: 28px; height: 28px; border-radius: 999px; font-size: 16px; line-height: 1; }
 
+  .chips { display: flex; gap: 6px; overflow-x: auto; margin-top: 10px; padding-bottom: 2px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip { flex: 0 0 auto; border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.10); border-radius: 999px; padding: 7px 14px; font-size: 12.5px; font-weight: 700; color: rgba(255,255,255,.88); position: relative; }
+  .chip.on { background: #FFF; color: var(--bleu); border-color: #FFF; }
+  .chip .bulle { display: none; margin-left: 6px; background: #DC2626; color: #FFF; font-size: 9.5px; font-weight: 900; border-radius: 999px; min-width: 15px; height: 15px; align-items: center; justify-content: center; padding: 0 4px; vertical-align: 1px; }
+  .search-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 9px; }
+  .search-filters select, .search-filters input { width: 100%; min-width: 0; padding: 9px 10px; border: 0; border-radius: 9px; background: rgba(255,255,255,.94); color: #334155; font-size: 11.5px; }
+
+  .corps-page { max-width: 720px; margin: 0 auto; padding: 14px 12px calc(28px + var(--safe-b)); }
   .bandeau { background: #FFFBEB; border: 1px solid #FDE68A; color: #92400E; border-radius: 14px; padding: 11px 14px; font-size: 13px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
   .bandeau button { background: #F59E0B; color: #FFF; border: 0; border-radius: 9px; padding: 7px 14px; font-weight: 800; font-size: 12.5px; }
-
-  .cherche { display: flex; gap: 8px; margin-bottom: 10px; }
-  .cherche input { flex: 1; padding: 13px 16px; border: 1px solid var(--border); border-radius: 999px; font-size: 15px; outline: none; background: #FFF; }
-  .cherche input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
-  .cherche button { background: var(--accent); color: #FFF; border: 0; border-radius: 999px; width: 48px; font-size: 17px; }
-  .search-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin: 0 0 10px; }
-  .search-filters select, .search-filters input { width: 100%; min-width: 0; padding: 9px 10px; border: 1px solid var(--border); border-radius: 10px; background: #FFF; color: #334155; font-size: 11.5px; }
-
-  .chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-  .chips::-webkit-scrollbar { display: none; }
-  .chip { flex: 0 0 auto; border: 1px solid var(--border); background: #FFF; border-radius: 999px; padding: 8px 15px; font-size: 12.5px; font-weight: 700; color: #475569; }
-  .chip.on { background: var(--bleu); color: #FFF; border-color: var(--bleu); }
-
-  /* ═══ MESSAGES ═══ */
-  /* ═══ CARTE MESSAGE — modèle de /admin/messages (BLAFFA FILE) ═══
-     Fiche blanche, type à gauche, montant coloré à droite, « Reçu sur
-     <PLATEFORME> », puis téléphone · opérateur · heure, puis le SMS.
-     Volontairement sobre : pas de grille TYPE/DIRECTION/RÉSEAU, pas de
-     bulle colorée pleine — c'est ce qui rendait l'écran illisible. */
-  .msg { background: #FFF; border: 1px solid var(--border); border-radius: 16px; padding: 13px 15px; margin-bottom: 10px; box-shadow: 0 1px 2px rgba(16,32,64,.06), 0 4px 16px rgba(16,32,64,.05); animation: fade .25s ease both; }
-  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-  .msg.rouge { border-color: #F6C9C9; background: linear-gradient(180deg, #FDEAEA, #FFF 60%); }
-  .m-head { display: flex; align-items: center; gap: 10px; }
-  .m-type { font-size: 14.5px; font-weight: 700; display: flex; align-items: center; gap: 6px; color: #0F1729; }
-  .m-amt { margin-left: auto; font-size: 18px; font-weight: 800; white-space: nowrap; }
-  .m-amt.jaune { color: #0F9D58; }
-  .m-amt.bleu  { color: #C2740A; }
-  .m-amt.rouge, .m-amt.vert { color: #DC2626; }
-  .m-amt.gris  { color: #64748B; }
-  .m-plat { margin-top: 8px; font-size: 13.5px; color: var(--mute); }
-  .m-plat b { background: #EAF1FF; color: #2563EB; padding: 2px 9px; border-radius: 7px; font-size: 12.5px; margin-left: 2px; display: inline-block; font-weight: 700; }
-  .m-meta { margin-top: 8px; font-size: 12.5px; color: #94A3B8; display: flex; flex-wrap: wrap; gap: 4px 8px; }
-  .corps { margin-top: 10px; font-size: 13px; line-height: 1.5; color: #475569; background: #F7F9FC; border: 1px solid #EEF2F8; border-radius: 11px; padding: 10px 12px; white-space: pre-wrap; word-break: break-word; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-  .msg.ouvert .corps { -webkit-line-clamp: unset; display: block; }
-  .refs { display: none; margin-top: 8px; padding: 6px 9px; border-radius: 8px; background: #F1F5F9; font: 10.5px ui-monospace, SFMono-Regular, Menlo, monospace; color: #475569; }
-  .msg.ouvert .refs { display: block; }
-  .entete-liste { display: flex; align-items: center; gap: 9px; padding: 2px 4px 12px; color: var(--mute); font-size: 12.5px; font-weight: 600; }
-  .entete-liste strong { color: #0F1729; font-size: 14px; display: block; }
-  .event-history { display: none; border-top: 1px dashed rgba(100,116,139,.35); margin-top: 8px; padding-top: 7px; }
-  .msg.ouvert .event-history { display: block; }
-  .event-history div { font-size: 10.5px; line-height: 1.4; margin: 4px 0; color: #475569; }
-  .event-history b { color: #0F172A; }
-
   .vide { text-align: center; color: var(--mute); padding: 60px 16px; font-size: 14px; }
   .vide .ico { font-size: 44px; margin-bottom: 8px; }
   .plus { display: block; width: 100%; padding: 13px; background: #FFF; border: 1px solid var(--border); border-radius: 14px; font-size: 14px; font-weight: 800; color: var(--accent); margin: 6px 0 12px; }
 
-  /* ═══ ONGLETS BAS ═══ */
-  .tabs { position: fixed; bottom: 0; left: 0; right: 0; background: #FFF; border-top: 1px solid var(--border); display: flex; z-index: 60; padding-bottom: var(--safe-b); box-shadow: 0 -4px 16px rgba(15,23,42,.06); }
-  .tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 9px 4px 7px; font-size: 10.5px; font-weight: 800; color: #94A3B8; border: 0; background: none; position: relative; }
-  .tab .ico { font-size: 21px; line-height: 1; }
-  .tab.on { color: var(--accent); }
-  .tab .bulle { position: absolute; top: 4px; right: calc(50% - 22px); background: #DC2626; color: #FFF; font-size: 9.5px; font-weight: 900; border-radius: 999px; min-width: 16px; height: 16px; display: none; align-items: center; justify-content: center; padding: 0 4px; }
+  /* ═══ LA CARTE EST UN SMS, PAS UNE FICHE TECHNIQUE ═══
+     En haut l'expéditeur, tel que le téléphone l'affiche : « +454 »,
+     « OrangeMoney », « Wave ». Au milieu le message, en grand, parce que
+     c'est lui qu'on lit. En bas, petit et discret : le type, la plateforme,
+     l'opérateur, le numéro — ce dont on a besoin sans que ça encombre. */
+  .msg { background: #FFF; border: 1px solid var(--border); border-radius: 16px; padding: 12px 14px; margin-bottom: 10px; box-shadow: 0 1px 2px rgba(16,32,64,.06), 0 4px 16px rgba(16,32,64,.05); animation: fade .25s ease both; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .m-head { display: flex; align-items: baseline; gap: 8px; }
+  .m-exp { font-size: 14.5px; font-weight: 800; color: #0F1729; letter-spacing: .1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .m-amt { margin-left: auto; font-size: 16.5px; font-weight: 800; white-space: nowrap; }
+  .m-amt.jaune { color: #0F9D58; }
+  .m-amt.bleu  { color: #C2740A; }
+  .m-amt.violet { color: #7C3AED; }
+  .m-amt.rouge, .m-amt.vert { color: #DC2626; }
+  .m-amt.gris  { color: #64748B; }
+  .m-heure { font-size: 11.5px; color: #94A3B8; white-space: nowrap; }
+  .corps { margin-top: 9px; font-size: 14px; line-height: 1.55; color: #1E293B; background: #F7F9FC; border: 1px solid #EEF2F8; border-radius: 12px; padding: 11px 13px; white-space: pre-wrap; word-break: break-word; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .msg.ouvert .corps { -webkit-line-clamp: unset; display: block; }
+  /* Le pied de carte : tout ce qui sert à classer, en petit. */
+  .m-pied { margin-top: 9px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 11.5px; color: #94A3B8; }
+  .etiq { font-size: 10.5px; font-weight: 800; padding: 2.5px 8px; border-radius: 999px; letter-spacing: .2px; }
+  .etiq.jaune { background: #E7F6EC; color: #0F7A43; }
+  .etiq.bleu { background: #FDF1E3; color: #9A5B06; }
+  .etiq.violet { background: #F3EBFF; color: #6D28D9; }
+  .etiq.rouge, .etiq.vert { background: #FDEAEA; color: #B91C1C; }
+  .etiq.gris { background: #F1F5F9; color: #64748B; }
+  .m-plat { font-weight: 700; color: #475569; }
+  .refs { display: none; margin-top: 8px; padding: 6px 9px; border-radius: 8px; background: #F1F5F9; font: 10.5px ui-monospace, SFMono-Regular, Menlo, monospace; color: #475569; }
+  .msg.ouvert .refs { display: block; }
+  .entete-liste { padding: 2px 4px 12px; color: var(--mute); font-size: 12.5px; font-weight: 600; }
+  .entete-liste strong { color: #0F1729; font-size: 15px; display: block; margin-bottom: 2px; }
+  .event-history { display: none; border-top: 1px dashed rgba(100,116,139,.35); margin-top: 8px; padding-top: 7px; }
+  .msg.ouvert .event-history { display: block; }
+  .event-history div { font-size: 10.5px; line-height: 1.4; margin: 4px 0; color: #475569; }
 
-  /* ═══ RÉGLAGES ═══ */
+  /* ═══ L'ANNULATION ET SON ORIGINE, DANS UN MÊME CADRE ═══ */
+  .pair { margin: 14px 0; border: 1.5px solid #FCA5A5; border-radius: 20px; padding: 6px; background: #FEF2F2; }
+  .pair-label { display: flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 800; color: #B91C1C; padding: 6px 10px 2px; text-transform: uppercase; letter-spacing: .3px; }
+  .pair .msg { margin: 6px; }
+  .pair-lien { display: flex; align-items: center; gap: 8px; color: var(--mute); font-size: 12.5px; font-weight: 700; padding: 4px 12px; }
+  .pair-lien .fleche { color: #B91C1C; font-size: 15px; }
+  .pair-absent { color: var(--mute); font-size: 12.5px; padding: 6px 12px 10px; font-style: italic; }
+
+  /* ═══ RÉGLAGES : un panneau qui glisse, pas un onglet permanent ═══ */
+  .voile { position: fixed; inset: 0; background: rgba(15,23,42,.45); opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 70; }
+  .voile.on { opacity: 1; pointer-events: auto; }
+  .panneau { position: fixed; top: 0; right: 0; bottom: 0; width: min(420px, 92vw); background: var(--fond); z-index: 80; transform: translateX(100%); transition: transform .25s ease; overflow-y: auto; padding: calc(12px + var(--safe-t)) 14px calc(20px + var(--safe-b)); }
+  .panneau.on { transform: none; }
+  .panneau-tete { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; font-size: 17px; }
+  .panneau-tete .icone-btn { background: #E2E8F0; color: #334155; }
+
   .carte { background: #FFF; border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; }
   .carte h3 { font-size: 14px; margin-bottom: 10px; }
   .carte label { display: block; font-size: 11px; font-weight: 800; color: #334155; margin: 10px 0 4px; }
@@ -152,19 +169,47 @@
 
 <!-- ═══ APPLICATION ═══ -->
 <div id="ecran-app" style="display:none">
-  <div class="entete">
+
+  <!-- EN-TETE FIXE : identite, etat, reglages -->
+  <header class="entete">
     <div class="row">
       <img class="logo" src="/sms-center-192.png" alt="">
-      <div>
+      <div class="ident">
         <div class="titre">SMS BLAFFA</div>
         <div class="org" id="org-nom">—</div>
       </div>
       <div class="maj"><span class="pastille" id="pastille"></span><span id="statut">…</span></div>
+      <button class="icone-btn" onclick="ouvrirReglages()" aria-label="Réglages">⚙️</button>
     </div>
-  </div>
 
-  <!-- PAGE MESSAGES -->
-  <div class="page on" id="page-messages">
+    <!-- LA RECHERCHE EST EN HAUT, TOUJOURS VISIBLE -->
+    <div class="cherche">
+      <span class="loupe">🔍</span>
+      <input id="in-q" inputmode="search" autocomplete="off" autocapitalize="off" spellcheck="false"
+             placeholder="Numéro, montant, ID, référence PP/TC, nom…"
+             onkeydown="if(event.key==='Enter'){this.blur();lancerRecherche();}">
+      <button id="clear-search" onclick="effacerRecherche()" aria-label="Effacer" style="display:none">×</button>
+    </div>
+
+    <div class="chips" id="chips">
+      <button class="chip on" data-f="tous" onclick="setFiltre('tous',this)">Tous</button>
+      <button class="chip" data-f="depot" onclick="setFiltre('depot',this)">Dépôts</button>
+      <button class="chip" data-f="retrait" onclick="setFiltre('retrait',this)">Retraits</button>
+      <button class="chip" data-f="validations" onclick="setFiltre('validations',this)">Validations</button>
+      <button class="chip" data-f="annulations" onclick="setFiltre('annulations',this)">Annulations<span class="bulle" id="badge-annul"></span></button>
+      <button class="chip" data-f="autres" onclick="setFiltre('autres',this)">Autres SMS</button>
+      <button class="chip plus-filtres" onclick="basculerFiltres()">Filtres ▾</button>
+    </div>
+
+    <div class="search-filters" id="filtres-avances" style="display:none">
+      <select id="search-platform" aria-label="Plateforme" onchange="lancerRecherche()"><option value="">Toutes les plateformes</option></select>
+      <select id="search-operator" aria-label="Opérateur" onchange="lancerRecherche()"><option value="">Tous les opérateurs</option></select>
+      <input id="search-from" type="date" aria-label="Date de début" onchange="lancerRecherche()">
+      <input id="search-to" type="date" aria-label="Date de fin" onchange="lancerRecherche()">
+    </div>
+  </header>
+
+  <main class="corps-page">
     <div class="bandeau" id="install-bar" style="display:none">
       <span>📲 Installe <b>SMS BLAFFA</b> sur ton téléphone.</span>
       <button onclick="installerAppli()">Installer</button>
@@ -177,44 +222,15 @@
       <span>🔔 Sois prévenu dès qu'une <b>annulation</b> arrive.</span>
       <button onclick="activerNotifs()">Activer</button>
     </div>
-    <div class="chips">
-      <button class="chip on" data-f="tous" onclick="setFiltre('tous',this)">💬 Tous</button>
-      <button class="chip" data-f="depot" onclick="setFiltre('depot',this)">📥 Dépôt</button>
-      <button class="chip" data-f="retrait" onclick="setFiltre('retrait',this)">📤 Retrait</button>
-      <button class="chip" data-f="autres" onclick="setFiltre('autres',this)">🗂️ Autres SMS</button>
-    </div>
+
     <div id="liste-messages"></div>
-    <button class="plus" id="plus-messages" style="display:none" onclick="chargerPlus('messages')">Voir les SMS plus anciens</button>
-  </div>
+    <button class="plus" id="plus-messages" style="display:none" onclick="chargerPlus()">Voir les messages plus anciens</button>
+  </main>
 
-  <!-- PAGE RECHERCHE -->
-  <div class="page" id="page-recherche">
-    <div class="cherche">
-      <input id="in-q" inputmode="search" placeholder="Numéro, montant, ID, PP ou TC…" onkeydown="if(event.key==='Enter')lancerRecherche()">
-      <button id="clear-search" onclick="effacerRecherche()" aria-label="Effacer" style="display:none;background:#E2E8F0;color:#334155">×</button>
-      <button onclick="lancerRecherche()">🔍</button>
-    </div>
-    <div class="search-filters">
-      <select id="search-scope" aria-label="Type de messages"><option value="tous">Messages financiers</option><option value="autres">Autres SMS et notifications</option></select>
-      <select id="search-platform" aria-label="Plateforme"><option value="">Toutes les plateformes</option></select>
-      <select id="search-operator" aria-label="Opérateur"><option value="">Tous les opérateurs</option></select>
-      <input id="search-from" type="date" aria-label="Date de début">
-      <input id="search-to" type="date" aria-label="Date de fin">
-    </div>
-    <div class="note" style="margin:0 4px 10px">Les messages financiers et les contenus hors modèles restent séparés. Choisis la catégorie, puis recherche par numéro, montant, identifiant, références PP/TC, plateforme ou période.</div>
-    <div id="liste-recherche"><div class="vide"><div class="ico">🔍</div>Tape un numéro ou un mot puis valide.</div></div>
-    <button class="plus" id="plus-recherche" style="display:none" onclick="chargerPlus('recherche')">Voir plus de résultats</button>
-  </div>
-
-  <!-- PAGE ANNULATIONS -->
-  <div class="page" id="page-annulations">
-    <div class="note" style="margin:0 4px 10px">Uniquement les annulations financières reconnues. Les événements « initiée » et « terminée » portant les mêmes références PP/TC sont regroupés dans un seul dossier.</div>
-    <div id="liste-annulations"></div>
-    <button class="plus" id="plus-annulations" style="display:none" onclick="chargerPlus('annulations')">Voir les annulations plus anciennes</button>
-  </div>
-
-  <!-- PAGE RÉGLAGES -->
-  <div class="page" id="page-reglages">
+  <!-- REGLAGES : un panneau, pas un onglet -->
+  <div class="voile" id="voile" onclick="fermerReglages()"></div>
+  <aside class="panneau" id="panneau-reglages">
+    <div class="panneau-tete"><b>Réglages</b><button class="icone-btn" onclick="fermerReglages()" aria-label="Fermer">×</button></div>
     <div class="carte">
       <h3>🔑 Connexion</h3>
       <label>Code d'accès de l'organisation</label>
@@ -231,61 +247,54 @@
     </div>
     <div class="carte">
       <h3>ℹ️ Application</h3>
-      <p class="note">SMS BLAFFA v6 — tous les SMS et toutes les notifications sont consultables, avec un espace « Autres SMS » pour les contenus hors modèles financiers.</p>
+      <p class="note">SMS BLAFFA — tous les SMS et notifications de l'organisation, avec les annulations rattachées à leur transaction d'origine.</p>
       <button class="btn rouge-b" onclick="deconnecter()">Se déconnecter</button>
     </div>
-  </div>
-
-  <!-- ONGLETS -->
-  <div class="tabs">
-    <button class="tab on" id="tab-messages" onclick="allerA('messages')"><span class="ico">💬</span>Messages</button>
-    <button class="tab" id="tab-recherche" onclick="allerA('recherche')"><span class="ico">🔍</span>Recherche</button>
-    <button class="tab" id="tab-annulations" onclick="allerA('annulations')"><span class="ico">⛔</span>Annulations<span class="bulle" id="badge-annul"></span></button>
-    <button class="tab" id="tab-reglages" onclick="allerA('reglages')"><span class="ico">⚙️</span>Réglages</button>
-  </div>
+  </aside>
 </div>
 
 <script>
 // ════ ÉTAT ════
-let ongletActif = "messages";
-let filtreMessages = "tous";
-const listes = { messages: [], recherche: [], annulations: [] };
-const anciens = { messages: null, recherche: null, annulations: null };
+// Un seul écran, un seul flux : un filtre, un terme de recherche, une liste.
+// Les onglets du bas ont disparu — la recherche est en tête, toujours à portée.
+let filtreActif = "tous";
+let messages = [];
+let plusAncien = null;
 let timerAuto = null;
 let idsConnus = new Set();
 let annulationsVues = new Set();
 let premierChargement = true;
+/** Messages d'origine retrouvés à la demande, indexés par id d'annulation. */
+const originesResolues = {};
+const enCoursDeResolution = {};
 
 const $ = (id) => document.getElementById(id);
 const API_ENDPOINT = "https://blaffa-file.onrender.com/api/public/sms-app";
-// Après la migration, certaines installations gardaient l'ancienne API Railway
-// dans le stockage du téléphone. L'adresse serveur est désormais fixe et sûre.
 localStorage.removeItem("smsblaffa_api");
 localStorage.removeItem("smscenter_api");
 const conf = () => ({ token: localStorage.getItem("smsblaffa_token") || localStorage.getItem("smscenter_token") || "", api: API_ENDPOINT });
-function cacher(id) { $(id).style.display = "none"; }
-
-// ════ NAVIGATION ════
-function allerA(nom) {
-  ongletActif = nom;
-  document.querySelectorAll(".page").forEach((p) => p.classList.remove("on"));
-  document.querySelectorAll(".tab").forEach((t) => t.classList.remove("on"));
-  $("page-" + nom).classList.add("on");
-  $("tab-" + nom).classList.add("on");
-  if (nom === "annulations") {
-    for (const s of listes.annulations) annulationsVues.add(s.id);
-    majBadge();
-    if (!listes.annulations.length) rafraichirListe("annulations");
-  }
-  if (nom === "reglages") { const c = conf(); $("set-token").value = c.token; $("set-api").value = c.api; majNotifEtat(); }
-  window.scrollTo(0, 0);
-}
+function cacher(id) { const e = $(id); if (e) e.style.display = "none"; }
 
 function setFiltre(f, el) {
-  filtreMessages = f;
-  document.querySelectorAll("#page-messages .chip").forEach((c) => c.classList.remove("on"));
+  filtreActif = f;
+  document.querySelectorAll("#chips .chip").forEach((c) => c.classList.remove("on"));
   el.classList.add("on");
-  rafraichirListe("messages");
+  if (f === "annulations") { for (const s of messages) annulationsVues.add(s.id); }
+  charger();
+  window.scrollTo(0, 0);
+}
+function basculerFiltres() {
+  const f = $("filtres-avances");
+  f.style.display = f.style.display === "none" ? "grid" : "none";
+}
+function ouvrirReglages() {
+  const c = conf();
+  $("set-token").value = c.token; $("set-api").value = c.api;
+  majNotifEtat();
+  $("voile").classList.add("on"); $("panneau-reglages").classList.add("on");
+}
+function fermerReglages() {
+  $("voile").classList.remove("on"); $("panneau-reglages").classList.remove("on");
 }
 
 // ════ API ════
@@ -294,7 +303,7 @@ async function appel(filtre, q, avant, options) {
   try {
     return await appelAvecToken(c.token, filtre, q, avant, options || {});
   } catch (e) {
-    // Un token révoqué ne laisse pas l'application bloquée sur un écran vide.
+    // Un code révoqué ne laisse pas l'application bloquée sur un écran vide.
     if (e && e.status === 401) deconnecter();
     throw e;
   }
@@ -321,11 +330,9 @@ async function appelAvecToken(token, filtre, q, avant, options) {
   const texte = await r.text();
   let j = null;
   try { j = texte ? JSON.parse(texte) : null; } catch (e) {}
-  if (!j || typeof j !== "object") {
-    throw new Error("serveur BLAFFA indisponible ou réponse non reconnue");
-  }
+  if (!j || typeof j !== "object") throw new Error("serveur BLAFFA indisponible ou réponse non reconnue");
   if (!r.ok) {
-    const erreur = new Error(j.error || (r.status === 401 ? "token refusé" : "erreur serveur " + r.status));
+    const erreur = new Error(j.error || (r.status === 401 ? "code refusé" : "erreur serveur " + r.status));
     erreur.status = r.status;
     throw erreur;
   }
@@ -357,14 +364,32 @@ function heure(d) {
     : x.toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit", timeZone: "Africa/Abidjan" });
 }
 
+/**
+ * Une notification produite par BLAFFA après un retrait payé n'est pas un SMS
+ * d'opérateur : c'est notre propre accusé. Elle a donc son propre filtre, et
+ * n'encombre plus la liste des retraits, où l'on cherche la preuve opérateur.
+ */
+function estValidationBlaffa(m) {
+  return String(m.operator || "").toUpperCase() === "BLAFFA"
+    || String(m.templateId || "").indexOf("BLAFFA_") === 0;
+}
+
 function presentationMessage(s) {
-  if (s.status === "ANNULATION_COMPLETED") return { cls: "vert", tag: "✅ Annulation terminée" };
-  if (s.status === "ANNULATION_INITIATED") return { cls: "rouge", tag: "🔴 Annulation initiée" };
-  if (s.status === "BLOCKED") return { cls: "rouge", tag: "🛑 Transaction bloquée" };
-  if (s.transactionType === "PAYOUT" && s.direction === "OUTGOING") return { cls: "bleu", tag: "📤 Retrait payé" };
-  if (s.transactionType === "DEPOSIT" && s.direction === "INCOMING") return { cls: "jaune", tag: "📥 Dépôt reçu" };
-  if (s.source === "NOTIFICATION") return { cls: "gris", tag: "🔔 Autre notification" };
-  return { cls: "gris", tag: "💬 Autre SMS" };
+  if (s.status === "ANNULATION_COMPLETED") return { cls: "vert", tag: "Annulation terminée" };
+  if (s.status === "ANNULATION_INITIATED") return { cls: "rouge", tag: "Annulation initiée" };
+  if (s.status === "BLOCKED") return { cls: "rouge", tag: "Transaction bloquée" };
+  if (estValidationBlaffa(s)) return { cls: "violet", tag: "Validation" };
+  if (s.transactionType === "PAYOUT" && s.direction === "OUTGOING") return { cls: "bleu", tag: "Retrait" };
+  if (s.transactionType === "DEPOSIT" && s.direction === "INCOMING") return { cls: "jaune", tag: "Dépôt" };
+  if (s.source === "NOTIFICATION") return { cls: "gris", tag: "Notification" };
+  return { cls: "gris", tag: "SMS" };
+}
+
+/** L'expéditeur tel que le téléphone l'affiche — c'est le repère de l'agent. */
+function expediteurAffiche(m) {
+  if (estValidationBlaffa(m)) return "BLAFFA FILE";
+  const brut = String(m.sender || "").trim();
+  return brut || "Inconnu";
 }
 
 function directionLabel(s) {
@@ -384,83 +409,212 @@ function eventHistory(s) {
   }).join("") + "</div>";
 }
 
-function rendreListe(nom) {
-  const L = $("liste-" + nom);
-  const sms = listes[nom];
-  if (!sms.length) {
-    const msgs = { messages: "Aucun SMS pour l'instant.", recherche: "Aucun résultat.", annulations: "Aucune annulation — tout va bien ✅" };
-    L.innerHTML = '<div class="vide"><div class="ico">' + (nom === "annulations" ? "✅" : "📭") + "</div>" + msgs[nom] + "</div>";
-    $("plus-" + nom).style.display = "none";
+/**
+ * UNE ANNULATION N'EST JAMAIS SEULE.
+ *
+ * Elle est rendue collée à sa transaction d'origine, dans un même cadre. Le
+ * rattachement se fait sur ce que l'opérateur a bien voulu écrire :
+ *   - une référence (Orange : PP… / TC…), quand elle existe ;
+ *   - sinon le NOM du payeur (Wave n'écrit rien d'autre), plus le montant.
+ * Dans les deux cas l'origine doit précéder l'annulation et porter la même
+ * plateforme. Sans cela, on n'affirme aucun lien.
+ */
+function estAnnulation(m) { return m.transactionType === "CANCELLATION"; }
+
+function clefsDeRattachement(m) {
+  const clefs = [];
+  if (m.originalTransferRef) clefs.push(String(m.originalTransferRef).toUpperCase());
+  if (m.transactionId) clefs.push(String(m.transactionId).toUpperCase());
+  return clefs;
+}
+
+function trouverOrigine(annulation, candidats) {
+  const refs = clefsDeRattachement(annulation);
+  const nom = annulation.counterpartyName ? String(annulation.counterpartyName).toUpperCase() : "";
+  const quand = annulation.receivedAt ? new Date(annulation.receivedAt).getTime() : 0;
+  let meilleur = null, meilleurT = 0;
+  for (const m of candidats) {
+    if (m === annulation || estAnnulation(m)) continue;
+    if (annulation.platformId && m.platformId && annulation.platformId !== m.platformId) continue;
+    const t = m.receivedAt ? new Date(m.receivedAt).getTime() : 0;
+    if (quand && t && t > quand) continue;
+    const corps = String(m.body || "").toUpperCase();
+    let lie = false;
+    for (const ref of refs) { if (ref && (corps.indexOf(ref) >= 0 || String(m.transactionId || "").toUpperCase() === ref)) { lie = true; break; } }
+    if (!lie && nom && nom.length >= 5 && corps.indexOf(nom) >= 0) {
+      // Le nom seul ne suffit pas : le montant doit concorder.
+      if (annulation.amount == null || m.amount == null || Number(annulation.amount) === Number(m.amount)) lie = true;
+    }
+    if (!lie) continue;
+    if (t >= meilleurT) { meilleur = m; meilleurT = t; }
+  }
+  return meilleur;
+}
+
+/** Va chercher l'origine au serveur quand elle n'est pas dans la page. */
+async function resoudreOrigine(id) {
+  const annulation = messages.find((m) => m.id === id);
+  if (!annulation || enCoursDeResolution[id]) return;
+  const terme = (clefsDeRattachement(annulation)[0] || annulation.counterpartyName || "").trim();
+  if (!terme) return;
+  enCoursDeResolution[id] = true;
+  try {
+    const j = await appel("tous", terme, null, {});
+    if (j && j.ok) {
+      const trouve = trouverOrigine(annulation, j.sms || []);
+      if (trouve) { originesResolues[id] = trouve; rendreListe(); }
+      else { originesResolues[id] = null; rendreListe(); }
+    }
+  } catch (e) { originesResolues[id] = null; }
+}
+
+// ════ RENDU DE LA LISTE ════
+function rendreListe() {
+  const L = $("liste-messages");
+  if (!messages.length) {
+    const vide = filtreActif === "annulations" ? "Aucune annulation — tout va bien ✅"
+      : $("in-q").value.trim() ? "Aucun résultat pour cette recherche."
+      : "Aucun message pour l'instant.";
+    L.innerHTML = '<div class="vide"><div class="ico">' + (filtreActif === "annulations" ? "✅" : "📭") + "</div>" + vide + "</div>";
+    $("plus-messages").style.display = "none";
     return;
   }
-  const titreListe = nom === "recherche" ? "Résultats de recherche" : nom === "annulations" ? "Annulations" : filtreMessages === "autres" ? "Autres SMS et notifications" : "Tous les messages";
-  L.innerHTML = '<div class="entete-liste"><span>💬</span><div><strong>' + titreListe + '</strong>' + sms.length + ' message' + (sms.length > 1 ? 's' : '') + ' · SMS BLAFFA</div></div>' + sms.map(function (s) {
-    const presentation = presentationMessage(s);
-    const phone = numeroLocal(s.senderPhone || s.beneficiary || s.devicePhone || s.deviceLabel) || "";
-    const montant = s.amount != null ? formaterMontant(s.amount) + " F" : "";
-    const refs = [s.originalTransferRef ? "PP: " + s.originalTransferRef : "", s.cancellationRef ? "TC: " + s.cancellationRef : "", s.transactionId ? "ID: " + s.transactionId : ""].filter(Boolean);
-    // Wave n'écrit aucune référence dans ses annulations : le NOM du payeur
-    // est le seul lien avec le message d'origine. Le serveur l'extrait
-    // (counterpartyName) ; on le montre et on en fait un raccourci de
-    // recherche, pour retrouver la transaction annulée en un geste.
-    if (s.counterpartyName) refs.push("Payeur: " + s.counterpartyName);
-    if (s.balance != null) refs.push("Solde: " + s.balance + " F");
-    const count = Number(s.relatedEventCount || 0);
-    if (count > 1) refs.push(count + " événements");
 
-    // « Reçu sur MEGA MLI » / « Retrait sur MEGA MLI » — la plateforme en
-    // évidence, jamais deux plateformes confondues sur une même carte.
-    const tete = s.transactionType === "DEPOSIT" ? "Reçu sur "
-      : s.transactionType === "PAYOUT" ? "Retrait sur "
-      : s.transactionType === "CANCELLATION" ? "Annulé sur " : "Sur ";
-    const meta = [];
-    if (phone) meta.push("📞 " + esc(phone));
-    else if (s.sender) meta.push(esc(s.sender));
-    if (s.operator && String(s.operator).toLowerCase() !== String(s.sender || "").toLowerCase()) meta.push(esc(s.operator));
-    meta.push(esc(heure(s.receivedAt)));
+  // On apparie d'abord, pour ne pas afficher deux fois le message d'origine.
+  const paires = {};
+  const consommes = {};
+  for (const m of messages) {
+    if (!estAnnulation(m)) continue;
+    const trouve = Object.prototype.hasOwnProperty.call(originesResolues, m.id)
+      ? originesResolues[m.id]
+      : trouverOrigine(m, messages);
+    paires[m.id] = trouve || null;
+    if (trouve && trouve.id) consommes[trouve.id] = true;
+    if (!trouve && !Object.prototype.hasOwnProperty.call(originesResolues, m.id)) resoudreOrigine(m.id);
+  }
 
-    return '<div class="msg ' + presentation.cls + '" onclick="this.classList.toggle(\'ouvert\')">'
-      + '<div class="m-head"><span class="m-type">' + presentation.tag + '</span>'
-      + (montant ? '<span class="m-amt ' + presentation.cls + '">' + esc(montant) + '</span>' : '')
-      + '</div>'
-      + (s.platformCode ? '<div class="m-plat">' + tete + '<b>' + esc(s.platformCode) + '</b></div>' : '')
-      + '<div class="m-meta">' + meta.join(" · ") + '</div>'
-      + '<div class="corps">' + esc(s.body) + "</div>"
-      + (refs.length ? '<div class="refs">' + esc(refs.join(" · ")) + '</div>' : '')
-      + (s.counterpartyName && s.transactionType === "CANCELLATION"
-          ? '<button class="btn-origine" onclick="event.stopPropagation();chercherOrigine(' + JSON.stringify(s.counterpartyName).replace(/"/g, "&quot;") + ')">↳ Retrouver la transaction d\'origine</button>'
-          : '')
-      + eventHistory(s)
-      + "</div>";
+  const titre = filtreActif === "annulations" ? "Annulations"
+    : filtreActif === "autres" ? "Autres SMS et notifications"
+    : filtreActif === "depot" ? "Dépôts"
+    : filtreActif === "validations" ? "Validations BLAFFA"
+    : filtreActif === "retrait" ? "Retraits"
+    : $("in-q").value.trim() ? "Résultats de recherche" : "Tous les messages";
+
+  const corps = messages.map(function (m) {
+    if (consommes[m.id]) return "";
+    if (estAnnulation(m)) return rendrePaire(m, paires[m.id]);
+    return carte(m);
   }).join("");
-  $("plus-" + nom).style.display = anciens[nom] ? "block" : "none";
+
+  L.innerHTML = '<div class="entete-liste"><div><strong>' + titre + "</strong>"
+    + messages.length + " message" + (messages.length > 1 ? "s" : "") + " · SMS BLAFFA</div></div>" + corps;
+  $("plus-messages").style.display = plusAncien ? "block" : "none";
+}
+
+function rendrePaire(annulation, origine) {
+  let dedans = '<div class="pair-label">🚫 Annulation</div>' + carte(annulation);
+  if (origine) {
+    dedans += '<div class="pair-lien"><span class="fleche">↳</span> Transaction d\'origine</div>' + carte(origine);
+  } else if (Object.prototype.hasOwnProperty.call(originesResolues, annulation.id)) {
+    dedans += '<div class="pair-absent">Transaction d\'origine introuvable dans les 30 derniers jours.</div>';
+  } else {
+    dedans += '<div class="pair-absent">Recherche de la transaction d\'origine…</div>';
+  }
+  return '<div class="pair">' + dedans + "</div>";
+}
+
+function carte(s) {
+  const p = presentationMessage(s);
+  const phone = numeroLocal(s.senderPhone || s.beneficiary) || "";
+  const montant = s.amount != null ? formaterMontant(s.amount) + " F" : "";
+
+  // Le pied : petit, gris, et dans cet ordre — le type, la plateforme, puis
+  // l'opérateur et le numéro. Rien d'autre : le reste attend le dépliage.
+  const pied = ['<span class="etiq ' + p.cls + '">' + esc(p.tag) + "</span>"];
+  if (s.platformCode) pied.push('<span class="m-plat">' + esc(s.platformCode) + "</span>");
+  const op = s.operator && String(s.operator).toLowerCase() !== String(s.sender || "").toLowerCase() && !estValidationBlaffa(s)
+    ? String(s.operator) : "";
+  if (op) pied.push("· " + esc(op));
+  if (phone) pied.push("· " + esc(phone));
+
+  const refs = [s.originalTransferRef ? "PP: " + s.originalTransferRef : "", s.cancellationRef ? "TC: " + s.cancellationRef : "", s.transactionId ? "ID: " + s.transactionId : ""].filter(Boolean);
+  if (s.counterpartyName) refs.push("Payeur: " + s.counterpartyName);
+  if (s.balance != null) refs.push("Solde: " + formaterMontant(s.balance) + " F");
+  const count = Number(s.relatedEventCount || 0);
+  if (count > 1) refs.push(count + " événements");
+
+  return '<div class="msg" onclick="this.classList.toggle(\'ouvert\')">'
+    + '<div class="m-head"><span class="m-exp">' + esc(expediteurAffiche(s)) + "</span>"
+    + (montant ? '<span class="m-amt ' + p.cls + '">' + esc(montant) + "</span>" : '<span class="m-amt"></span>')
+    + '<span class="m-heure">' + esc(heure(s.receivedAt)) + "</span></div>"
+    + '<div class="corps">' + esc(s.body) + "</div>"
+    + '<div class="m-pied">' + pied.join(" ") + "</div>"
+    + (refs.length ? '<div class="refs">' + esc(refs.join(" · ")) + "</div>" : "")
+    + eventHistory(s)
+    + "</div>";
 }
 
 function majBadge() {
-  const nouvelles = listes.annulations.filter((s) => !annulationsVues.has(s.id)).length;
+  const nouvelles = messages.filter((s) => estAnnulation(s) && !annulationsVues.has(s.id)).length;
   const b = $("badge-annul");
-  if (nouvelles > 0 && ongletActif !== "annulations") { b.style.display = "flex"; b.textContent = nouvelles > 9 ? "9+" : nouvelles; }
+  if (!b) return;
+  if (nouvelles > 0 && filtreActif !== "annulations") { b.style.display = "inline-flex"; b.textContent = nouvelles > 9 ? "9+" : nouvelles; }
   else b.style.display = "none";
 }
 
+// ════ RECHERCHE ════
 /**
- * Une annulation Wave ne cite aucune référence, seulement le nom du payeur.
- * Ce raccourci bascule sur l'onglet Recherche avec ce nom comme terme : le
- * message de paiement d'origine porte le même nom, il remonte donc avec.
+ * CE QUE L'AGENT TAPE N'EST PAS CE QU'IL FAUT ENVOYER.
+ *
+ *   « +225 07 12 34 56 78 »  → 0712345678  (l'indicatif disparaît, le SMS
+ *                               d'origine ne le contient pas)
+ *   « pp260911.0021.a48102 » → PP260911.0021.A48102  (référence complète,
+ *                               lettres et points conservés)
+ *   « 730631df »             → 730631df   (identifiant mêlant chiffres et
+ *                               lettres : on n'en retire surtout pas les
+ *                               lettres, sinon il ne retrouve plus rien)
  */
-function chercherOrigine(nom) {
-  allerA("recherche");
-  $("in-q").value = nom;
-  $("search-scope").value = "tous";
-  rafraichirListe("recherche");
+function normaliserRecherche(valeur) {
+  const brut = String(valeur || "").trim().replace(/\s+/g, " ");
+  if (!brut) return "";
+  const aDesLettres = /[A-Za-zÀ-ÿ]/.test(brut);
+  if (aDesLettres) {
+    // Référence ou identifiant : on garde tout, on enlève juste les espaces
+    // que le collage ajoute parfois au milieu.
+    if (/^[A-Za-z0-9.\-_ ]+$/.test(brut) && /\d/.test(brut)) return brut.replace(/\s+/g, "").toUpperCase();
+    return brut; // un nom de personne : tel quel
+  }
+  const chiffres = brut.replace(/\D/g, "");
+  if (chiffres.length >= 8) return numeroLocal(chiffres);
+  return chiffres || brut;
+}
+
+let rechercheTimer = null;
+function lancerRecherche() {
+  $("clear-search").style.display = $("in-q").value ? "block" : "none";
+  charger().catch(function () {});
+}
+function effacerRecherche() {
+  $("in-q").value = "";
+  $("clear-search").style.display = "none";
+  charger().catch(function () {});
 }
 
 // ════ CHARGEMENT ════
-function paramsDe(nom) {
-  if (nom === "messages") return { filtre: filtreMessages, q: "", options: {} };
-  if (nom === "recherche") return {
-    filtre: $("search-scope").value,
-    q: $("in-q").value.trim(),
+/** Le serveur ne connaît pas « validations » : c'est un tri local. */
+function filtreServeur(f) { return f === "validations" ? "retrait" : f; }
+
+/** Ce que la puce choisie laisse passer, une fois la réponse reçue. */
+function gardeLocale(m) {
+  if (filtreActif === "validations") return estValidationBlaffa(m);
+  if (filtreActif === "retrait") return !estValidationBlaffa(m);
+  return true;
+}
+
+function parametres() {
+  return {
+    filtre: filtreServeur(filtreActif),
+    q: normaliserRecherche($("in-q").value),
     options: {
       platform: $("search-platform").value,
       operator: $("search-operator").value,
@@ -468,34 +622,36 @@ function paramsDe(nom) {
       to: $("search-to").value,
     },
   };
-  return { filtre: "annulations", q: "", options: {} };
 }
 
 function mettreAJourFiltres(j) {
   const platform = $("search-platform");
   const operator = $("search-operator");
   if (platform && Array.isArray(j.platforms)) {
-    const selected = platform.value;
-    platform.innerHTML = '<option value="">Toutes les plateformes</option>' + j.platforms.map(function (p) { return '<option value="' + esc(p.code) + '">' + esc(p.code) + '</option>'; }).join("");
-    platform.value = selected;
+    const choisi = platform.value;
+    platform.innerHTML = '<option value="">Toutes les plateformes</option>' + j.platforms.map(function (p) { return '<option value="' + esc(p.code) + '">' + esc(p.code) + "</option>"; }).join("");
+    platform.value = choisi;
   }
   if (operator && Array.isArray(j.operators)) {
-    const selected = operator.value;
-    operator.innerHTML = '<option value="">Tous les opérateurs</option>' + j.operators.map(function (name) { return '<option value="' + esc(name) + '">' + esc(name) + '</option>'; }).join("");
-    operator.value = selected;
+    const choisi = operator.value;
+    operator.innerHTML = '<option value="">Tous les opérateurs</option>' + j.operators.map(function (n) { return '<option value="' + esc(n) + '">' + esc(n) + "</option>"; }).join("");
+    operator.value = choisi;
   }
 }
 
-async function rafraichirListe(nom) {
+async function charger() {
   try {
-    const p = paramsDe(nom);
+    const p = parametres();
     const j = await appel(p.filtre, p.q, null, p.options);
     if (!j.ok) throw new Error(j.error || "?");
     if (j.org && j.org.name) $("org-nom").textContent = j.org.name;
     mettreAJourFiltres(j);
-    listes[nom] = j.sms;
-    anciens[nom] = j.hasMore ? j.nextBefore : null;
-    rendreListe(nom);
+    messages = (j.sms || []).filter(gardeLocale);
+    plusAncien = j.hasMore ? j.nextBefore : null;
+    for (const k in originesResolues) delete originesResolues[k];
+    for (const k in enCoursDeResolution) delete enCoursDeResolution[k];
+    rendreListe();
+    majBadge();
     return j;
   } catch (e) {
     $("statut").textContent = "⚠️ " + (e.message || e);
@@ -504,80 +660,57 @@ async function rafraichirListe(nom) {
   }
 }
 
-async function chargerPlus(nom) {
-  if (!anciens[nom]) return;
+async function chargerPlus() {
+  if (!plusAncien) return;
   try {
-    const p = paramsDe(nom);
-    const j = await appel(p.filtre, p.q, anciens[nom], p.options);
+    const p = parametres();
+    const j = await appel(p.filtre, p.q, plusAncien, p.options);
     if (j.ok && j.sms.length) {
-      listes[nom] = fusionnerMessages(listes[nom], j.sms);
-      anciens[nom] = j.hasMore ? j.nextBefore : null;
-      rendreListe(nom);
-    } else { anciens[nom] = null; $("plus-" + nom).style.display = "none"; }
+      messages = fusionnerMessages(messages, j.sms.filter(gardeLocale));
+      plusAncien = j.hasMore ? j.nextBefore : null;
+      rendreListe();
+    } else { plusAncien = null; $("plus-messages").style.display = "none"; }
   } catch (e) {}
 }
-
-let rechercheTimer = null;
-function lancerRecherche() {
-  const input = $("in-q");
-  input.value = numeroLocal(input.value);
-  $("clear-search").style.display = input.value ? "block" : "none";
-  rafraichirListe("recherche").catch(function () {});
-}
-function effacerRecherche() {
-  $("in-q").value = "";
-  $("clear-search").style.display = "none";
-  listes.recherche = [];
-  rendreListe("recherche");
-}
-$("in-q").addEventListener("input", function () {
-  const before = this.value;
-  const normalized = numeroLocal(before);
-  if (normalized && /\d/.test(before) && !/[A-Za-zÀ-ÿ]/.test(before)) this.value = normalized;
-  $("clear-search").style.display = this.value ? "block" : "none";
-  clearTimeout(rechercheTimer);
-  rechercheTimer = setTimeout(lancerRecherche, 450);
-});
 
 function fusionnerMessages(actuels, nouveaux) {
   const map = new Map();
   for (const item of actuels.concat(nouveaux)) {
-    const current = map.get(item.id);
-    if (!current || item.transactionType !== "CANCELLATION") { map.set(item.id, item); continue; }
+    const courant = map.get(item.id);
+    if (!courant || item.transactionType !== "CANCELLATION") { map.set(item.id, item); continue; }
     const events = [];
-    const seen = new Set();
-    for (const event of (current.events || [current]).concat(item.events || [item])) {
-      if (seen.has(event.id)) continue;
-      seen.add(event.id); events.push(event);
+    const vus = new Set();
+    for (const ev of (courant.events || [courant]).concat(item.events || [item])) {
+      if (vus.has(ev.id)) continue;
+      vus.add(ev.id); events.push(ev);
     }
     events.sort(function (a, b) { return new Date(a.receivedAt) - new Date(b.receivedAt); });
-    const completed = events.slice().reverse().find(function (event) { return event.status === "ANNULATION_COMPLETED"; });
-    const latest = events.slice().sort(function (a, b) { return new Date(b.receivedAt) - new Date(a.receivedAt); })[0];
-    map.set(item.id, Object.assign({}, completed || latest, {
+    const termine = events.slice().reverse().find(function (ev) { return ev.status === "ANNULATION_COMPLETED"; });
+    const dernier = events.slice().sort(function (a, b) { return new Date(b.receivedAt) - new Date(a.receivedAt); })[0];
+    map.set(item.id, Object.assign({}, termine || dernier, {
       id: item.id,
-      cancellationCaseKey: item.cancellationCaseKey || current.cancellationCaseKey,
+      cancellationCaseKey: item.cancellationCaseKey || courant.cancellationCaseKey,
       events: events,
       relatedEventCount: events.length,
-      receivedAt: latest.receivedAt,
+      receivedAt: dernier.receivedAt,
     }));
   }
   return Array.from(map.values()).sort(function (a, b) { return new Date(b.receivedAt) - new Date(a.receivedAt); });
 }
 
-// ════ BOUCLE AUTO (messages + annulations + notifications) ════
+// ════ BOUCLE AUTO : la liste courante, et les annulations en fond ════
 async function ticAuto() {
   try {
-    await rafraichirListe(ongletActif === "recherche" ? "messages" : ongletActif === "reglages" ? "messages" : ongletActif);
-    // Annulations : toujours surveillées en fond pour badge + notification
+    await charger();
     const ja = await appel("annulations", "", null);
     if (ja.ok) {
       if (!premierChargement && "Notification" in window && Notification.permission === "granted") {
         for (const s of ja.sms) {
           const events = Array.isArray(s.events) && s.events.length ? s.events : [s];
-          for (const event of events) {
-            if (!idsConnus.has(event.id)) {
-              const titre = event.status === "ANNULATION_COMPLETED" ? "✅ Annulation terminée — SMS BLAFFA" : "🔴 Annulation initiée — SMS BLAFFA";
-              try { new Notification(titre, { body: (event.body || "").slice(0, 130), icon: "/sms-center-192.png" }); } catch (e) {}
+          for (const ev of events) {
+            if (!idsConnus.has(ev.id)) {
+              const titre = ev.status === "ANNULATION_COMPLETED" ? "✅ Annulation terminée — SMS BLAFFA" : "🔴 Annulation initiée — SMS BLAFFA";
+              try { new Notification(titre, { body: (ev.body || "").slice(0, 130), icon: "/sms-center-192.png" }); } catch (e) {}
             }
           }
         }
@@ -585,15 +718,18 @@ async function ticAuto() {
       if (premierChargement) for (const s of ja.sms) annulationsVues.add(s.id);
       for (const s of ja.sms) {
         const events = Array.isArray(s.events) && s.events.length ? s.events : [s];
-        for (const event of events) idsConnus.add(event.id);
+        for (const ev of events) idsConnus.add(ev.id);
       }
-      listes.annulations = ja.sms;
-      if (ongletActif === "annulations") rendreListe("annulations");
-      majBadge();
+      const nouvelles = ja.sms.filter((s) => !annulationsVues.has(s.id)).length;
+      const b = $("badge-annul");
+      if (b) {
+        if (nouvelles > 0 && filtreActif !== "annulations") { b.style.display = "inline-flex"; b.textContent = nouvelles > 9 ? "9+" : nouvelles; }
+        else b.style.display = "none";
+      }
     }
     premierChargement = false;
     $("pastille").className = "pastille";
-    $("statut").textContent = new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    $("statut").textContent = new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
   } catch (e) {}
 }
 
@@ -636,8 +772,8 @@ async function sauverReglages() {
     if (!j.ok) throw new Error(j.error || "?");
     localStorage.setItem("smsblaffa_token", token);
     localStorage.removeItem("smscenter_token");
-    allerA("messages");
-    await rafraichirListe("messages");
+    fermerReglages();
+    await charger();
   } catch (e) {
     err.textContent = "⚠️ " + (e.message || e);
     err.style.display = "block";
@@ -693,6 +829,13 @@ window.addEventListener("appinstalled", function () { cacher("install-bar"); });
     localStorage.setItem("smsblaffa_ios_hint", "1");
   }
 })();
+
+// La frappe ne déclenche pas une requête par lettre.
+$("in-q").addEventListener("input", function () {
+  $("clear-search").style.display = this.value ? "block" : "none";
+  clearTimeout(rechercheTimer);
+  rechercheTimer = setTimeout(lancerRecherche, 420);
+});
 
 // ════ DÉMARRAGE ════
 function ecran() {
