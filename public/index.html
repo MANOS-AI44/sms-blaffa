@@ -57,6 +57,21 @@
   .cherche input:focus { box-shadow: 0 0 0 3px rgba(255,255,255,.28); }
   .cherche #clear-search { position: absolute; right: 7px; top: 50%; transform: translateY(-50%); background: #E2E8F0; color: #334155; border: 0; width: 28px; height: 28px; border-radius: 999px; font-size: 16px; line-height: 1; }
 
+  /* ★ 29/09/2026 (Gérard) — « quand on met un numéro, ça doit tourner pour
+     nous montrer que effectivement c'est en train de rechercher. Mais on
+     lance, on ne sait même pas à quel moment ça recherche. »
+     Ce bandeau apparaît DÈS LA FRAPPE, avant même la requête, et ne disparaît
+     qu'avec le résultat. */
+  .etat-recherche { display: none; align-items: center; gap: 8px; margin-top: 9px; padding: 8px 12px; border-radius: 10px; font-size: 13px; background: rgba(255,255,255,.16); color: #fff; }
+  .etat-recherche.visible { display: flex; }
+  .etat-recherche.fini { background: rgba(255,255,255,.10); }
+  .etat-recherche.echec { background: rgba(220,38,38,.92); }
+  .etat-recherche b { font-weight: 700; }
+  .etat-recherche .rr { display: inline-block; width: 14px; height: 14px; border-radius: 99px; border: 2px solid rgba(255,255,255,.35); border-top-color: #fff; animation: tourner .8s linear infinite; flex: 0 0 auto; }
+  .etat-recherche.fini .rr, .etat-recherche.echec .rr { display: none; }
+  .etat-recherche .reessayer { margin-left: auto; background: #fff; color: #B91C1C; border: 0; border-radius: 8px; padding: 5px 10px; font-size: 12px; font-weight: 700; }
+  @keyframes tourner { to { transform: rotate(360deg); } }
+
   .chips { display: flex; gap: 6px; overflow-x: auto; margin-top: 10px; padding-bottom: 2px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .chips::-webkit-scrollbar { display: none; }
   .chip { flex: 0 0 auto; border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.10); border-radius: 999px; padding: 7px 14px; font-size: 12.5px; font-weight: 700; color: rgba(255,255,255,.88); position: relative; }
@@ -192,6 +207,10 @@
       <button id="clear-search" onclick="effacerRecherche()" aria-label="Effacer" style="display:none">×</button>
     </div>
 
+    <div class="etat-recherche" id="etat-recherche" aria-live="polite">
+      <span class="rr" id="etat-rr"></span><span id="etat-texte"></span>
+    </div>
+
     <div class="chips" id="chips">
       <button class="chip on" data-f="tous" onclick="setFiltre('tous',this)">Tous</button>
       <button class="chip" data-f="depot" onclick="setFiltre('depot',this)">Dépôts</button>
@@ -299,15 +318,37 @@ function fermerReglages() {
 }
 
 // ════ API ════
+/** Au-delà, on abandonne la tentative en cours et on recommence. */
+const DELAI_APPEL_MS = 25000;
+/** Trois essais : immédiat, puis 1,2 s, puis 3 s. */
+const ATTENTES_REPRISE_MS = [1200, 3000];
+
+/**
+ * ★ 29/09/2026 — UNE COUPURE N'EST PLUS UNE PANNE.
+ *
+ * Ne recommence QUE ce qui a une chance de marcher au coup suivant : une panne
+ * de transport, ou un 502/503/504 (Render qui redémarre). Un 401 (code refusé)
+ * ou un 400 ne sont jamais retentés — les retenter ne ferait que retarder le
+ * message utile. Cet appel ne lit rien et n'écrit rien : le recommencer est
+ * sans danger.
+ */
 async function appel(filtre, q, avant, options) {
   const c = conf();
-  try {
-    return await appelAvecToken(c.token, filtre, q, avant, options || {});
-  } catch (e) {
-    // Un code révoqué ne laisse pas l'application bloquée sur un écran vide.
-    if (e && e.status === 401) deconnecter();
-    throw e;
+  let derniere = null;
+  for (let essai = 0; essai <= ATTENTES_REPRISE_MS.length; essai++) {
+    try {
+      return await appelAvecToken(c.token, filtre, q, avant, options || {});
+    } catch (e) {
+      // Un code révoqué ne laisse pas l'application bloquée sur un écran vide.
+      if (e && e.status === 401) { deconnecter(); throw e; }
+      const reprenable = (e && e.reseau) || (e && (e.status === 502 || e.status === 503 || e.status === 504));
+      derniere = e;
+      if (!reprenable || essai === ATTENTES_REPRISE_MS.length) throw e;
+      etatRecherche("reprise", { essai: essai + 2, total: ATTENTES_REPRISE_MS.length + 1 });
+      await new Promise(function (r) { setTimeout(r, ATTENTES_REPRISE_MS[essai]); });
+    }
   }
+  throw derniere;
 }
 
 async function appelAvecToken(token, filtre, q, avant, options) {
@@ -321,13 +362,38 @@ async function appelAvecToken(token, filtre, q, avant, options) {
   if (options.operator) u.searchParams.set("operator", options.operator);
   if (options.from) u.searchParams.set("from", options.from);
   if (options.to) u.searchParams.set("to", options.to);
-  const r = await fetch(u.toString(), {
-    method: "GET",
-    headers: { Authorization: "Bearer " + token, Accept: "application/json" },
-    cache: "no-store",
-    credentials: "omit",
-    referrerPolicy: "no-referrer",
-  });
+  // ★ 29/09/2026 — POURQUOI « Failed to fetch » S'AFFICHAIT SI SOUVENT.
+  //   Cet appel n'avait NI délai NI nouvelle tentative. Le serveur BLAFFA est
+  //   sur Render : au réveil d'une instance, ou sur une coupure de réseau
+  //   mobile d'une seconde, `fetch` rejette avec le TypeError « Failed to
+  //   fetch » — le message brut du navigateur, que l'application affichait tel
+  //   quel, définitivement, sans jamais réessayer. Une seconde de réseau
+  //   perdue suffisait à casser l'écran jusqu'au rechargement.
+  //   Désormais : 25 s d'attente maximum, puis abandon PROPRE de la tentative,
+  //   et l'appelant (appelAvecReprise) recommence.
+  const minuteur = new AbortController();
+  const stop = setTimeout(function () { minuteur.abort(); }, DELAI_APPEL_MS);
+  let r;
+  try {
+    r = await fetch(u.toString(), {
+      method: "GET",
+      headers: { Authorization: "Bearer " + token, Accept: "application/json" },
+      cache: "no-store",
+      credentials: "omit",
+      referrerPolicy: "no-referrer",
+      signal: minuteur.signal,
+    });
+  } catch (e) {
+    // Panne de transport : ni le code ni le serveur ne sont en cause. On le
+    // dit en français, et on marque l'erreur pour que la reprise la retente.
+    const erreur = new Error(e && e.name === "AbortError"
+      ? "BLAFFA met trop de temps à répondre"
+      : "connexion interrompue");
+    erreur.reseau = true;
+    throw erreur;
+  } finally {
+    clearTimeout(stop);
+  }
   const texte = await r.text();
   let j = null;
   try { j = texte ? JSON.parse(texte) : null; } catch (e) {}
@@ -594,13 +660,66 @@ function normaliserRecherche(valeur) {
 }
 
 let rechercheTimer = null;
+/**
+ * ★ 29/09/2026 (Gérard) — « ÇA DOIT TOURNER POUR NOUS MONTRER QUE
+ * EFFECTIVEMENT C'EST EN TRAIN DE RECHERCHER. »
+ *
+ * Avant, rien ne bougeait entre la frappe et l'arrivée des messages : ni
+ * pendant les 420 ms d'attente de frappe, ni pendant la requête. Une recherche
+ * lente était indiscernable d'une recherche qui n'avait jamais démarré.
+ *
+ * Cinq états, un seul bandeau, toujours au même endroit :
+ *   frappe   — dès la première lettre, avant même la requête ;
+ *   cherche  — la requête est partie ;
+ *   reprise  — la connexion a sauté, on recommence (essai 2 sur 3) ;
+ *   fini     — le nombre de messages trouvés ;
+ *   echec    — le motif en français + un bouton Réessayer.
+ */
+function etatRecherche(phase, info) {
+  const bloc = $("etat-recherche"); if (!bloc) return;
+  const texte = $("etat-texte");
+  info = info || {};
+  const terme = (info.terme !== undefined ? info.terme : ($("in-q") ? $("in-q").value.trim() : ""));
+  const pour = terme ? " pour <b>" + esc(terme) + "</b>" : "";
+  bloc.className = "etat-recherche visible";
+  const ancien = bloc.querySelector(".reessayer");
+  if (ancien) ancien.remove();
+  if (phase === "cache") { bloc.className = "etat-recherche"; return; }
+  if (phase === "frappe")  { texte.innerHTML = "Recherche" + pour + "\u2026"; return; }
+  if (phase === "cherche") { texte.innerHTML = "Recherche en cours" + pour + "\u2026"; return; }
+  if (phase === "reprise") {
+    texte.innerHTML = "Connexion interrompue — nouvelle tentative (" + info.essai + "/" + info.total + ")\u2026";
+    return;
+  }
+  if (phase === "fini") {
+    bloc.className = "etat-recherche visible fini";
+    const n = info.nombre || 0;
+    texte.innerHTML = n === 0
+      ? "Aucun message" + pour
+      : n + " message" + (n > 1 ? "s" : "") + pour;
+    // Sans terme de recherche, le résultat parle de lui-même : on s'efface.
+    if (!terme) setTimeout(function () { if (bloc.classList.contains("fini")) bloc.className = "etat-recherche"; }, 1600);
+    return;
+  }
+  if (phase === "echec") {
+    bloc.className = "etat-recherche visible echec";
+    texte.innerHTML = "⚠️ " + esc(info.motif || "recherche impossible");
+    const b = document.createElement("button");
+    b.className = "reessayer"; b.textContent = "Réessayer";
+    b.onclick = function () { lancerRecherche(); };
+    bloc.appendChild(b);
+  }
+}
+
 function lancerRecherche() {
   $("clear-search").style.display = $("in-q").value ? "block" : "none";
+  etatRecherche("cherche");
   charger().catch(function () {});
 }
 function effacerRecherche() {
   $("in-q").value = "";
   $("clear-search").style.display = "none";
+  etatRecherche("cache");
   charger().catch(function () {});
 }
 
@@ -672,10 +791,16 @@ async function charger() {
     for (const k in originesResolues) if (!presents.has(k)) delete originesResolues[k];
     rendreListe();
     majBadge();
+    etatRecherche("fini", { nombre: messages.length });
+    $("pastille").className = "pastille";
     return j;
   } catch (e) {
-    $("statut").textContent = "⚠️ " + (e.message || e);
+    // Le message du navigateur (« Failed to fetch ») ne dit rien à personne :
+    // on affiche le motif en français, et on laisse un bouton pour reprendre.
+    const motif = (e && e.reseau) ? (e.message || "connexion interrompue") : (e.message || String(e));
+    $("statut").textContent = "⚠️ " + motif;
     $("pastille").className = "pastille off";
+    etatRecherche("echec", { motif: motif });
     throw e;
   }
 }
@@ -858,6 +983,9 @@ window.addEventListener("appinstalled", function () { cacher("install-bar"); });
 $("in-q").addEventListener("input", function () {
   $("clear-search").style.display = this.value ? "block" : "none";
   clearTimeout(rechercheTimer);
+  // Le bandeau s'allume DÈS LA FRAPPE : les 420 ms d'attente ne sont plus un
+  // silence, elles sont annoncées.
+  if (this.value.trim()) etatRecherche("frappe"); else etatRecherche("cache");
   rechercheTimer = setTimeout(lancerRecherche, 420);
 });
 
