@@ -42,10 +42,10 @@
   .entete { background: linear-gradient(135deg, var(--bleu), var(--bleu2)); color: #FFF; padding: calc(10px + var(--safe-t)) 14px 10px; position: sticky; top: 0; z-index: 50; box-shadow: 0 6px 20px rgba(11,37,69,.18); }
   .entete .row { display: flex; align-items: center; gap: 10px; }
   .entete img.logo { width: 32px; height: 32px; border-radius: 9px; }
-  .entete .ident { min-width: 0; }
+  .entete .ident { min-width: 0; flex: 1 1 auto; }
   .entete .titre { font-size: 16px; font-weight: 900; letter-spacing: .4px; }
   .entete .org { font-size: 11px; opacity: .8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .entete .maj { margin-left: auto; text-align: right; font-size: 10px; opacity: .75; white-space: nowrap; }
+  .entete .maj { margin-left: auto; text-align: right; font-size: 10px; opacity: .75; white-space: normal; max-width: 45%; line-height: 1.35; flex: 0 1 auto; }
   .icone-btn { background: rgba(255,255,255,.14); border: 0; color: #FFF; width: 34px; height: 34px; border-radius: 10px; font-size: 16px; flex: 0 0 auto; }
   .pastille { display: inline-block; width: 8px; height: 8px; border-radius: 99px; background: #22C55E; margin-right: 4px; }
   .pastille.off { background: #F59E0B; }
