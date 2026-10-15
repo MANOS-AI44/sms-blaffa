@@ -112,7 +112,10 @@
   .etiq.violet { background: #F3EBFF; color: #6D28D9; }
   .etiq.rouge, .etiq.vert { background: #FDEAEA; color: #B91C1C; }
   .etiq.gris { background: #F1F5F9; color: #64748B; }
-  .m-plat { font-weight: 700; color: #475569; }
+  /* Conservé pour les cartes déjà écrites dans la page : la plateforme ne
+     s'affiche plus sur un message (15/10) — elle sert à filtrer, pas à
+     étiqueter ce qu'on envoie à un partenaire. */
+  .m-plat { display: none; }
   .refs { display: none; margin-top: 8px; padding: 6px 9px; border-radius: 8px; background: #F1F5F9; font: 10.5px ui-monospace, SFMono-Regular, Menlo, monospace; color: #475569; }
   .msg.ouvert .refs { display: block; }
   .entete-liste { padding: 2px 4px 12px; color: var(--mute); font-size: 12.5px; font-weight: 600; }
@@ -1104,7 +1107,6 @@ function carte(s) {
   // Le pied : petit, gris, et dans cet ordre — le type, la plateforme, puis
   // l'opérateur et le numéro. Rien d'autre : le reste attend le dépliage.
   const pied = ['<span class="etiq ' + p.cls + '">' + esc(p.tag) + "</span>"];
-  if (s.platformCode) pied.push('<span class="m-plat">' + esc(s.platformCode) + "</span>");
   const op = s.operator && String(s.operator).toLowerCase() !== String(s.sender || "").toLowerCase() && !estValidationBlaffa(s)
     ? String(s.operator) : "";
   if (op) pied.push("· " + esc(op));
