@@ -3,14 +3,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#0B2545">
-<title>SMS BLAFFA</title>
+<title>SMS</title>
 <link rel="manifest" href="/sms-center-manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="/sms-center-192.png">
 <link rel="apple-touch-icon" href="/sms-center-192.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="SMS BLAFFA">
+<meta name="apple-mobile-web-app-title" content="SMS">
 <style>
   :root {
     --bleu: #0B2545; --bleu2: #14386B; --accent: #2563EB;
@@ -101,7 +101,7 @@
   .m-amt.violet { color: #7C3AED; }
   .m-amt.rouge, .m-amt.vert { color: #DC2626; }
   .m-amt.gris  { color: #64748B; }
-  .m-heure { font-size: 11.5px; color: #94A3B8; white-space: nowrap; }
+  .m-heure { font-size: 11px; color: #64748B; white-space: nowrap; font-variant-numeric: tabular-nums; }
   .corps { margin-top: 9px; font-size: 14px; line-height: 1.55; color: #1E293B; background: #F7F9FC; border: 1px solid #EEF2F8; border-radius: 12px; padding: 11px 13px; white-space: pre-wrap; word-break: break-word; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
   .msg.ouvert .corps { -webkit-line-clamp: unset; display: block; }
   /* Le pied de carte : tout ce qui sert à classer, en petit. */
@@ -159,7 +159,7 @@
 
 <div id="splash" style="opacity: 0; display: none;">
   <img src="/sms-center-192.png" alt="">
-  <div class="nom">SMS BLAFFA</div>
+  <div class="nom">SMS</div>
   <div class="sous">Tes SMS opérateurs, en direct</div>
 </div>
 
@@ -168,13 +168,13 @@
   <div class="login-boite">
     <div class="haut">
       <img src="/sms-center-192.png" alt="">
-      <h2>SMS BLAFFA</h2>
+      <h2>SMS</h2>
       <p>Lis et recherche les SMS opérateurs.<br>Saisis ton <b>code d'accès</b> — celui de l'organisation, ou celui que le responsable t'a donné.</p>
     </div>
     <label style="font-size:11px;font-weight:800;color:#334155">Code d'accès de ton organisation</label>
     <input id="in-token" style="width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:16px;font-weight:800;letter-spacing:2px;text-transform:uppercase;font-family:monospace" placeholder="ex. BLF303" autocomplete="off" autocapitalize="characters" spellcheck="false">
     <div style="font-size:11px;color:var(--mute);margin-top:6px">6 caractères minimum. Un ancien token long fonctionne toujours.</div>
-    <label style="font-size:11px;font-weight:800;color:#334155;display:block;margin-top:12px">Serveur BLAFFA FILE</label>
+    <label style="font-size:11px;font-weight:800;color:#334155;display:block;margin-top:12px">Serveur</label>
     <input id="in-api" aria-label="Serveur BLAFFA FILE" aria-readonly="true" readonly="" style="width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:monospace;background:#F8FAFC;color:#475569" value="https://blaffa-file.onrender.com/api/public/sms-app">
     <button class="btn" onclick="connecter()">Se connecter</button>
     <div class="erreur" id="login-err"></div>
@@ -189,8 +189,8 @@
     <div class="row">
       <img class="logo" src="/sms-center-192.png" alt="">
       <div class="ident">
-        <div class="titre">SMS BLAFFA</div>
-        <div class="org" id="org-nom">BLAFFA Main</div>
+        <div class="titre">SMS</div>
+        <div class="org" id="org-nom"></div>
         <div class="org" id="acces-portee" style="display:none"></div>
       </div>
       <div class="maj"><span class="pastille" id="pastille"></span><span id="statut">12:22</span></div>
@@ -228,7 +228,7 @@
 
   <main class="corps-page">
     <div class="bandeau" id="install-bar" style="display:none">
-      <span>📲 Installe <b>SMS BLAFFA</b> sur ton téléphone.</span>
+      <span>📲 Installe <b>SMS</b> sur ton téléphone.</span>
       <button onclick="installerAppli()">Installer</button>
     </div>
     <div class="bandeau" id="ios-bar" style="display:none">
@@ -240,7 +240,7 @@
       <button onclick="activerNotifs()">Activer</button>
     </div>
 
-    <div id="liste-messages"><div class="entete-liste"><div><strong>Tous les messages</strong>100 messages · SMS BLAFFA</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">2 000 F</span><span class="m-heure">12:21</span></div><div class="corps">Transfert de 2000 FCFA recu du +22383097743 (Mali).
+    <div id="liste-messages"><div class="entete-liste"><div><strong>Tous les messages</strong>100 messages · SMS</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">2 000 F</span><span class="m-heure">12:21</span></div><div class="corps">Transfert de 2000 FCFA recu du +22383097743 (Mali).
 Nouveau solde : 43000 FCFA
 ID : 1f50a9de
 Retrait en point de vente, transferts et paiements a 0F.
@@ -597,7 +597,7 @@ OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</sp
       <h3>🔑 Connexion</h3>
       <label>Code d'accès de l'organisation</label>
       <input id="set-token" autocomplete="off" autocapitalize="characters" spellcheck="false" style="text-transform:uppercase;letter-spacing:1px;font-weight:700">
-      <label>Serveur BLAFFA FILE</label>
+      <label>Serveur</label>
       <input id="set-api" aria-readonly="true" readonly="" style="background:#F8FAFC;color:#475569">
       <button class="btn" onclick="sauverReglages()">Enregistrer</button>
       <div class="erreur" id="set-err"></div>
@@ -609,7 +609,7 @@ OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</sp
     </div>
     <div class="carte">
       <h3>ℹ️ Application</h3>
-      <p class="note">SMS BLAFFA — tous les SMS et notifications de l'organisation, avec les annulations rattachées à leur transaction d'origine.</p>
+      <p class="note">SMS — tous les SMS et notifications de l'organisation, avec les annulations rattachées à leur transaction d'origine.</p>
       <button class="btn rouge-b" onclick="deconnecter()">Se déconnecter</button>
     </div>
   </aside>
@@ -879,7 +879,7 @@ async function appelAvecToken(token, filtre, q, avant, options) {
     // Panne de transport : ni le code ni le serveur ne sont en cause. On le
     // dit en français, et on marque l'erreur pour que la reprise la retente.
     const erreur = new Error(e && e.name === "AbortError"
-      ? "BLAFFA met trop de temps à répondre"
+      ? "Le serveur met trop de temps à répondre"
       : "connexion interrompue");
     erreur.reseau = true;
     throw erreur;
@@ -889,7 +889,7 @@ async function appelAvecToken(token, filtre, q, avant, options) {
   const texte = await r.text();
   let j = null;
   try { j = texte ? JSON.parse(texte) : null; } catch (e) {}
-  if (!j || typeof j !== "object") throw new Error("serveur BLAFFA indisponible ou réponse non reconnue");
+  if (!j || typeof j !== "object") throw new Error("serveur indisponible ou réponse non reconnue");
   if (!r.ok) {
     const erreur = new Error(j.error || (r.status === 401 ? "code refusé" : "erreur serveur " + r.status));
     erreur.status = r.status;
@@ -916,11 +916,22 @@ function numeroLocal(value) {
   return digits || String(value || "").trim();
 }
 function heure(d) {
-  const x = new Date(d); const now = new Date();
-  const memeJour = x.toDateString() === now.toDateString();
-  return memeJour
-    ? x.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Africa/Abidjan" })
-    : x.toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit", timeZone: "Africa/Abidjan" });
+  // ★ 15/10 (Gérard) — « la date du dépôt ne sort pas. Or la date doit
+  //   apparaître. » Avant, un message du jour n'affichait QUE l'heure
+  //   (« 12:21 ») : sur une capture envoyée à un collaborateur, impossible de
+  //   savoir de quel jour il s'agit — et une capture sans date ne prouve rien.
+  //   La date est désormais toujours là. L'année n'apparaît que si le message
+  //   n'est pas de l'année en cours : elle n'encombre pas le cas courant, mais
+  //   un vieux message ne peut pas se faire passer pour celui de cette année.
+  const x = new Date(d);
+  if (!d || Number.isNaN(x.getTime())) return "";
+  const autreAnnee = x.getFullYear() !== new Date().getFullYear();
+  return x.toLocaleString("fr-FR", {
+    day: "2-digit", month: "2-digit",
+    ...(autreAnnee ? { year: "numeric" } : {}),
+    hour: "2-digit", minute: "2-digit",
+    timeZone: "Africa/Abidjan",
+  });
 }
 
 /**
@@ -946,7 +957,7 @@ function presentationMessage(s) {
 
 /** L'expéditeur tel que le téléphone l'affiche — c'est le repère de l'agent. */
 function expediteurAffiche(m) {
-  if (estValidationBlaffa(m)) return "BLAFFA FILE";
+  if (estValidationBlaffa(m)) return "Système";
   const brut = String(m.sender || "").trim();
   return brut || "Inconnu";
 }
@@ -1055,7 +1066,7 @@ function rendreListe() {
   const titre = filtreActif === "annulations" ? "Annulations"
     : filtreActif === "autres" ? "Autres SMS et notifications"
     : filtreActif === "depot" ? "Dépôts"
-    : filtreActif === "validations" ? "Validations BLAFFA"
+    : filtreActif === "validations" ? "Validations"
     : filtreActif === "retrait" ? "Retraits"
     : $("in-q").value.trim() ? "Résultats de recherche" : "Tous les messages";
 
@@ -1066,7 +1077,7 @@ function rendreListe() {
   }).join("");
 
   L.innerHTML = '<div class="entete-liste"><div><strong>' + titre + "</strong>"
-    + messages.length + " message" + (messages.length > 1 ? "s" : "") + " · SMS BLAFFA</div></div>" + corps;
+    + messages.length + " message" + (messages.length > 1 ? "s" : "") + " · SMS</div></div>" + corps;
   $("plus-messages").style.display = plusAncien ? "block" : "none";
 }
 
@@ -1368,7 +1379,7 @@ async function ticAuto() {
           const events = Array.isArray(s.events) && s.events.length ? s.events : [s];
           for (const ev of events) {
             if (!idsConnus.has(ev.id)) {
-              const titre = ev.status === "ANNULATION_COMPLETED" ? "✅ Annulation terminée — SMS BLAFFA" : "🔴 Annulation initiée — SMS BLAFFA";
+              const titre = ev.status === "ANNULATION_COMPLETED" ? "✅ Annulation terminée" : "🔴 Annulation initiée";
               try { new Notification(titre, { body: (ev.body || "").slice(0, 130), icon: "/sms-center-192.png" }); } catch (e) {}
             }
           }
