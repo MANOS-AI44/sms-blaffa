@@ -3,14 +3,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#0B2545">
-<title>SMS</title>
+<title>Messages</title>
 <link rel="manifest" href="/sms-center-manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="/sms-center-192.png">
 <link rel="apple-touch-icon" href="/sms-center-192.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="SMS">
+<meta name="apple-mobile-web-app-title" content="SMS BLAFFA">
 <style>
   :root {
     --bleu: #0B2545; --bleu2: #14386B; --accent: #2563EB;
@@ -159,7 +159,7 @@
 
 <div id="splash" style="opacity: 0; display: none;">
   <img src="/sms-center-192.png" alt="">
-  <div class="nom">SMS</div>
+  <div class="nom">Messages</div>
   <div class="sous">Tes SMS opérateurs, en direct</div>
 </div>
 
@@ -168,7 +168,7 @@
   <div class="login-boite">
     <div class="haut">
       <img src="/sms-center-192.png" alt="">
-      <h2>SMS</h2>
+      <h2>Messages</h2>
       <p>Lis et recherche les SMS opérateurs.<br>Saisis ton <b>code d'accès</b> — celui de l'organisation, ou celui que le responsable t'a donné.</p>
     </div>
     <label style="font-size:11px;font-weight:800;color:#334155">Code d'accès de ton organisation</label>
@@ -189,7 +189,7 @@
     <div class="row">
       <img class="logo" src="/sms-center-192.png" alt="">
       <div class="ident">
-        <div class="titre">SMS</div>
+        <div class="titre">Messages</div>
         <div class="org" id="org-nom"></div>
         <div class="org" id="acces-portee" style="display:none"></div>
       </div>
@@ -228,7 +228,7 @@
 
   <main class="corps-page">
     <div class="bandeau" id="install-bar" style="display:none">
-      <span>📲 Installe <b>SMS</b> sur ton téléphone.</span>
+      <span>📲 Installe <b>SMS BLAFFA</b> sur ton téléphone.</span>
       <button onclick="installerAppli()">Installer</button>
     </div>
     <div class="bandeau" id="ios-bar" style="display:none">
@@ -240,7 +240,7 @@
       <button onclick="activerNotifs()">Activer</button>
     </div>
 
-    <div id="liste-messages"><div class="entete-liste"><div><strong>Tous les messages</strong>100 messages · SMS</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">2 000 F</span><span class="m-heure">12:21</span></div><div class="corps">Transfert de 2000 FCFA recu du +22383097743 (Mali).
+    <div id="liste-messages"><div class="entete-liste"><div><strong>Tous les messages</strong>100 messages · Messages</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">2 000 F</span><span class="m-heure">12:21</span></div><div class="corps">Transfert de 2000 FCFA recu du +22383097743 (Mali).
 Nouveau solde : 43000 FCFA
 ID : 1f50a9de
 Retrait en point de vente, transferts et paiements a 0F.
@@ -609,7 +609,7 @@ OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</sp
     </div>
     <div class="carte">
       <h3>ℹ️ Application</h3>
-      <p class="note">SMS — tous les SMS et notifications de l'organisation, avec les annulations rattachées à leur transaction d'origine.</p>
+      <p class="note">Tous les SMS et notifications de l'organisation, avec les annulations rattachées à leur transaction d'origine.</p>
       <button class="btn rouge-b" onclick="deconnecter()">Se déconnecter</button>
     </div>
   </aside>
@@ -1077,7 +1077,7 @@ function rendreListe() {
   }).join("");
 
   L.innerHTML = '<div class="entete-liste"><div><strong>' + titre + "</strong>"
-    + messages.length + " message" + (messages.length > 1 ? "s" : "") + " · SMS</div></div>" + corps;
+    + messages.length + " message" + (messages.length > 1 ? "s" : "") + "</div></div>" + corps;
   $("plus-messages").style.display = plusAncien ? "block" : "none";
 }
 

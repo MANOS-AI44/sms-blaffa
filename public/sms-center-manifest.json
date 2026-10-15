@@ -1,6 +1,6 @@
 {
-  "name": "SMS",
-  "short_name": "SMS",
+  "name": "SMS BLAFFA",
+  "short_name": "SMS BLAFFA",
   "description": "Lecture et recherche des SMS opérateurs de ton organisation (réclamations, annulations, notifications).",
   "start_url": "/sms-center.html",
   "scope": "/sms-center",
