@@ -193,7 +193,7 @@
         <div class="org" id="org-nom">BLAFFA Main</div>
         <div class="org" id="acces-portee" style="display:none"></div>
       </div>
-      <div class="maj"><span class="pastille" id="pastille"></span><span id="statut">12:15</span></div>
+      <div class="maj"><span class="pastille" id="pastille"></span><span id="statut">12:22</span></div>
       <button class="icone-btn" onclick="ouvrirReglages()" aria-label="Réglages">⚙️</button>
     </div>
 
@@ -204,7 +204,7 @@
       <button id="clear-search" onclick="effacerRecherche()" aria-label="Effacer" style="display:none">×</button>
     </div>
 
-    <div class="etat-recherche visible fini" id="etat-recherche" aria-live="polite">
+    <div class="etat-recherche" id="etat-recherche" aria-live="polite">
       <span class="rr" id="etat-rr"></span><span id="etat-texte">100 messages</span>
     </div>
 
@@ -213,7 +213,7 @@
       <button class="chip" data-f="depot" onclick="setFiltre('depot',this)">Dépôts</button>
       <button class="chip" data-f="retrait" onclick="setFiltre('retrait',this)">Retraits</button>
       <button class="chip" data-f="validations" onclick="setFiltre('validations',this)">Validations</button>
-      <button class="chip" data-f="annulations" onclick="setFiltre('annulations',this)">Annulations<span class="bulle" id="badge-annul" style="display: none;"></span></button>
+      <button class="chip" data-f="annulations" onclick="setFiltre('annulations',this)">Annulations<span class="bulle" id="badge-annul" style="display: none;">1</span></button>
       <button class="chip" data-f="autres" onclick="setFiltre('autres',this)">Autres SMS</button>
       <button class="chip plus-filtres" onclick="basculerFiltres()">Filtres ▾</button>
     </div>
@@ -240,7 +240,108 @@
       <button onclick="activerNotifs()">Activer</button>
     </div>
 
-    <div id="liste-messages"><div class="entete-liste"><div><strong>Tous les messages</strong>100 messages · SMS BLAFFA</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt bleu">10 000 F</span><span class="m-heure">12:15</span></div><div class="corps">Transfert d argent reussi de 10000 FCFA au +22372511762 (Mali) Frais=150 FCFA.
+    <div id="liste-messages"><div class="entete-liste"><div><strong>Tous les messages</strong>100 messages · SMS BLAFFA</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">2 000 F</span><span class="m-heure">12:21</span></div><div class="corps">Transfert de 2000 FCFA recu du +22383097743 (Mali).
+Nouveau solde : 43000 FCFA
+ID : 1f50a9de
+Retrait en point de vente, transferts et paiements a 0F.
+Consultez votre solde reception intra regional au #144*133#.
+OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 83097743</div><div class="refs">ID: 1F50A9DE</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">3 000 F</span><span class="m-heure">12:21</span></div><div class="corps">Transfert de 3000 FCFA recu du +22374746555 (Mali).
+Nouveau solde : 41000 FCFA
+ID : d261f4b4
+Retrait en point de vente, transferts et paiements a 0F.
+Consultez votre solde reception intra regional au #144*133#.
+OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 74746555</div><div class="refs">ID: D261F4B4</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">4 000 F</span><span class="m-heure">12:21</span></div><div class="corps">Transfert de 4000 FCFA recu du +22370239482 (Mali).
+Nouveau solde : 4000 FCFA
+ID : d1f4a1d8
+Retrait en point de vente, transferts et paiements a 0F.
+Consultez votre solde reception intra regional au #144*133#.
+OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">WINOB</span> · Orange Money · 70239482</div><div class="refs">ID: D1F4A1D8</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt bleu">16 000 F</span><span class="m-heure">12:21</span></div><div class="corps">Transfert d argent reussi de 16000 FCFA au +22379965113 (Mali) Frais=240 FCFA.
+Nouveau solde : 949307.25 FCFA
+ID : 79023df7
+Orange Money vous remercie.</div><div class="m-pied"><span class="etiq bleu">Retrait</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 79965113</div><div class="refs">ID: 79023DF7 · Solde: 949 307 F</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">+454</span><span class="m-amt jaune">1 000 F</span><span class="m-heure">12:21</span></div><div class="corps">Transfert de 1000.00F recu de KONAN 0710105766. Ref :PP261015.1221.B08341. Solde : 215128.00F. Vos transferts et paiements sont a 0F. OMCI vous remercie.</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">BETA CIV</span> · Orange Money · 0710105766</div><div class="refs">ID: PP261015.1221.B08341</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">Wave</span><span class="m-amt jaune">2 000 F</span><span class="m-heure">12:21</span></div><div class="corps">Transfert reçu! Vous avez reçu 2.000F
+De Mame Cheikh Ibrahima Diouf (+221782955372)
+15/10/2026 à 12h21
+
++infos: 1315
+Avec UBA
+xot-27x0qd8281yfw</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">WINOB</span> · 782955372</div><div class="refs">ID: XOT-27X0QD8281YFW</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt bleu">12 000 F</span><span class="m-heure">12:21</span></div><div class="corps">Transfert d argent reussi de 12000 FCFA au +22379439834 (Mali) Frais=180 FCFA.
+Nouveau solde : 965547.25 FCFA
+ID : bbb88143
+Orange Money vous remercie.</div><div class="m-pied"><span class="etiq bleu">Retrait</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 79439834</div><div class="refs">ID: BBB88143 · Solde: 965 547 F</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">1 000 F</span><span class="m-heure">12:20</span></div><div class="corps">Transfert de 1000 FCFA recu du +22391160146 (Mali).
+Nouveau solde : 38000 FCFA
+ID : 29137d09
+Retrait en point de vente, transferts et paiements a 0F.
+Consultez votre solde reception intra regional au #144*133#.
+OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 91160146</div><div class="refs">ID: 29137D09</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">MoovMoney</span><span class="m-amt jaune">800 F</span><span class="m-heure">12:20</span></div><div class="corps">15/10/2026 à 12:20:31
+Le numéro 2250102989710 a envoyé 800 FCFA sur votre numéro 0153215451 - RETAILER GODS SON ENTREPRISES/YESSO SATURNIN GAUTIER.
+Frais : 0 FCFA
+Commission de la transaction : 2 FCFA
+Ref : DJF088NZK6
+Votre nouveau solde Moov Money est de 99 237 FCFA
+
+Nouveau! Cher partenaire, un compte a été créé pour les opérations de retrait.
+Pour consulter, tapez *156*6*1#
+Pour remonter les UV vers le compte principal, tapez *156*1*9#</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">1XB CIV</span> · Moov Money · 0102989710</div><div class="refs">ID: DJF088NZK6</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">5 000 F</span><span class="m-heure">12:20</span></div><div class="corps">Transfert de 5000 FCFA recu du +22391736740 (Mali).
+Nouveau solde : 8000 FCFA
+ID : 4cdbd5ad
+Retrait en point de vente, transferts et paiements a 0F.
+Consultez votre solde reception intra regional au #144*133#.
+OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">WINOB</span> · Orange Money · 91736740</div><div class="refs">ID: 4CDBD5AD</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">+454</span><span class="m-amt jaune">800 F</span><span class="m-heure">12:19</span></div><div class="corps">Transfert de 800.00F recu de dekassan dimitri 0709926801. Ref :PP261015.1219.B07884. Solde : 278583.00F. Vos transferts et paiements sont a 0F. OMCI vous remercie.</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MELB</span> · Orange Money · 0709926801</div><div class="refs">ID: PP261015.1219.B07884</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">3 000 F</span><span class="m-heure">12:19</span></div><div class="corps">Transfert de 3000 FCFA recu du +22375333645 (Mali).
+Nouveau solde : 37000 FCFA
+ID : c1d5df27
+Retrait en point de vente, transferts et paiements a 0F.
+Consultez votre solde reception intra regional au #144*133#.
+OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 75333645</div><div class="refs">ID: C1D5DF27</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">3 000 F</span><span class="m-heure">12:19</span></div><div class="corps">Transfert de 3000 FCFA recu du +22375267843 (Mali).
+Nouveau solde : 34000 FCFA
+ID : 6b0b29c2
+Retrait en point de vente, transferts et paiements a 0F.
+Consultez votre solde reception intra regional au #144*133#.
+OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 75267843</div><div class="refs">ID: 6B0B29C2</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">3 000 F</span><span class="m-heure">12:19</span></div><div class="corps">Transfert de 3000 FCFA recu du +22376472558 (Mali).
+Nouveau solde : 31000 FCFA
+ID : 7e823822
+Retrait en point de vente, transferts et paiements a 0F.
+Consultez votre solde reception intra regional au #144*133#.
+OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 76472558</div><div class="refs">ID: 7E823822</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">12 500 F</span><span class="m-heure">12:19</span></div><div class="corps">Transfert de 12500 FCFA recu du +22375325359 (Mali).
+Nouveau solde : 28000 FCFA
+ID : 1ceac5a7
+Retrait en point de vente, transferts et paiements a 0F.
+Consultez votre solde reception intra regional au #144*133#.
+OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 75325359</div><div class="refs">ID: 1CEAC5A7</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">5 000 F</span><span class="m-heure">12:19</span></div><div class="corps">Transfert de 5000 FCFA recu du +22375258294 (Mali).
+Nouveau solde : 15500 FCFA
+ID : ac3c0638
+Retrait en point de vente, transferts et paiements a 0F.
+Consultez votre solde reception intra regional au #144*133#.
+OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 75258294</div><div class="refs">ID: AC3C0638</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">MobileMoney</span><span class="m-amt jaune">1 000 F</span><span class="m-heure">12:19</span></div><div class="corps">Vous avez recu 1000 FCFA du 2250504363684 sur votre compte Mobile Money le 15-10-2026 12:19:07. Votre nouveau solde est de: 136860 FCFA. ID Transaction: 18174808038.</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">BETA CIV</span> · MTN Mobile Money · 0504363684</div><div class="refs">ID: 18174808038</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">+454</span><span class="m-amt jaune">1 000 F</span><span class="m-heure">12:18</span></div><div class="corps">Transfert de 1000.00F recu de SANOGO 0777867958. Ref :PP261015.1218.C09476. Solde : 277783.00F. Vos transferts et paiements sont a 0F. OMCI vous remercie.</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MELB</span> · Orange Money · 0777867958</div><div class="refs">ID: PP261015.1218.C09476</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">MobileMoney</span><span class="m-amt jaune">480 F</span><span class="m-heure">12:18</span></div><div class="corps">Vous avez recu 480 FCFA du 2250544653979 sur votre compte Mobile Money le 15-10-2026 12:18:32. Votre nouveau solde est de: 135860 FCFA. ID Transaction: 18174807279.</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">BETA CIV</span> · MTN Mobile Money · 0544653979</div><div class="refs">ID: 18174807279</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">2 500 F</span><span class="m-heure">12:18</span></div><div class="corps">Transfert de 2500 FCFA recu du +22372606351 (Mali).
+Nouveau solde : 10500 FCFA
+ID : a3adf291
+Retrait en point de vente, transferts et paiements a 0F.
+Consultez votre solde reception intra regional au #144*133#.
+OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 72606351</div><div class="refs">ID: A3ADF291</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">2 000 F</span><span class="m-heure">12:18</span></div><div class="corps">Transfert de 2000 FCFA recu du +22379787998 (Mali).
+Nouveau solde : 8000 FCFA
+ID : 064cd152
+Retrait en point de vente, transferts et paiements a 0F.
+Consultez votre solde reception intra regional au #144*133#.
+OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 79787998</div><div class="refs">ID: 064CD152</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">2 000 F</span><span class="m-heure">12:17</span></div><div class="corps">Transfert de 2000 FCFA recu du +22390542443 (Mali).
+Nouveau solde : 6000 FCFA
+ID : 845054f6
+Retrait en point de vente, transferts et paiements a 0F.
+Consultez votre solde reception intra regional au #144*133#.
+OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 90542443</div><div class="refs">ID: 845054F6</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">1 000 F</span><span class="m-heure">12:17</span></div><div class="corps">Transfert de 1000 FCFA recu du +22376934885 (Mali).
+Nouveau solde : 4000 FCFA
+ID : eafd6f28
+Retrait en point de vente, transferts et paiements a 0F.
+Consultez votre solde reception intra regional au #144*133#.
+OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 76934885</div><div class="refs">ID: EAFD6F28</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">+454</span><span class="m-amt jaune">5 000 F</span><span class="m-heure">12:16</span></div><div class="corps">Transfert de 5000.00F recu de SAWADOGO 0702247424. Ref :PP261015.1216.B06896. Solde : 276783.00F. Vos transferts et paiements sont a 0F. OMCI vous remercie.</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MELB</span> · Orange Money · 0702247424</div><div class="refs">ID: PP261015.1216.B06896</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">1 000 F</span><span class="m-heure">12:16</span></div><div class="corps">Transfert de 1000 FCFA recu du +22394980005 (Mali).
+Nouveau solde : 3000 FCFA
+ID : ef631019
+Retrait en point de vente, transferts et paiements a 0F.
+Consultez votre solde reception intra regional au #144*133#.
+OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 94980005</div><div class="refs">ID: EF631019</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">3 000 F</span><span class="m-heure">12:16</span></div><div class="corps">Transfert de 3000 FCFA recu du +22375825456 (Mali).
+Nouveau solde : 3000 FCFA
+ID : cac46f23
+Retrait en point de vente, transferts et paiements a 0F.
+Consultez votre solde reception intra regional au #144*133#.
+OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">WINOB</span> · Orange Money · 75825456</div><div class="refs">ID: CAC46F23</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">MobileMoney</span><span class="m-amt jaune">1 000 F</span><span class="m-heure">12:15</span></div><div class="corps">Vous avez recu 1000 FCFA du 2250555403538 sur votre compte Mobile Money le 15-10-2026 12:15:37. Votre nouveau solde est de: 135380 FCFA. ID Transaction: 18174803337.</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">BETA CIV</span> · MTN Mobile Money · 0555403538</div><div class="refs">ID: 18174803337</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt bleu">10 000 F</span><span class="m-heure">12:15</span></div><div class="corps">Transfert d argent reussi de 10000 FCFA au +22372511762 (Mali) Frais=150 FCFA.
 Nouveau solde : 977727.25 FCFA
 ID : 8aac0cfa
 Orange Money vous remercie.</div><div class="m-pied"><span class="etiq bleu">Retrait</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 72511762</div><div class="refs">ID: 8AAC0CFA · Solde: 977 727 F</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">+454</span><span class="m-amt jaune">900 F</span><span class="m-heure">12:14</span></div><div class="corps">Transfert de 900.00F recu de OULAI 0759917860. Ref :PP261015.1214.C08194. Solde : 214128.00F. Vos transferts et paiements sont a 0F. OMCI vous remercie.</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">BETA CIV</span> · Orange Money · 0759917860</div><div class="refs">ID: PP261015.1214.C08194</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">MobileMoney</span><span class="m-amt jaune">500 F</span><span class="m-heure">12:14</span></div><div class="corps">You have received 500 FCFA from 2250595581774 on your mobile money account.Your new balance: 0 FCFA. Financial Transaction Id: 18174802202.</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">BETA CIV</span> · MTN Mobile Money · 0595581774</div><div class="refs">ID: 18174802202</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">1 000 F</span><span class="m-heure">12:14</span></div><div class="corps">Transfert de 1000 FCFA recu du +22376574297 (Mali).
@@ -484,113 +585,7 @@ Nouveau solde : 958235 FCFA
 ID : f243ee4d
 Retrait en point de vente, transferts et paiements a 0F.
 Consultez votre solde reception intra regional au #144*133#.
-OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 76844402</div><div class="refs">ID: F243EE4D</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">2 000 F</span><span class="m-heure">11:57</span></div><div class="corps">Transfert de 2000 FCFA recu du +22378553413 (Mali).
-Nouveau solde : 957235 FCFA
-ID : 55616e42
-Retrait en point de vente, transferts et paiements a 0F.
-Consultez votre solde reception intra regional au #144*133#.
-OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 78553413</div><div class="refs">ID: 55616E42</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">+454</span><span class="m-amt jaune">4 040 F</span><span class="m-heure">11:57</span></div><div class="corps">Transfert de 4040.00F recu de KONE 0714892450. Ref :PP261015.1157.D01541. Solde : 259818.00F. Vos transferts et paiements sont a 0F. OMCI vous remercie.</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MELB</span> · Orange Money · 0714892450</div><div class="refs">ID: PP261015.1157.D01541</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">2 000 F</span><span class="m-heure">11:57</span></div><div class="corps">Transfert de 2000 FCFA recu du +22379145162 (Mali).
-Nouveau solde : 955235 FCFA
-ID : 9e57d770
-Retrait en point de vente, transferts et paiements a 0F.
-Consultez votre solde reception intra regional au #144*133#.
-OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 79145162</div><div class="refs">ID: 9E57D770</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">2 500 F</span><span class="m-heure">11:57</span></div><div class="corps">Transfert de 2500 FCFA recu du +22374139306 (Mali).
-Nouveau solde : 953235 FCFA
-ID : 47f62b0d
-Retrait en point de vente, transferts et paiements a 0F.
-Consultez votre solde reception intra regional au #144*133#.
-OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 74139306</div><div class="refs">ID: 47F62B0D</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">1 500 F</span><span class="m-heure">11:57</span></div><div class="corps">Transfert de 1500 FCFA recu du +22390900826 (Mali).
-Nouveau solde : 950735 FCFA
-ID : c2a272dc
-Retrait en point de vente, transferts et paiements a 0F.
-Consultez votre solde reception intra regional au #144*133#.
-OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 90900826</div><div class="refs">ID: C2A272DC</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">1 000 F</span><span class="m-heure">11:56</span></div><div class="corps">Transfert de 1000 FCFA recu du +22383961729 (Mali).
-Nouveau solde : 949235 FCFA
-ID : e40a3f39
-Retrait en point de vente, transferts et paiements a 0F.
-Consultez votre solde reception intra regional au #144*133#.
-OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 83961729</div><div class="refs">ID: E40A3F39</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">9 850 F</span><span class="m-heure">11:56</span></div><div class="corps">Transfert de 9850 FCFA recu du +22371469006 (Mali).
-Nouveau solde : 948235 FCFA
-ID : cf3efeaa
-Retrait en point de vente, transferts et paiements a 0F.
-Consultez votre solde reception intra regional au #144*133#.
-OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 71469006</div><div class="refs">ID: CF3EFEAA</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">2 000 F</span><span class="m-heure">11:56</span></div><div class="corps">Transfert de 2000 FCFA recu du +22370000387 (Mali).
-Nouveau solde : 2000 FCFA
-ID : 7d7eea02
-Retrait en point de vente, transferts et paiements a 0F.
-Consultez votre solde reception intra regional au #144*133#.
-OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">WINOB</span> · Orange Money · 70000387</div><div class="refs">ID: 7D7EEA02</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt bleu">5 000 F</span><span class="m-heure">11:55</span></div><div class="corps">Transfert d argent reussi de 5000 FCFA au +22378232157 (Mali) Frais=75 FCFA.
-Nouveau solde : 1047153.25 FCFA
-ID : 1f681393
-Orange Money vous remercie.</div><div class="m-pied"><span class="etiq bleu">Retrait</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 78232157</div><div class="refs">ID: 1F681393 · Solde: 1 047 153 F</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">+454</span><span class="m-amt jaune">1 212 F</span><span class="m-heure">11:55</span></div><div class="corps">Transfert de 1212.00F recu de OUATTARA 0797677650. Ref :PP261015.1155.D00957. Solde : 210778.00F. Vos transferts et paiements sont a 0F. OMCI vous remercie.</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">BETA CIV</span> · Orange Money · 0797677650</div><div class="refs">ID: PP261015.1155.D00957</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">MoovMoney</span><span class="m-amt jaune">5 000 F</span><span class="m-heure">11:55</span></div><div class="corps">15/10/2026 à 11:55:34
-Le numéro 2250102416442 a envoyé 5 000 FCFA sur votre numéro 0153215451 - RETAILER GODS SON ENTREPRISES/YESSO SATURNIN GAUTIER.
-Frais : 0 FCFA
-Commission de la transaction : 15 FCFA
-Ref : DJF188LRC5
-Votre nouveau solde Moov Money est de 96 437 FCFA
-
-Nouveau! Cher partenaire, un compte a été créé pour les opérations de retrait.
-Pour consulter, tapez *156*6*1#
-Pour remonter les UV vers le compte principal, tapez *156*1*9#</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">1XB CIV</span> · Moov Money · 0102416442</div><div class="refs">ID: DJF188LRC5</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">+454</span><span class="m-amt jaune">5 000 F</span><span class="m-heure">11:53</span></div><div class="corps">Transfert de 5000.00F recu de KADJA 0708960361. Ref :PP261015.1153.B98868. Solde : 209566.00F. Vos transferts et paiements sont a 0F. OMCI vous remercie.</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">BETA CIV</span> · Orange Money · 0708960361</div><div class="refs">ID: PP261015.1153.B98868</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">3 000 F</span><span class="m-heure">11:53</span></div><div class="corps">Transfert de 3000 FCFA recu du +22372973669 (Mali).
-Nouveau solde : 938385 FCFA
-ID : fd92e081
-Retrait en point de vente, transferts et paiements a 0F.
-Consultez votre solde reception intra regional au #144*133#.
-OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 72973669</div><div class="refs">ID: FD92E081</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">1 000 F</span><span class="m-heure">11:52</span></div><div class="corps">Transfert de 1000 FCFA recu du +22375103589 (Mali).
-Nouveau solde : 934385 FCFA
-ID : e5981553
-Retrait en point de vente, transferts et paiements a 0F.
-Consultez votre solde reception intra regional au #144*133#.
-OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 75103589</div><div class="refs">ID: E5981553</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">1 000 F</span><span class="m-heure">11:52</span></div><div class="corps">Transfert de 1000 FCFA recu du +22375402822 (Mali).
-Nouveau solde : 935385 FCFA
-ID : c0f7d5fe
-Retrait en point de vente, transferts et paiements a 0F.
-Consultez votre solde reception intra regional au #144*133#.
-OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 75402822</div><div class="refs">ID: C0F7D5FE</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">+454</span><span class="m-amt jaune">500 F</span><span class="m-heure">11:51</span></div><div class="corps">Transfert de 500.00F recu de AGUIA 0767190030. Ref :PP261015.1151.D99481. Solde : 204566.00F. Vos transferts et paiements sont a 0F. OMCI vous remercie.</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">BETA CIV</span> · Orange Money · 0767190030</div><div class="refs">ID: PP261015.1151.D99481</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt bleu">10 000 F</span><span class="m-heure">11:51</span></div><div class="corps">Transfert d argent reussi de 10000 FCFA au +22375797983 (Mali) Frais=150 FCFA.
-Nouveau solde : 1052228.25 FCFA
-ID : 19480bbb
-Orange Money vous remercie.</div><div class="m-pied"><span class="etiq bleu">Retrait</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 75797983</div><div class="refs">ID: 19480BBB · Solde: 1 052 228 F</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">2 000 F</span><span class="m-heure">11:51</span></div><div class="corps">Transfert de 2000 FCFA recu du +22376152307 (Mali).
-Nouveau solde : 933385 FCFA
-ID : 77ba97d8
-Retrait en point de vente, transferts et paiements a 0F.
-Consultez votre solde reception intra regional au #144*133#.
-OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 76152307</div><div class="refs">ID: 77BA97D8</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">1 000 F</span><span class="m-heure">11:51</span></div><div class="corps">Transfert de 1000 FCFA recu du +22373316904 (Mali).
-Nouveau solde : 930385 FCFA
-ID : a25223cc
-Retrait en point de vente, transferts et paiements a 0F.
-Consultez votre solde reception intra regional au #144*133#.
-OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 73316904</div><div class="refs">ID: A25223CC</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">1 000 F</span><span class="m-heure">11:51</span></div><div class="corps">Transfert de 1000 FCFA recu du +22370620642 (Mali).
-Nouveau solde : 931385 FCFA
-ID : 592501a2
-Retrait en point de vente, transferts et paiements a 0F.
-Consultez votre solde reception intra regional au #144*133#.
-OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 70620642</div><div class="refs">ID: 592501A2</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">1 000 F</span><span class="m-heure">11:50</span></div><div class="corps">Transfert de 1000 FCFA recu du +22378017446 (Mali).
-Nouveau solde : 929385 FCFA
-ID : a4c2f227
-Retrait en point de vente, transferts et paiements a 0F.
-Consultez votre solde reception intra regional au #144*133#.
-OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 78017446</div><div class="refs">ID: A4C2F227</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt bleu">25 000 F</span><span class="m-heure">11:50</span></div><div class="corps">Transfert d argent reussi de 25000 FCFA au +22376937910 (Mali) Frais=375 FCFA.
-Nouveau solde : 1062378.25 FCFA
-ID : 15fdcc33
-Orange Money vous remercie.</div><div class="m-pied"><span class="etiq bleu">Retrait</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 76937910</div><div class="refs">ID: 15FDCC33 · Solde: 1 062 378 F</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt bleu">20 000 F</span><span class="m-heure">11:49</span></div><div class="corps">Transfert d argent reussi de 20000 FCFA au +22372954496 (Mali) Frais=300 FCFA.
-Nouveau solde : 1087753.25 FCFA
-ID : 32c074d3
-Orange Money vous remercie.</div><div class="m-pied"><span class="etiq bleu">Retrait</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 72954496</div><div class="refs">ID: 32C074D3 · Solde: 1 087 753 F</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">+454</span><span class="m-amt jaune">1 000 F</span><span class="m-heure">11:49</span></div><div class="corps">Transfert de 1000.00F recu de GOGBEU 0769125328. Ref :PP261015.1149.B97614. Solde : 204066.00F. Vos transferts et paiements sont a 0F. OMCI vous remercie.</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">BETA CIV</span> · Orange Money · 0769125328</div><div class="refs">ID: PP261015.1149.B97614</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">3 500 F</span><span class="m-heure">11:49</span></div><div class="corps">Transfert de 3500 FCFA recu du +22372511762 (Mali).
-Nouveau solde : 928385 FCFA
-ID : 074c3c2f
-Retrait en point de vente, transferts et paiements a 0F.
-Consultez votre solde reception intra regional au #144*133#.
-OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 72511762</div><div class="refs">ID: 074C3C2F</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">1 850 F</span><span class="m-heure">11:48</span></div><div class="corps">Transfert de 1850 FCFA recu du +22374222095 (Mali).
-Nouveau solde : 924885 FCFA
-ID : 53543bce
-Retrait en point de vente, transferts et paiements a 0F.
-Consultez votre solde reception intra regional au #144*133#.
-OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 74222095</div><div class="refs">ID: 53543BCE</div></div><div class="msg" onclick="this.classList.toggle('ouvert')"><div class="m-head"><span class="m-exp">OrangeMoney</span><span class="m-amt jaune">5 000 F</span><span class="m-heure">11:48</span></div><div class="corps">Transfert de 5000 FCFA recu du +22374676321 (Mali).
-Nouveau solde : 923035 FCFA
-ID : 9ad03035
-Retrait en point de vente, transferts et paiements a 0F.
-Consultez votre solde reception intra regional au #144*133#.
-OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 74676321</div><div class="refs">ID: 9AD03035</div></div></div>
+OMCI vous remercie</div><div class="m-pied"><span class="etiq jaune">Dépôt</span> <span class="m-plat">MEGA MLI</span> · Orange Money · 76844402</div><div class="refs">ID: F243EE4D</div></div></div>
     <button class="plus" id="plus-messages" style="display: block;" onclick="chargerPlus()">Voir les messages plus anciens</button>
   </main>
 
@@ -1345,6 +1340,23 @@ function fusionnerMessages(actuels, nouveaux) {
 let ticEnCours = false;
 async function ticAuto() {
   if (ticEnCours) return; // jamais deux rafraichissements en vol
+  /* ★ 15/10 (Gerard) — « quand on veut rechercher, tu arrives en bas et puis
+     ca s actualise seul. Ca s actualise tellement qu on n arrive meme pas a
+     rechercher ce qu on veut. »
+
+     Le rafraichissement automatique recharge la liste toutes les 20 secondes.
+     Pendant une recherche, il efface le resultat qu on etait en train de lire
+     et renvoie la page en haut. On le met donc en pause tant qu une recherche
+     est en cours : des que le champ est vide a nouveau, il repart tout seul.
+
+     Il ne s agit pas de rafraichir moins, mais de ne pas interrompre. Rien
+     n est perdu : le rapatriement de fond continue a remplir la memoire, et
+     le tic suivant reprend des que la recherche est terminee. */
+  try {
+    const champ = $("in-q");
+    const enRecherche = champ && (String(champ.value || "").trim() !== "" || document.activeElement === champ);
+    if (enRecherche) return;
+  } catch (e) {}
   ticEnCours = true;
   try {
     await charger();
